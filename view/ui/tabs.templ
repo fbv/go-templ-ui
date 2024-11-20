@@ -3,8 +3,8 @@ package ui
 type TabItem struct {
 	Title    string
 	URL      string
-	Disabled bool
 	Active   bool
+	Disabled bool
 }
 
 templ Tabs(items ...*TabItem) {
@@ -23,4 +23,24 @@ templ Tabs(items ...*TabItem) {
 			}
 		</ul>
 	</div>
+}
+
+templ SmallTabs() {
+	<div class="bg-white text-sm font-medium text-center text-slate-500 mb-4 border-b">
+		<ul class="relative h-10 w-full">
+			{ children... }
+		</ul>
+	</div>
+}
+
+templ SmallTabItem(item *TabItem) {
+	if item.Active {
+		<li class="me-2 float-left justify-center x-tab x-tab-active">
+			<a href={ templ.URL(item.URL) } class="inline-block p-2 text-blue-500 active" aria-current="page">{ item.Title }</a>
+		</li>
+	} else {
+		<li class="me-2 float-left justify-center x-tab">
+			<a href={ templ.URL(item.URL) } class="inline-block p-2 hover:text-blue-500">{ item.Title }</a>
+		</li>
+	}
 }
