@@ -1,0 +1,55 @@
+package ui
+
+type SidebarItem struct {
+	Name      string
+	Icon      string
+	URL       string
+	Active    bool
+	Modifiers []templ.Component
+}
+
+templ Sidebar(items ...*SidebarItem) {
+	<div class="flex flex-col w-60 bg-white h-screen border-r">
+		<div class="overflow-y-auto overflow-x-hidden flex-grow">
+			<ul class="flex flex-col p-2 space-y-1">
+				for _, item := range items {
+					<li>
+						if item.Active {
+							<a href={ templ.URL(item.URL) } class="relative flex flex-row items-center h-11 focus:outline-none bg-slate-100 text-gray-800 p-2 rounded-md">
+								<span class="inline-flex justify-center items-center ml-2">
+									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={ item.Icon }></path></svg>
+								</span>
+								<span class="ml-2 text-sm tracking-wide truncate">{ item.Name }</span>
+								if len(item.Modifiers) >0 {
+									@item.Modifiers[0]
+								}
+							</a>
+						} else {
+							<a href={ templ.URL(item.URL) } class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-slate-50 text-gray-800 p-2 rounded-md">
+								<span class="inline-flex justify-center items-center ml-2">
+									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={ item.Icon }></path></svg>
+								</span>
+								<span class="ml-2 text-sm tracking-wide truncate">{ item.Name }</span>
+								if len(item.Modifiers) >0 {
+									@item.Modifiers[0]
+								}
+							</a>
+						}
+					</li>
+				}
+			</ul>
+		</div>
+	</div>
+}
+
+templ SidebarNew() {
+	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-indigo-500 bg-indigo-50 rounded-full">New</span>
+}
+
+templ SidebarRed(label string) {
+	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-red-500 bg-red-50 rounded-full">{ label }</span>
+}
+
+templ SidebarGreen(label string) {
+	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-green-500 bg-green-50 rounded-full">{ label }</span>
+}
