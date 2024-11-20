@@ -1,0 +1,36 @@
+package ui
+
+templ Table() {
+	<table class="border-collapse table-auto w-full text-sm">
+		{ children... }
+	</table>
+}
+
+templ TableHeader(columns []string) {
+	<thead class="border-t">
+		<tr>
+			for i, c := range columns {
+				if i > 0 {
+					<th class="border-b border-l font-sm pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal">{ c }</th>
+				} else {
+					<th class="border-b font-sm pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal">{ c }</th>
+				}
+			}
+		</tr>
+	</thead>
+}
+
+templ Values() {
+	<table class="border-collapse table-auto text-sm">
+		<tbody class="border-t">
+			{ children... }
+		</tbody>
+	</table>
+}
+
+templ Value(header string) {
+	<tr class="border-b hover:bg-slate-50">
+		<th class="font-sm pl-2 pt-1 pr-2 pb-1 text-gray-400 text-right font-normal">{ header }</th>
+		<td>{ children... }</td>
+	</tr>
+}
