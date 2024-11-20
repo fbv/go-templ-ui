@@ -8,10 +8,13 @@ clean:
 
 build: $(projects)
 
-$(projects):
+templ:
+	templ generate -include-version=false
+
+$(projects): templ
 	go build -o bin/$@ cmd/$@/main.go
 
 test:
 	go test ./...
 
-.PHONY: all clean build test $(projects)
+.PHONY: all clean build test templ $(projects)

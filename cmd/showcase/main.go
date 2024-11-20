@@ -1,7 +1,15 @@
 package main
 
-import "log"
+import (
+	"log"
+
+	"github.com/fbv/go-templ-ui/server"
+)
 
 func main() {
-	log.Println("hello world")
+	s := server.New()
+	err := s.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
