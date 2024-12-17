@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+li.x-tab {
+    display: flex;
+    justify-content: center;
+    margin: 0 8px 0 0; 
+}
+
+li.x-tab-active::before {
+    content: '';
+    position: absolute;
+    background-color: #fff;
+    transform: rotate(45deg);
+    width: 9px;
+    height: 9px;
+    border-width: 1px 0 0 1px;
+    border-style: solid;
+    border-color: #e5e7eb;
+    bottom: -5px;
+}
