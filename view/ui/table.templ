@@ -1,5 +1,41 @@
 package ui
 
+type TableDataSource interface{
+	GetColumnCount() int
+	GetColumnName(col int) string
+	GetRowCount() int
+	GetData(row, col int) templ.Component
+}
+
+templ DynamicTable(data TableDataSource) {
+	<table class="border-collapse table-auto w-full">
+		<thead class="border-t">
+			<tr>
+				for col := 0; col < data.GetColumnCount(); col++ {
+					if col > 0 {
+						<th class="border-b pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal border-l">{ data.GetColumnName(col) }</th>
+					} else {
+						<th class="border-b pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal">{ data.GetColumnName(col) }</th>
+					}
+				}
+			</tr>	
+		</thead>
+        <tbody>
+			for row := 0; row < data.GetRowCount(); row++ {
+				<tr class="border-b hover:bg-slate-50 align-top">
+					for col := 0; col < data.GetColumnCount(); col++ {
+						<td class="px-2 py-1">@data.GetData(row, col)</td>
+					}
+				</tr>
+			}
+        </tbody>
+	</table>
+}
+
+templ Text(text string) {
+    <span>{ text }</span>
+}
+
 templ Table() {
 	<table class="border-collapse table-auto w-full">
 		{ children... }

@@ -1,0 +1,133 @@
+package showcase
+
+import (
+	"github.com/fbv/go-templ-ui/view"
+	"github.com/fbv/go-templ-ui/view/icon"
+	"github.com/fbv/go-templ-ui/view/ui"
+)
+
+templ Sidebar() {
+	@ui.Sidebar(&ui.SidebarItem{
+		Name:   "Applications",
+		Icon:   icon.Dashboard,
+		URL:    "/admin/app",
+		Active: view.PathPrefixIs(ctx, "/showcase"),
+	}, &ui.SidebarItem{
+		Name:   "Payments",
+		Icon:   icon.Tasks,
+		URL:    "/admin/payments/status",
+		Active: view.PathPrefixIs(ctx, "/admin/payments"),
+	}, &ui.SidebarItem{
+		Name:   "Synchronization",
+		Icon:   icon.Profile,
+		URL:    "/admin/sync/data",
+		Active: view.PathPrefixIs(ctx, "/admin/sync"),
+	}, &ui.SidebarItem{
+		Name:   "Settings",
+		Icon:   icon.Settings,
+		URL:    "/admin/settings",
+		Active: view.PathPrefixIs(ctx, "/admin/settings"),
+	})
+}
+
+templ Showcase() {
+	@Page("Showcase") {
+		<div class="flex flex-row">
+			@Sidebar()
+			<div class="flex-1 w-auto h-screen p-4">
+
+				@ui.H2("Tabs")
+
+				@ui.Tabs(&ui.TabItem{
+					Title: "Дашборд каталога",
+					URL:   "#",
+				}, &ui.TabItem{
+					Title:  "Сервисные аккаунты",
+					URL:    "#",
+					Active: true,
+				}, &ui.TabItem{
+					Title: "Уведомления сервисов",
+					URL:   "#",
+				}, &ui.TabItem{
+					Title: "Права доступа",
+					URL:   "#",
+				}, &ui.TabItem{
+					Title:    "Операции",
+					URL:      "#",
+					Disabled: true,
+				})
+				<div>
+					@ui.SmallTabs() {
+						@ui.SmallTabItem(&ui.TabItem{
+							Title: "One",
+							URL:   "#",
+						})
+						@ui.SmallTabItem(&ui.TabItem{
+							Title:  "Two",
+							URL:    "#",
+							Active: true,
+						})
+						@ui.SmallTabItem(&ui.TabItem{
+							Title: "Tree",
+							URL:   "#",
+						})
+						@ui.SmallTabItem(&ui.TabItem{
+							Title: "Four",
+							URL:   "#",
+						})
+					}
+				</div>
+				
+				@ui.H2("Timeline")
+
+				@ui.LinearTimeline(ui.TimelineProps{
+					Items: []ui.TimeLineItem{
+						{Value: "Android 5.0 Lollipop", Date: "2011"},
+						{Value: "iPhone", Date: "2015"},
+						// Add more items as needed
+					},
+				})
+				@ui.VerticalTimeline(ui.TimelineProps{
+					Items: []ui.TimeLineItem{
+						{Value: "Apple Watch", Date: "2015"},
+						{Value: "Apple TV", Date: "2007"},
+						// Add more items as needed
+					},
+				})
+				@ui.DotTimeline(ui.TimelineProps{
+					Items: []ui.TimeLineItem{
+						{Value: "Apple Watch", Date: "2015"},
+						{Value: "Apple TV", Date: "2007"},
+						// Add more items as needed
+					},
+				})
+				
+				<h1>Cards</h1>
+
+				@ui.Card2(ui.CardProps{
+					Title:   "Test",
+					Content: "Nullam a euismod massa, non cursus odio. Fusce augue ex, finibus nec tempor nec, lacinia in mauris. Cras id interdum diam.",
+				})
+
+				@headers()
+				@buttons()
+				@tables()
+
+			</div>
+
+		</div>
+	}
+}
+
+
+templ headers() {
+	@ui.H2("Headers")
+	@ui.H1("H1")
+	@ui.H2("H2")
+	@ui.H3("H3")
+}
+
+templ buttons() {	
+	@ui.H2("Buttons")
+	@ui.Button("#", "Do Action!")
+}
