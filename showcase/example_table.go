@@ -14,18 +14,21 @@ var exampleTable *ui.DataSource[string] = &ui.DataSource[string]{
 			GetData: func(row string) templ.Component {
 				return ui.Text(fmt.Sprintf("%s col %d", row, 1))
 			},
+			Style: "w-20",
 		},
 		{
 			Name: "Col 2",
 			GetData: func(row string) templ.Component {
 				return ui.Text(fmt.Sprintf("%s col %d", row, 2))
 			},
+			Style: "w-40",
 		},
 		{
 			Name: "Col 3",
 			GetData: func(row string) templ.Component {
 				return ui.Text(fmt.Sprintf("%s col %d", row, 3))
 			},
+			Style: "w-60 bg-yellow-50",
 		},
 		{
 			Name: "Col 4",

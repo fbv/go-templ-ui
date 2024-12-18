@@ -4,6 +4,7 @@ import "github.com/a-h/templ"
 
 type Column[T any] struct {
 	Name    string
+	Style   string // optional style
 	GetData func(t T) templ.Component
 }
 
@@ -18,6 +19,10 @@ func (ds *DataSource[T]) GetColumnCount() int {
 
 func (ds *DataSource[T]) GetColumnName(col int) string {
 	return ds.Columns[col].Name
+}
+
+func (ds *DataSource[T]) GetColumnStyle(col int) string {
+	return ds.Columns[col].Style
 }
 
 func (ds *DataSource[T]) GetRowCount() int {

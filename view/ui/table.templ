@@ -3,6 +3,7 @@ package ui
 type TableDataSource interface{
 	GetColumnCount() int
 	GetColumnName(col int) string
+	GetColumnStyle(col int) string
 	GetRowCount() int
 	GetData(row, col int) templ.Component
 }
@@ -24,7 +25,7 @@ templ DynamicTable(data TableDataSource) {
 			for row := 0; row < data.GetRowCount(); row++ {
 				<tr class="border-b hover:bg-slate-50 align-top">
 					for col := 0; col < data.GetColumnCount(); col++ {
-						<td class="px-2 py-1">@data.GetData(row, col)</td>
+						<td class={ "px-2 py-1 "+ data.GetColumnStyle(col) }>@data.GetData(row, col)</td>
 					}
 				</tr>
 			}
