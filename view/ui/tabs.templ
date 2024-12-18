@@ -11,7 +11,7 @@ templ Tabs(items ...*TabItem) {
 	<div class="text-center text-gray-800 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
 		<ul class="flex flex-wrap -mb-px">
 			for _, tab := range items {
-				<li class="me-2 pr-6">
+				<li class="me-2 pl-2 pr-4">
 					if tab.Active {
 						<a href={ templ.URL(tab.URL) } class="inline-block py-2 border-b-2 border-blue-600 active dark:border-blue-500" aria-current="page">{ tab.Title }</a>
 					} else if tab.Disabled {

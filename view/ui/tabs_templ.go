@@ -40,7 +40,7 @@ func Tabs(items ...*TabItem) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, tab := range items {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li class=\"me-2 pr-6\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li class=\"me-2 pl-2 pr-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
