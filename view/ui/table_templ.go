@@ -28,7 +28,7 @@ func Table() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<table class=\"border-collapse table-auto w-full text-sm\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<table class=\"border-collapse table-auto w-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -71,14 +71,14 @@ func TableHeader(columns []string) templ.Component {
 		}
 		for i, c := range columns {
 			if i > 0 {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<th class=\"border-b border-l font-sm pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<th class=\"border-b border-l pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(c)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/table.templ`, Line: 14, Col: 102}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/table.templ`, Line: 14, Col: 94}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -89,14 +89,14 @@ func TableHeader(columns []string) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<th class=\"border-b font-sm pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<th class=\"border-b pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(c)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/table.templ`, Line: 16, Col: 93}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/table.templ`, Line: 16, Col: 85}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -137,7 +137,7 @@ func Values() templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<table class=\"border-collapse table-auto text-sm\"><tbody class=\"border-t\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<table class=\"border-collapse table-auto\"><tbody class=\"border-t\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -174,14 +174,14 @@ func Value(header string) templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<tr class=\"border-b hover:bg-slate-50\"><th class=\"font-sm pl-2 pt-1 pr-2 pb-1 text-gray-400 text-right font-normal\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<tr class=\"border-b hover:bg-slate-50\"><th class=\"pl-2 pt-1 pr-2 pb-1 text-gray-400 text-right font-normal\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(header)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/table.templ`, Line: 33, Col: 87}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/table.templ`, Line: 33, Col: 79}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
