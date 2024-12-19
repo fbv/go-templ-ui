@@ -35,9 +35,7 @@ templ Showcase() {
 		<div class="flex flex-row">
 			@Sidebar()
 			<div class="flex-1 w-auto h-screen p-4">
-
 				@ui.H2("Tabs")
-
 				@ui.Tabs(&ui.TabItem{
 					Title: "Дашборд каталога",
 					URL:   "#",
@@ -77,9 +75,7 @@ templ Showcase() {
 						})
 					}
 				</div>
-				
 				@ui.H2("Timeline")
-
 				@ui.LinearTimeline(ui.TimelineProps{
 					Items: []ui.TimeLineItem{
 						{Value: "Android 5.0 Lollipop", Date: "2011"},
@@ -101,24 +97,22 @@ templ Showcase() {
 						// Add more items as needed
 					},
 				})
-				
 				<h1>Cards</h1>
-
 				@ui.Card2(ui.CardProps{
 					Title:   "Test",
 					Content: "Nullam a euismod massa, non cursus odio. Fusce augue ex, finibus nec tempor nec, lacinia in mauris. Cras id interdum diam.",
 				})
-
 				@headers()
 				@buttons()
 				@tables()
+				@utils()
+
+				<br/>
 
 			</div>
-
 		</div>
 	}
 }
-
 
 templ headers() {
 	@ui.H2("Headers")
@@ -127,10 +121,20 @@ templ headers() {
 	@ui.H3("H3")
 }
 
-templ buttons() {	
+templ buttons() {
 	@ui.H2("Buttons")
 	@ui.Button("#", "Do Action!")
 	<div class="m-4">
-	@ui.Link("#", "Go To Mars")
+		@ui.Link("#", "Go To Mars")
+	</div>
+}
+
+templ utils() {
+	@ui.H2("Utils")
+	<div class="m-4">
+		@ui.YesNo(true)
+	</div>
+	<div class="m-4">
+		@ui.YesNo(false)
 	</div>
 }
