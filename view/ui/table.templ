@@ -6,6 +6,7 @@ type TableDataSource interface{
 	GetColumnStyle(col int) string
 	GetRowCount() int
 	GetData(row, col int) templ.Component
+	GetRowHXGet(row int) string
 }
 
 templ DynamicTable(data TableDataSource) {
@@ -23,7 +24,12 @@ templ DynamicTable(data TableDataSource) {
 		</thead>
         <tbody>
 			for row := 0; row < data.GetRowCount(); row++ {
-				<tr class="border-b hover:bg-slate-50 align-top">
+				{{ hxGet := data.GetRowHXGet(row) }}
+				<tr class="border-b hover:bg-slate-50 align-top" 
+					if hxGet !="" {
+						hx-get={ hxGet }
+					}
+				>
 					for col := 0; col < data.GetColumnCount(); col++ {
 						<td class={ "px-2 py-1 "+ data.GetColumnStyle(col) }>@data.GetData(row, col)</td>
 					}

@@ -9,8 +9,13 @@ type Column[T any] struct {
 }
 
 type DataSource[T any] struct {
-	Columns []Column[T]
-	Rows    []T
+	Columns     []Column[T]
+	Rows        []T
+	RowModifier RowModifier[T]
+}
+
+type RowModifier[T any] interface {
+	HXGet(row int, d T) string
 }
 
 func (ds *DataSource[T]) GetColumnCount() int {
@@ -31,4 +36,11 @@ func (ds *DataSource[T]) GetRowCount() int {
 
 func (ds *DataSource[T]) GetData(row, col int) templ.Component {
 	return ds.Columns[col].GetData(ds.Rows[row])
+}
+
+func (ds *DataSource[T]) GetRowHXGet(row int) string {
+	if ds.RowModifier != nil {
+		return ds.RowModifier.HXGet(row, ds.Rows[row])
+	}
+	return ""
 }
