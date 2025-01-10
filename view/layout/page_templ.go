@@ -32,7 +32,7 @@ func Page(p *PageProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -45,7 +45,7 @@ func Page(p *PageProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</title><style>\nhtml { font-size: 13px; }\nli.x-tab {\n    display: flex;\n    justify-content: center;\n    margin: 0 8px 0 0; \n}\nli.x-tab-active::before {\n    content: '';\n    position: absolute;\n    background-color: #fff;\n    transform: rotate(45deg);\n    width: 9px;\n    height: 9px;\n    border-width: 1px 0 0 1px;\n    border-style: solid;\n    border-color: #e5e7eb;\n    bottom: -5px;\n}\n</style><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css\"><script src=\"https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp\"></script><script>\n\t\t\t\ttailwind.config = {\n\t\t\t\t\tdarkMode: \"class\",\n\t\t\t\t\ttheme: {\n\t\t\t\t\t\tfontFamily: {\n        \t\t\t\t\tsans: [\"Roboto\", \"sans-serif\"],\n        \t\t\t\t\tbody: [\"Roboto\", \"sans-serif\"],\n        \t\t\t\t\tmono: [\"ui-monospace\", \"monospace\"],\n      \t\t\t\t\t},\n\t\t\t\t\t\textend: {\n\t\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tcorePlugins: {\n\t\t\t\t\t\tpreflight: false,\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t</script></head><body class=\"bg-white\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><style>\nhtml { font-size: 13px; }\nli.x-tab {\n    display: flex;\n    justify-content: center;\n    margin: 0 8px 0 0; \n}\nli.x-tab-active::before {\n    content: '';\n    position: absolute;\n    background-color: #fff;\n    transform: rotate(45deg);\n    width: 9px;\n    height: 9px;\n    border-width: 1px 0 0 1px;\n    border-style: solid;\n    border-color: #e5e7eb;\n    bottom: -5px;\n}\n</style><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&amp;display=swap\"><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css\"><script src=\"https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp\"></script><script>\n\t\t\t\ttailwind.config = {\n\t\t\t\t\tdarkMode: \"class\",\n\t\t\t\t\ttheme: {\n\t\t\t\t\t\tfontFamily: {\n        \t\t\t\t\tsans: [\"Roboto\", \"sans-serif\"],\n        \t\t\t\t\tbody: [\"Roboto\", \"sans-serif\"],\n        \t\t\t\t\tmono: [\"ui-monospace\", \"monospace\"],\n      \t\t\t\t\t},\n\t\t\t\t\t\textend: {\n\t\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tcorePlugins: {\n\t\t\t\t\t\tpreflight: false,\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t</script></head><body class=\"bg-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -53,11 +53,11 @@ func Page(p *PageProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<script src=\"https://unpkg.com/htmx.org@2.0.3\" integrity=\"sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq\" crossorigin=\"anonymous\"></script><script src=\"https://unpkg.com/htmx.org/dist/ext/json-enc.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/tw-elements/dist/js/tw-elements.umd.min.js\"></script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<script src=\"https://unpkg.com/htmx.org@2.0.3\" integrity=\"sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq\" crossorigin=\"anonymous\"></script><script src=\"https://unpkg.com/htmx.org/dist/ext/json-enc.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/tw-elements/dist/js/tw-elements.umd.min.js\"></script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		return templ_7745c5c3_Err
+		return nil
 	})
 }
 

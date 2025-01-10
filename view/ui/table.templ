@@ -10,7 +10,7 @@ type TableDataSource interface{
 }
 
 templ DynamicTable(data TableDataSource) {
-	<table class="border-collapse table-auto w-full">
+	<table hx-boost="true" class="border-collapse table-auto w-full">
 		<thead class="border-t">
 			<tr>
 				for col := 0; col < data.GetColumnCount(); col++ {
