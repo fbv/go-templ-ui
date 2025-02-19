@@ -52,4 +52,9 @@ var exampleTable *ui.DataSource[string] = &ui.DataSource[string]{
 		"row 6",
 		"row 7",
 	},
+	RowModifier: &ui.RowModifier[string]{
+		OnClick: func(row int, d string) string {
+			return fmt.Sprintf("#row=%d", row)
+		},
+	},
 }
