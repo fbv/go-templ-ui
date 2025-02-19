@@ -10,10 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type TestRowModifier struct {
-}
-
-func (m *TestRowModifier) HXGet(row int, s string) string {
+func HXGet(row int, s string) string {
 	return "/app/" + s
 }
 
@@ -27,8 +24,10 @@ func TestDataSource(t *testing.T) {
 				},
 			},
 		},
-		Rows:        []string{"row1", "row2", "row3"},
-		RowModifier: &TestRowModifier{},
+		Rows: []string{"row1", "row2", "row3"},
+		RowModifier: &RowModifier[string]{
+			HXGet: HXGet,
+		},
 	}
 	assert.Equal(t, 1, ds.GetColumnCount())
 

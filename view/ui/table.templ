@@ -1,12 +1,17 @@
 package ui
 
+type RowMeta struct {
+	HXGet string 
+	HRef string
+}
+
 type TableDataSource interface{
 	GetColumnCount() int
 	GetColumnName(col int) string
 	GetColumnStyle(col int) string
 	GetRowCount() int
 	GetData(row, col int) templ.Component
-	GetRowHXGet(row int) string
+	GetRowMeta(row int) *RowMeta
 }
 
 templ DynamicTable(data TableDataSource) {
@@ -24,10 +29,13 @@ templ DynamicTable(data TableDataSource) {
 		</thead>
         <tbody>
 			for row := 0; row < data.GetRowCount(); row++ {
-				{{ hxGet := data.GetRowHXGet(row) }}
+				{{ meta := data.GetRowMeta(row) }}
 				<tr class="border-b hover:bg-slate-50 align-top" 
-					if hxGet !="" {
-						hx-get={ hxGet }
+					if meta.HXGet !="" {
+						hx-get={ meta.HXGet }
+					}
+					if meta.HRef != "" {
+						onclick={ assignLocation(meta.HRef) }
 					}
 				>
 					for col := 0; col < data.GetColumnCount(); col++ {

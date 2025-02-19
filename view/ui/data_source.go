@@ -11,11 +11,12 @@ type Column[T any] struct {
 type DataSource[T any] struct {
 	Columns     []Column[T]
 	Rows        []T
-	RowModifier RowModifier[T]
+	RowModifier *RowModifier[T]
 }
 
-type RowModifier[T any] interface {
-	HXGet(row int, d T) string
+type RowModifier[T any] struct {
+	HXGet   func(row int, d T) string
+	OnClick func(row int, d T) string
 }
 
 func (ds *DataSource[T]) GetColumnCount() int {
@@ -38,9 +39,15 @@ func (ds *DataSource[T]) GetData(row, col int) templ.Component {
 	return ds.Columns[col].GetData(ds.Rows[row])
 }
 
-func (ds *DataSource[T]) GetRowHXGet(row int) string {
+func (ds *DataSource[T]) GetRowMeta(row int) *RowMeta {
+	meta := &RowMeta{}
 	if ds.RowModifier != nil {
-		return ds.RowModifier.HXGet(row, ds.Rows[row])
+		if ds.RowModifier.HXGet != nil {
+			meta.HXGet = ds.RowModifier.HXGet(row, ds.Rows[row])
+		}
+		if ds.RowModifier.OnClick != nil {
+			meta.HRef = ds.RowModifier.OnClick(row, ds.Rows[row])
+		}
 	}
-	return ""
+	return meta
 }
