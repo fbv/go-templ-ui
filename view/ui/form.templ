@@ -9,7 +9,7 @@ type FormProps struct {
 
 templ Form(p *FormProps) {
 	<form action={ templ.URL(p.Action) } method={ p.Method } class="max-w-sm mx-auto">
-        { children... }
+		{ children... }
 	</form>
 }
 
@@ -39,17 +39,18 @@ type InputProps struct {
 	Placeholder string
 	Required    bool
 	Value       string
+	Checked     bool
 }
 
 templ Input(p *InputProps) {
 	if p.Type == "checkbox" {
 		<div class="flex items-start mb-5">
 			<div class="flex items-center h-5">
-				<input id={ p.Name } type="checkbox" name={ p.Name } value={ p.Value } required?={ p.Required } class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
+				<input id={ p.Name } type="checkbox" name={ p.Name } checked?={ p.Checked } required?={ p.Required } class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"/>
 			</div>
-            if len(p.Label) > 0 {
-			    <label for={ p.Name} class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{ p.Label }</label>
-            }
+			if len(p.Label) > 0 {
+				<label for={ p.Name } class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{ p.Label }</label>
+			}
 		</div>
 	} else {
 		<div class="mb-5">
