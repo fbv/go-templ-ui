@@ -3,64 +3,94 @@ package ui
 import "fmt"
 
 type FormProps struct {
-    Action string
+	Action string
+	Method string
 }
 
 templ Form(p *FormProps) {
-    <form action={ templ.URL(p.Action) }>
-        <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            { children... }
-        </div>
-    </form>s
+	<form action={ templ.URL(p.Action) } method={ p.Method } class="max-w-sm mx-auto">
+		<div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+			{ children... }
+		</div>
+	</form>s
 }
 
 templ FormHeader(title string, description string) {
-    <h2 class="text-base font-semibold text-slate-900">{ title }</h2>
-    if (len(description) > 0) {
-        <p class="mt-1 text-sm leading-6 text-slate-600">{ description }</p>
-    }
+	<h2 class="text-base font-semibold text-slate-900">{ title }</h2>
+	if (len(description) > 0) {
+		<p class="mt-1 text-sm leading-6 text-slate-600">{ description }</p>
+	}
 }
 
 templ Hidden(name string, value string) {
-    <input type="hidden" name={ name } value={ value } />
+	<input type="hidden" name={ name } value={ value }/>
+}
+
+type InputProps struct {
+	Label       string
+	Name        string
+	Type        string
+	Placeholder string
+	Required    bool
+	Value       string
+}
+
+templ Input(p *InputProps) {
+	if p.Type == "checkbox" {
+		<div class="flex items-start mb-5">
+			<div class="flex items-center h-5">
+				<input id={ p.Name } type="checkbox" name={ p.Name } value={ p.Value } required?={ p.Required } class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
+			</div>
+            if len(p.Label) > 0 {
+			    <label for={ p.Name} class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{ p.Label }</label>
+            }
+		</div>
+	} else {
+		<div class="mb-5">
+			if len(p.Label) > 0 {
+				<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
+			}
+			<input type={ p.Type } id={ p.Name } name={ p.Name } value={ p.Value } placeholder={ p.Placeholder } required?={ p.Required } class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+		</div>
+	}
 }
 
 templ InputText(size int, label string, name string, value string) {
-    <div class={ fmt.Sprintf("sm:col-span-%d", size) }>
-        <label for={ name } class="block text-sm font-medium leading-6 text-slate-900">{ label }</label>
-        <div class="mt-2">
-            <input type="text" value={ value } name={ name } id={ name } class="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
-        </div>
-    </div>
+	<div class={ fmt.Sprintf("sm:col-span-%d", size) }>
+		<label for={ name } class="block text-sm font-medium leading-6 text-slate-900">{ label }</label>
+		<div class="mt-2">
+			<input type="text" value={ value } name={ name } id={ name } class="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+		</div>
+	</div>
 }
 
 templ Checkbox(size int, label string, name string, value bool) {
-    <div class={ fmt.Sprintf("sm:col-span-%d", size) }>
-        <div class="sm:mt-9 h-6 items-center">
-            <input checked?={ value } id={ name } name={ name } type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
-            <label for={ name } class="text-sm font-medium text-gray-900 ml-1">{ label }</label>
-        </div>
-    </div>
+	<div class={ fmt.Sprintf("sm:col-span-%d", size) }>
+		<div class="sm:mt-9 h-6 items-center">
+			<input checked?={ value } id={ name } name={ name } type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"/>
+			<label for={ name } class="text-sm font-medium text-gray-900 ml-1">{ label }</label>
+		</div>
+	</div>
 }
 
 type SelectItem struct {
-    Name string
-    Value string
+	Name  string
+	Value string
 }
 
 templ Select(size int, label string, name string, items []SelectItem, selectedValue string) {
-    <div class={ fmt.Sprintf("sm:col-span-%d", size) }>
-        <label for={ name } class="block text-sm font-medium leading-6 text-slate-900">{ label }</label>
-        <div class="mt-2">
-            <select id={ name } name={ name } class="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                for _, item := range items {
-                    <option value={ item.Value } selected?={ item.Value == selectedValue }>{ item.Name }</option>
-                }
-            </select>
-        </div>
-    </div>
+	<div class={ fmt.Sprintf("sm:col-span-%d", size) }>
+		<label for={ name } class="block text-sm font-medium leading-6 text-slate-900">{ label }</label>
+		<div class="mt-2">
+			<select id={ name } name={ name } class="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+				for _, item := range items {
+					<option value={ item.Value } selected?={ item.Value == selectedValue }>{ item.Name }</option>
+				}
+			</select>
+		</div>
+	</div>
 }
 
 templ Submit(title string) {
-    <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{ title }</button>
+	<button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{ title }</button>
 }
