@@ -1,0 +1,9 @@
+package ui
+
+import "fmt"
+
+templ Columns(n int) {
+	<div class={ fmt.Sprintf("grid grid-cols-%d gap-4", n) }>
+		{ children... }
+	</div>
+}
