@@ -22,9 +22,9 @@ templ GridForm(p *FormProps) {
 }
 
 templ FormHeader(title string, description string) {
-	<h2 class="text-base font-semibold text-slate-900">{ title }</h2>
+	<h2 class="text-base font-semibold text-slate-900 mb-5">{ title }</h2>
 	if (len(description) > 0) {
-		<p class="mt-1 text-sm leading-6 text-slate-600">{ description }</p>
+		<p class="mt-1 text-sm leading-6 text-slate-600 mb-5">{ description }</p>
 	}
 }
 
