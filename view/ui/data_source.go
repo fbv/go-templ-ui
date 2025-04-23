@@ -15,8 +15,10 @@ type DataSource[T any] struct {
 }
 
 type RowModifier[T any] struct {
-	HXGet   func(row int, d T) string
-	OnClick func(row int, d T) string
+	Title    func(row int, d T) string
+	HXGet    func(row int, d T) string
+	OnClick  func(row int, d T) string
+	OnDelete func(row int, d T) string
 }
 
 func (ds *DataSource[T]) GetColumnCount() int {
