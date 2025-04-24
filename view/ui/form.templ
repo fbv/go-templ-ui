@@ -21,13 +21,19 @@ templ GridForm(p *FormProps) {
 	</form>s
 }
 
+templ ColSpan(size int) {
+	<div class={ fmt.Sprintf("sm:col-span-%d", size) }>
+		{ children... }
+	</div>
+}
+
 templ FormHeader(title string, description string) {
 	if (len(description) > 0) {
-    	<h2 class="text-base font-semibold text-slate-900">{ title }</h2>
+		<h2 class="text-base font-semibold text-slate-900">{ title }</h2>
 		<p class="mt-1 text-sm leading-6 text-slate-600 mb-5">{ description }</p>
 	} else {
-    	<h2 class="text-base font-semibold text-slate-900 mb-5">{ title }</h2>
-    }
+		<h2 class="text-base font-semibold text-slate-900 mb-5">{ title }</h2>
+	}
 }
 
 templ Hidden(name string, value string) {
@@ -64,21 +70,17 @@ templ Input(p *InputProps) {
 	}
 }
 
-templ InputText(size int, label string, name string, value string) {
-	<div class={ fmt.Sprintf("sm:col-span-%d", size) }>
-		<label for={ name } class="block text-sm font-medium leading-6 text-slate-900">{ label }</label>
-		<div class="mt-2">
-			<input type="text" value={ value } name={ name } id={ name } class="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
-		</div>
+templ InputText(label string, name string, value string) {
+	<label for={ name } class="block text-sm font-medium leading-6 text-slate-900">{ label }</label>
+	<div class="mt-2">
+		<input type="text" value={ value } name={ name } id={ name } class="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
 	</div>
 }
 
-templ Checkbox(size int, label string, name string, value bool) {
-	<div class={ fmt.Sprintf("sm:col-span-%d", size) }>
-		<div class="sm:mt-9 h-6 items-center">
-			<input checked?={ value } id={ name } name={ name } type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"/>
-			<label for={ name } class="text-sm font-medium text-gray-900 ml-1">{ label }</label>
-		</div>
+templ Checkbox(label string, name string, value bool) {
+	<div class="sm:mt-9 h-6 items-center">
+		<input checked?={ value } id={ name } name={ name } type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"/>
+		<label for={ name } class="text-sm font-medium text-gray-900 ml-1">{ label }</label>
 	</div>
 }
 
@@ -87,16 +89,25 @@ type SelectItem struct {
 	Value string
 }
 
-templ Select(size int, label string, name string, items []SelectItem, selectedValue string) {
-	<div class={ fmt.Sprintf("sm:col-span-%d", size) }>
-		<label for={ name } class="block text-sm font-medium leading-6 text-slate-900">{ label }</label>
-		<div class="mt-2">
-			<select id={ name } name={ name } class="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-				for _, item := range items {
-					<option value={ item.Value } selected?={ item.Value == selectedValue }>{ item.Name }</option>
-				}
-			</select>
-		</div>
+type SelectProps struct {
+	Label         string
+	Name          string
+	Placeholder   string
+	Items         []SelectItem
+	SelectedValue string
+}
+
+templ Select(p *SelectProps) {
+	<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
+	<div class="mt-2">
+		<select id={ p.Name } name={ p.Name } class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+			if len(p.Placeholder) > 0 {
+				<option hidden selected?={ len(p.SelectedValue) == 0 }>{ p.Placeholder }</option>
+			}
+			for _, item := range p.Items {
+				<option value={ item.Value } selected?={ item.Value == p.SelectedValue }>{ item.Name }</option>
+			}
+		</select>
 	</div>
 }
 
