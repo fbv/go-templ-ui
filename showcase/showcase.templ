@@ -4,6 +4,7 @@ import (
 	"github.com/fbv/go-templ-ui/view"
 	"github.com/fbv/go-templ-ui/view/icon"
 	"github.com/fbv/go-templ-ui/view/ui"
+	"github.com/fbv/go-templ-ui/view/layout"
 )
 
 templ Sidebar() {
@@ -31,13 +32,13 @@ templ Sidebar() {
 }
 
 templ Showcase() {
-	@Page("Showcase") {
+	@layout.Page(&layout.PageProps{Title: "Showcase"}) {
 		<div class="flex flex-row">
 			@Sidebar()
 			<div class="flex-1 w-auto h-screen p-4">
 
 				@ui.H2("Forms")
-				@forms()
+				//@forms()
 
 				@ui.H2("Progress")
 
@@ -98,32 +99,32 @@ templ Showcase() {
 					}
 				</div>
 				@ui.H2("Timeline")
-				@ui.LinearTimeline(ui.TimelineProps{
-					Items: []ui.TimeLineItem{
-						{Value: "Android 5.0 Lollipop", Date: "2011"},
-						{Value: "iPhone", Date: "2015"},
-						// Add more items as needed
-					},
-				})
-				@ui.VerticalTimeline(ui.TimelineProps{
-					Items: []ui.TimeLineItem{
-						{Value: "Apple Watch", Date: "2015"},
-						{Value: "Apple TV", Date: "2007"},
-						// Add more items as needed
-					},
-				})
-				@ui.DotTimeline(ui.TimelineProps{
-					Items: []ui.TimeLineItem{
-						{Value: "Apple Watch", Date: "2015"},
-						{Value: "Apple TV", Date: "2007"},
-						// Add more items as needed
-					},
-				})
-				<h1>Cards</h1>
-				@ui.Card2(ui.CardProps{
-					Title:   "Test",
-					Content: "Nullam a euismod massa, non cursus odio. Fusce augue ex, finibus nec tempor nec, lacinia in mauris. Cras id interdum diam.",
-				})
+				// @ui.LinearTimeline(ui.TimelineProps{
+				// 	Items: []ui.TimeLineItem{
+				// 		{Value: "Android 5.0 Lollipop", Date: "2011"},
+				// 		{Value: "iPhone", Date: "2015"},
+				// 		// Add more items as needed
+				// 	},
+				// })
+				// @ui.VerticalTimeline(ui.TimelineProps{
+				// 	Items: []ui.TimeLineItem{
+				// 		{Value: "Apple Watch", Date: "2015"},
+				// 		{Value: "Apple TV", Date: "2007"},
+				// 		// Add more items as needed
+				// 	},
+				// })
+				// @ui.DotTimeline(ui.TimelineProps{
+				// 	Items: []ui.TimeLineItem{
+				// 		{Value: "Apple Watch", Date: "2015"},
+				// 		{Value: "Apple TV", Date: "2007"},
+				// 		// Add more items as needed
+				// 	},
+				// })
+				// <h1>Cards</h1>
+				// @ui.Card2(ui.CardProps{
+				// 	Title:   "Test",
+				// 	Content: "Nullam a euismod massa, non cursus odio. Fusce augue ex, finibus nec tempor nec, lacinia in mauris. Cras id interdum diam.",
+				// })
 				@headers()
 				@buttons()
 				@tables()
@@ -145,7 +146,7 @@ templ headers() {
 
 templ buttons() {
 	@ui.H2("Buttons")
-	@ui.Button("#", "Do Action!")
+	//@ui.Button("#", "Do Action!")
 	<div class="m-4">
 		@ui.Link("#", "Go To Mars")
 	</div>

@@ -32,7 +32,7 @@ func (s *Server) Run() error {
 		Browse: true,
 	}))
 	r.Get("/", view.StaticPage(showcase.Showcase()))
-	r.Get("/alert", view.StaticPage(showcase.AlertPage()))
-	r.Get("/breadcrumb", view.StaticPage(showcase.BreadcrumbsPage()))
+	//r.Get("/alert", view.StaticPage(showcase.AlertPage()))
+	//r.Get("/breadcrumb", view.StaticPage(showcase.BreadcrumbsPage()))
 	return s.fiber.Listen(":8080")
 }
