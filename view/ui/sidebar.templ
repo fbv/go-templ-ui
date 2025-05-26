@@ -3,6 +3,7 @@ package ui
 type SidebarItem struct {
 	Name      string
 	Icon      string
+	IconRaw   string // SVG icon raw tag
 	URL       string
 	Active    bool
 	Modifiers []templ.Component
@@ -17,7 +18,7 @@ templ Sidebar(items ...*SidebarItem) {
 						if item.Active {
 							<a href={ templ.URL(item.URL) } class="relative flex flex-row items-center h-11 focus:outline-none bg-slate-100 text-gray-800 p-2 rounded-md">
 								<span class="inline-flex justify-center items-center ml-2">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={ item.Icon }></path></svg>
+									@SidebarItemIcon(item)
 								</span>
 								<span class="ml-2 text-sm tracking-wide truncate">{ item.Name }</span>
 								if len(item.Modifiers) >0 {
@@ -27,7 +28,7 @@ templ Sidebar(items ...*SidebarItem) {
 						} else {
 							<a href={ templ.URL(item.URL) } class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-slate-50 text-gray-800 p-2 rounded-md">
 								<span class="inline-flex justify-center items-center ml-2">
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={ item.Icon }></path></svg>
+									@SidebarItemIcon(item)
 								</span>
 								<span class="ml-2 text-sm tracking-wide truncate">{ item.Name }</span>
 								if len(item.Modifiers) >0 {
@@ -40,6 +41,16 @@ templ Sidebar(items ...*SidebarItem) {
 			</ul>
 		</div>
 	</div>
+}
+
+templ SidebarItemIcon(item *SidebarItem) {
+	if item.Icon != "" {
+		<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={ item.Icon }></path>
+		</svg>
+	} else if item.IconRaw != "" {
+		@templ.Raw(item.IconRaw)
+	}
 }
 
 templ SidebarNew() {
