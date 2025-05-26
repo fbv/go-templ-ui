@@ -91,7 +91,7 @@ func DynamicTable(data TableDataSource) templ.Component {
 		}
 		for row := 0; row < data.GetRowCount(); row++ {
 			meta := data.GetRowMeta(row)
-			templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, assignLocation(meta.HRef))
+			templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, AssignLocation(meta.HRef))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -123,7 +123,7 @@ func DynamicTable(data TableDataSource) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var5 templ.ComponentScript = assignLocation(meta.HRef)
+				var templ_7745c5c3_Var5 templ.ComponentScript = AssignLocation(meta.HRef)
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5.Call)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err

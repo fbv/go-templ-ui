@@ -35,7 +35,7 @@ templ DynamicTable(data TableDataSource) {
 						hx-get={ meta.HXGet }
 					}
 					if meta.HRef != "" {
-						onclick={ assignLocation(meta.HRef) }
+						onclick={ AssignLocation(meta.HRef) }
 					}
 				>
 					for col := 0; col < data.GetColumnCount(); col++ {

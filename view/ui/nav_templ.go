@@ -7,13 +7,13 @@ package ui
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func assignLocation(url string) templ.ComponentScript {
+func AssignLocation(url string) templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_assignLocation_18fe`,
-		Function: `function __templ_assignLocation_18fe(url){window.location.assign(url)
+		Name: `__templ_AssignLocation_18fe`,
+		Function: `function __templ_AssignLocation_18fe(url){window.location.assign(url)
 }`,
-		Call:       templ.SafeScript(`__templ_assignLocation_18fe`, url),
-		CallInline: templ.SafeScriptInline(`__templ_assignLocation_18fe`, url),
+		Call:       templ.SafeScript(`__templ_AssignLocation_18fe`, url),
+		CallInline: templ.SafeScriptInline(`__templ_AssignLocation_18fe`, url),
 	}
 }
 

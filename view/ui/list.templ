@@ -36,13 +36,13 @@ templ SimpleListItem(p *ListItemProps) {
 		<span
 			class="cursor-pointer hover:text-blue-700 dark:hover:text-white"
 			if p.URL != "" {
-				onclick={ assignLocation(p.URL) }
+				onclick={ AssignLocation(p.URL) }
 			}
 		>{ p.Label }</span>
 		if p.OnDelete != "" {
 			<button
 				class="absolute top-0 right-0 px-2 py-1 text-gray-600 hover:text-red-500"
-				onclick={ assignLocation(p.OnDelete) }
+				onclick={ AssignLocation(p.OnDelete) }
 			>
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
