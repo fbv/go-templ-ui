@@ -1,0 +1,47 @@
+package ui
+
+templ CollapsibleStyle() {
+	<style>
+.collapsible {
+  cursor: pointer;
+}
+
+.collapsible-active::before {
+    content: "▾ ";
+}
+
+.collapsible-notactive::before {
+    content: "▸ ";
+}
+
+.collapsible-content {
+  display: none;
+  overflow: hidden;
+}
+</style>
+}
+
+templ Collapsible(label string) {
+	<button type="button" class="collapsible collapsible-notactive">{ label }</button>
+	<div class="collapsible-content">{ children... }</div>
+}
+
+templ CollapsibleScript() {
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("collapsible-active");
+    this.classList.toggle("collapsible-notactive");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+</script>
+}
