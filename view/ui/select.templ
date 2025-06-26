@@ -30,7 +30,7 @@ func (p ListItemProvider[T]) GetItemsCount() int {
 	return len(p)
 }
 
-func (p ListItemProvider[T]) GetItem(i int) T {
+func (p ListItemProvider[T]) GetItem(i int) HasNameAndValue {
 	return p[i]
 }
 
