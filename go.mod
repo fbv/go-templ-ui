@@ -1,9 +1,9 @@
 module github.com/fbv/go-templ-ui
 
-go 1.23.1
+go 1.24
 
 require (
-	github.com/a-h/templ v0.3.865
+	github.com/a-h/templ v0.3.906
 	github.com/gofiber/fiber/v2 v2.52.8
 	github.com/stretchr/testify v1.10.0
 )
