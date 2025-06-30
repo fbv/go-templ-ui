@@ -13,6 +13,12 @@ templ Form(p *FormProps) {
 	</form>
 }
 
+templ FormActions() {
+	<div>
+		{ children... }
+	</div>
+}
+
 templ GridForm(p *FormProps) {
 	<form action={ templ.URL(p.Action) } method={ p.Method }>
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
@@ -21,8 +27,8 @@ templ GridForm(p *FormProps) {
 	</form>
 }
 
-templ FormActions() {
-	<div class="sm:col-span-6 border-t">
+templ GridFormActions() {
+	<div class="sm:col-span-6">
 		{ children... }
 	</div>
 }
