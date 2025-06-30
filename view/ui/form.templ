@@ -21,6 +21,12 @@ templ GridForm(p *FormProps) {
 	</form>
 }
 
+templ FormActions() {
+	<div class="sm:col-span-6 border-t">
+		{ children... }
+	</div>
+}
+
 templ ColSpan(size int) {
 	<div class={ fmt.Sprintf("sm:col-span-%d", size) }>
 		{ children... }
