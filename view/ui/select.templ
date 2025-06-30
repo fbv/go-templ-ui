@@ -33,7 +33,7 @@ func (p ListItemProvider[T]) GetItemsCount() int {
 func (p ListItemProvider[T]) GetItem(i int) HasNameAndValue {
 	return p[i]
 }
-
+									
 templ Select(p *SelectProps) {
 	<div class="mb-5">
 		if len(p.Label) > 0 {
