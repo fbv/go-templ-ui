@@ -15,7 +15,7 @@ templ Form(p *FormProps) {
 
 templ GridForm(p *FormProps) {
 	<form action={ templ.URL(p.Action) } method={ p.Method }>
-		<div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+		<div class="grid grid-cols-1 gap-4 sm:grid-cols-6">
 			{ children... }
 		</div>
 	</form>
@@ -51,29 +51,30 @@ type InputProps struct {
 }
 
 templ Input(p *InputProps) {
-	if p.Type == "checkbox" {
-		<div class="flex items-start mb-5">
-			<div class="flex items-center h-5">
-				<input id={ p.Name } type="checkbox" name={ p.Name } checked?={ p.Checked } required?={ p.Required } class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"/>
+	switch p.Type{
+		case "checkbox":
+			<div class="flex items-start">
+				<div class="flex items-center h-5">
+					<input id={ p.Name } type="checkbox" name={ p.Name } checked?={ p.Checked } required?={ p.Required } class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"/>
+				</div>
+				if len(p.Label) > 0 {
+					<label for={ p.Name } class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{ p.Label }</label>
+				}
 			</div>
-			if len(p.Label) > 0 {
-				<label for={ p.Name } class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{ p.Label }</label>
-			}
-		</div>
-	} else if p.Type == "textarea" {
-		<div class="mb-5">
-			if len(p.Label) > 0 {
-				<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
-			}
-			<textarea id={ p.Name } name={ p.Name } placeholder={ p.Placeholder } required?={ p.Required } rows="5" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">{ p.Value }</textarea>
-		</div>
-	} else {
-		<div class="mb-5">
-			if len(p.Label) > 0 {
-				<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
-			}
-			<input type={ p.Type } id={ p.Name } name={ p.Name } value={ p.Value } placeholder={ p.Placeholder } required?={ p.Required } class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
-		</div>
+		case "textarea":
+			<div>
+				if len(p.Label) > 0 {
+					<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
+				}
+				<textarea id={ p.Name } name={ p.Name } placeholder={ p.Placeholder } required?={ p.Required } rows="5" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">{ p.Value }</textarea>
+			</div>
+		default:
+			<div>
+				if len(p.Label) > 0 {
+					<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
+				}
+				<input type={ p.Type } id={ p.Name } name={ p.Name } value={ p.Value } placeholder={ p.Placeholder } required?={ p.Required } class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+			</div>
 	}
 }
 
