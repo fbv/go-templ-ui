@@ -39,23 +39,21 @@ templ Select(p *SelectProps) {
 		if len(p.Label) > 0 {
 			<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
 		}
-		<div class="mt-2">
-			<select id={ p.Name } name={ p.Name } class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-				if len(p.Placeholder) > 0 {
-					<option hidden selected?={ len(p.SelectedValue) == 0 }>{ p.Placeholder }</option>
+		<select id={ p.Name } name={ p.Name } class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+			if len(p.Placeholder) > 0 {
+				<option hidden selected?={ len(p.SelectedValue) == 0 }>{ p.Placeholder }</option>
+			}
+			if p.ItemsProvider != nil {
+				{{ var count = p.ItemsProvider.GetItemsCount() }}
+				for i := 0; i < count; i++ {
+					{{var item = p.ItemsProvider.GetItem(i) }}
+					{{var value = item.GetValue() }}
+					<option value={ value } selected?={ value == p.SelectedValue }>{ item.GetName() }</option>
 				}
-				if p.ItemsProvider != nil {
-					{{ var count = p.ItemsProvider.GetItemsCount() }}
-					for i := 0; i < count; i++ {
-						{{var item = p.ItemsProvider.GetItem(i) }}
-						{{var value = item.GetValue() }}
-						<option value={ value } selected?={ value == p.SelectedValue }>{ item.GetName() }</option>
-					}
-				}
-				for _, item := range p.Items {
-					<option value={ item.Value } selected?={ item.Value == p.SelectedValue }>{ item.Name }</option>
-				}
-			</select>
-		</div>
+			}
+			for _, item := range p.Items {
+				<option value={ item.Value } selected?={ item.Value == p.SelectedValue }>{ item.Name }</option>
+			}
+		</select>
 	</div>
 }
