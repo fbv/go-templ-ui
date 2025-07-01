@@ -35,7 +35,7 @@ func (p ListItemProvider[T]) GetItem(i int) HasNameAndValue {
 }
 									
 templ Select(p *SelectProps) {
-	<div class="mb-5">
+	<div>
 		if len(p.Label) > 0 {
 			<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
 		}
