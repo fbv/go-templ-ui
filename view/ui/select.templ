@@ -41,7 +41,7 @@ templ Select(p *SelectProps) {
 		}
 		<select id={ p.Name } name={ p.Name } class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 			if len(p.Placeholder) > 0 {
-				<option hidden selected?={ len(p.SelectedValue) == 0 }>{ p.Placeholder }</option>
+				<option hidden selected?={ len(p.SelectedValue) == 0 } value="">{ p.Placeholder }</option>
 			}
 			if p.ItemsProvider != nil {
 				{{ var count = p.ItemsProvider.GetItemsCount() }}
