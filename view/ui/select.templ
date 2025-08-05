@@ -1,48 +1,70 @@
 package ui
 
+// SelectItem represents a single option in a select dropdown
+// with a display name and corresponding value
 type SelectItem struct {
-	Name  string
-	Value string
+	Name  string // Display text shown to the user
+	Value string // Value that gets submitted when the form is sent
 }
 
+// SelectProps contains all the configuration options for rendering a select dropdown
 type SelectProps struct {
-	Label         string
-	Name          string
-	Placeholder   string
-	Items         []SelectItem
-	ItemsProvider ItemsProvider
-	SelectedValue string
+	Label         string        // Optional label text displayed above the select
+	Name          string        // HTML name attribute for form submission
+	Placeholder   string        // Optional placeholder text shown when no option is selected
+	Items         []SelectItem  // Static list of options (alternative to ItemsProvider)
+	ItemsProvider ItemsProvider // Dynamic provider for options (alternative to Items)
+	SelectedValue string        // Currently selected value to pre-select an option
+	Style         string        // Optional element style
 }
 
+// ItemsProvider interface allows for dynamic generation of select options
+// This is useful when options need to be loaded from a database or computed
 type ItemsProvider interface {
-	GetItemsCount() int
-	GetItem(i int) HasNameAndValue
+	GetItemsCount() int           // Returns the total number of available options
+	GetItem(i int) HasNameAndValue // Returns the item at the specified index
 }
 
+// HasNameAndValue interface defines the contract for items that can be used in select dropdowns
+// Any type implementing this interface can be used as a select option
 type HasNameAndValue interface {
-	GetName() string
-	GetValue() string
+	GetName() string  // Returns the display name for the option
+	GetValue() string // Returns the value for the option
 }
 
+// ListItemProvider is a generic wrapper that converts any slice of items
+// implementing HasNameAndValue into an ItemsProvider
 type ListItemProvider[T HasNameAndValue] []T
 
+// GetItemsCount returns the length of the underlying slice
 func (p ListItemProvider[T]) GetItemsCount() int {
 	return len(p)
 }
 
+// GetItem returns the item at the specified index from the underlying slice
 func (p ListItemProvider[T]) GetItem(i int) HasNameAndValue {
 	return p[i]
 }
-									
+
+// Select renders a styled HTML select dropdown with optional label and placeholder
+// The component supports both static items (via Items) and dynamic items (via ItemsProvider)
+// It automatically handles the selected state based on SelectedValue
 templ Select(p *SelectProps) {
-	<div>
+	<div 
+		if p.Style != ""{
+			style={p.Style}
+		}
+	>
+		// Render optional label if provided
 		if len(p.Label) > 0 {
 			<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
 		}
 		<select id={ p.Name } name={ p.Name } class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+			// Render placeholder option if provided (hidden when a value is selected)
 			if len(p.Placeholder) > 0 {
 				<option hidden selected?={ len(p.SelectedValue) == 0 } value="">{ p.Placeholder }</option>
 			}
+			// Render dynamic options from ItemsProvider if available
 			if p.ItemsProvider != nil {
 				{{ var count = p.ItemsProvider.GetItemsCount() }}
 				for i := 0; i < count; i++ {
@@ -51,6 +73,7 @@ templ Select(p *SelectProps) {
 					<option value={ value } selected?={ value == p.SelectedValue }>{ item.GetName() }</option>
 				}
 			}
+			// Render static options from Items slice
 			for _, item := range p.Items {
 				<option value={ item.Value } selected?={ item.Value == p.SelectedValue }>{ item.Name }</option>
 			}
