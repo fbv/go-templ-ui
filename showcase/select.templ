@@ -1,0 +1,75 @@
+package showcase
+
+import (
+	"github.com/fbv/go-templ-ui/view/ui"
+)
+
+templ selects() {
+
+	@ui.H2("Select Components")
+	
+	<div class="space-y-6">
+		<div>
+			@ui.H3("Basic Select")
+			@ui.Select(&ui.SelectProps{
+				Name:        "basic-select",
+				Label:       "Choose a country",
+				Placeholder: "Select a country...",
+				Items: []ui.SelectItem{
+					{Name: "United States", Value: "us"},
+					{Name: "Canada", Value: "ca"},
+					{Name: "United Kingdom", Value: "uk"},
+					{Name: "Germany", Value: "de"},
+					{Name: "France", Value: "fr"},
+				},
+			})
+		</div>
+
+		<div>
+			@ui.H3("Select with Pre-selected Value")
+			@ui.Select(&ui.SelectProps{
+				Name:          "preselected-select",
+				Label:         "Choose a language",
+				Placeholder:   "Select a language...",
+				SelectedValue: "en",
+				Items: []ui.SelectItem{
+					{Name: "English", Value: "en"},
+					{Name: "Spanish", Value: "es"},
+					{Name: "French", Value: "fr"},
+					{Name: "German", Value: "de"},
+					{Name: "Italian", Value: "it"},
+				},
+			})
+		</div>
+
+		<div>
+			@ui.H3("Select without Label")
+			@ui.Select(&ui.SelectProps{
+				Name:        "no-label-select",
+				Placeholder: "Choose an option...",
+				Items: []ui.SelectItem{
+					{Name: "Option 1", Value: "1"},
+					{Name: "Option 2", Value: "2"},
+					{Name: "Option 3", Value: "3"},
+				},
+			})
+		</div>
+
+		<div>
+			@ui.H3("Select with Custom Style")
+			@ui.Select(&ui.SelectProps{
+				Name:        "styled-select",
+				Label:       "Styled Select",
+				Placeholder: "Choose...",
+				Style:       "max-width: 300px;",
+				Items: []ui.SelectItem{
+					{Name: "Red", Value: "red"},
+					{Name: "Green", Value: "green"},
+					{Name: "Blue", Value: "blue"},
+					{Name: "Yellow", Value: "yellow"},
+				},
+			})
+		</div>
+	</div>
+}
+
