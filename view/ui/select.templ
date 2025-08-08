@@ -52,8 +52,8 @@ func (p ListItemProvider[T]) GetItem(i int) HasNameAndValue {
 // It automatically handles the selected state based on SelectedValue
 templ Select(p *SelectProps) {
 	<div 
-		if p.Style != ""{
-			style={p.Style}
+		if p.Style != "" {
+			class={p.Style}
 		}
 	>
 		// Render optional label if provided
