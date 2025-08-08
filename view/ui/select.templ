@@ -16,6 +16,7 @@ type SelectProps struct {
 	ItemsProvider ItemsProvider // Dynamic provider for options (alternative to Items)
 	SelectedValue string        // Currently selected value to pre-select an option
 	Style         string        // Optional element style
+	SubmitOnSelect bool         // Auto submit form on selection
 }
 
 // ItemsProvider interface allows for dynamic generation of select options
@@ -59,7 +60,11 @@ templ Select(p *SelectProps) {
 		if len(p.Label) > 0 {
 			<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
 		}
-		<select id={ p.Name } name={ p.Name } class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+		<select id={ p.Name } name={ p.Name } class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+			if p.SubmitOnSelect {
+				onchange="this.form.submit()"
+			}
+		>
 			// Render placeholder option if provided (hidden when a value is selected)
 			if len(p.Placeholder) > 0 {
 				<option hidden selected?={ len(p.SelectedValue) == 0 } value="">{ p.Placeholder }</option>
