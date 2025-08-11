@@ -7,6 +7,12 @@ type SelectItem struct {
 	Value string // Value that gets submitted when the form is sent
 }
 
+// SelectItemByName sort contract
+type SelectItemByName []SelectItem
+func (a SelectItemByName) Len() int           { return len(a) }
+func (a SelectItemByName) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a SelectItemByName) Less(i, j int) bool { return a[i].Name < a[j].Name }
+
 // SelectProps contains all the configuration options for rendering a select dropdown
 type SelectProps struct {
 	Label         string        // Optional label text displayed above the select
