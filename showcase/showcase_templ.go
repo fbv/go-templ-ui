@@ -35,26 +35,35 @@ func Sidebar() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = ui.Sidebar(&ui.SidebarItem{
-			Name:   "Applications",
-			Icon:   icon.Dashboard,
-			URL:    "/admin/app",
-			Active: view.PathPrefixIs(ctx, "/showcase"),
-		}, &ui.SidebarItem{
-			Name:   "Payments",
-			Icon:   icon.Tasks,
-			URL:    "/admin/payments/status",
-			Active: view.PathPrefixIs(ctx, "/admin/payments"),
-		}, &ui.SidebarItem{
-			Name:   "Synchronization",
-			Icon:   icon.Profile,
-			URL:    "/admin/sync/data",
-			Active: view.PathPrefixIs(ctx, "/admin/sync"),
-		}, &ui.SidebarItem{
-			Name:   "Settings",
-			Icon:   icon.Settings,
-			URL:    "/admin/settings",
-			Active: view.PathPrefixIs(ctx, "/admin/settings"),
+		templ_7745c5c3_Err = ui.Sidebar(&ui.SidebarProps{
+			Items: []*ui.SidebarItem{
+				&ui.SidebarItem{
+					Name:   "Applications",
+					Icon:   icon.Dashboard,
+					URL:    "/admin/app",
+					Active: view.PathPrefixIs(ctx, "/showcase"),
+				}, &ui.SidebarItem{
+					Name:   "Payments",
+					Icon:   icon.Tasks,
+					URL:    "/admin/payments/status",
+					Active: view.PathPrefixIs(ctx, "/admin/payments"),
+				}, &ui.SidebarItem{
+					Name:   "Synchronization",
+					Icon:   icon.Profile,
+					URL:    "/admin/sync/data",
+					Active: view.PathPrefixIs(ctx, "/admin/sync"),
+				}, &ui.SidebarItem{
+					Name:   "Settings",
+					Icon:   icon.Settings,
+					URL:    "/admin/settings",
+					Active: view.PathPrefixIs(ctx, "/admin/settings"),
+				},
+			},
+			User: &ui.UserInfo{
+				Name:  "Boris Fedorov",
+				Email: "boris.fedorov.ru@gmail.com",
+			},
+			LogoutURL: "#",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

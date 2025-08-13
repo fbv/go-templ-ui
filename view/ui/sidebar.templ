@@ -9,11 +9,23 @@ type SidebarItem struct {
 	Modifiers []templ.Component
 }
 
-templ Sidebar(items ...*SidebarItem) {
+type UserInfo struct {
+	Name  string
+	Email string
+	Avatar string
+}
+
+type SidebarProps struct {
+	Items []*SidebarItem
+	User *UserInfo
+	LogoutURL string 
+}
+
+templ Sidebar(p *SidebarProps) {
 	<div class="flex flex-col w-60 bg-white h-screen border-r">
 		<div class="overflow-y-auto overflow-x-hidden flex-grow">
 			<ul class="flex flex-col p-2 space-y-1">
-				for _, item := range items {
+				for _, item := range p.Items {
 					<li>
 						if item.Active {
 							<a href={ templ.URL(item.URL) } class="relative flex flex-row items-center h-11 focus:outline-none bg-slate-100 text-gray-800 p-2 rounded-md">
@@ -40,6 +52,38 @@ templ Sidebar(items ...*SidebarItem) {
 				}
 			</ul>
 		</div>
+		
+		<!-- Footer with user info and logout -->
+		if p.User != nil {
+			<div class="border-t border-gray-200 p-4">
+				<div class="flex items-center space-x-3 mb-3">
+					<div class="flex-shrink-0">
+						if p.User.Avatar != "" {
+							<img class="h-8 w-8 rounded-full" src={ p.User.Avatar } alt="User avatar" />
+						} else {
+							<div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
+								<svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+								</svg>
+							</div>
+						}
+					</div>
+					<div class="flex-1 min-w-0">
+						<p class="text-sm font-medium text-gray-900 truncate">{ p.User.Name }</p>
+						<p class="text-xs text-gray-500 truncate">{ p.User.Email }</p>
+					</div>
+				</div>
+				if p.LogoutURL != ""{
+				<a class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+					href={ templ.URL(p.LogoutURL) }>
+					<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+					</svg>
+					Logout
+				</a>
+				}
+			</div>
+		}
 	</div>
 }
 
