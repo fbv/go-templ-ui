@@ -233,7 +233,7 @@ func Sidebar(p *SidebarProps) templ.Component {
 				var templ_7745c5c3_Var9 templ.SafeURL
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(p.LogoutURL))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/sidebar.templ`, Line: 78, Col: 34}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/sidebar.templ`, Line: 78, Col: 35}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {

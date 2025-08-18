@@ -1,0 +1,393 @@
+package showcase
+
+import (
+	"github.com/fbv/go-templ-ui/view/ui"
+)
+
+templ forms() {
+	@ui.H2("Form Components")
+	
+	<div class="space-y-8">
+		<!-- Basic Form -->
+		<div>
+			@ui.H3("Basic Form")
+			@ui.Form(&ui.FormProps{
+				Action: "/submit",
+				Method: "POST",
+			}) {
+				@ui.Input(&ui.InputProps{
+					Label:       "Full Name",
+					Name:        "fullname",
+					Type:        "text",
+					Placeholder: "Enter your full name",
+					Required:    true,
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Email Address",
+					Name:        "email",
+					Type:        "email",
+					Placeholder: "Enter your email",
+					Required:    true,
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Phone Number",
+					Name:        "phone",
+					Type:        "tel",
+					Placeholder: "Enter your phone number",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Password",
+					Name:        "password",
+					Type:        "password",
+					Placeholder: "Enter your password",
+					Required:    true,
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Date of Birth",
+					Name:        "birthdate",
+					Type:        "date",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Profile Picture",
+					Name:        "avatar",
+					Type:        "file",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "I agree to the terms and conditions",
+					Name:        "terms",
+					Type:        "checkbox",
+					Required:    true,
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Subscribe to newsletter",
+					Name:        "newsletter",
+					Type:        "checkbox",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Bio",
+					Name:        "bio",
+					Type:        "textarea",
+					Placeholder: "Tell us about yourself...",
+					Value:       "",
+				})
+				
+				@ui.FormActions() {
+					@ui.Submit("Submit Form")
+				}
+			}
+		</div>
+
+		<!-- Grid Form -->
+		<div>
+			@ui.H3("Grid Form Layout")
+			@ui.GridForm(&ui.FormProps{
+				Action: "/submit-grid",
+				Method: "POST",
+			}) {
+				@ui.ColSpan(3) {
+					@ui.Input(&ui.InputProps{
+						Label:       "First Name",
+						Name:        "firstname",
+						Type:        "text",
+						Placeholder: "First name",
+						Required:    true,
+					})
+				}
+				
+				@ui.ColSpan(3) {
+					@ui.Input(&ui.InputProps{
+						Label:       "Last Name",
+						Name:        "lastname",
+						Type:        "text",
+						Placeholder: "Last name",
+						Required:    true,
+					})
+				}
+				
+				@ui.ColSpan(6) {
+					@ui.Input(&ui.InputProps{
+						Label:       "Company",
+						Name:        "company",
+						Type:        "text",
+						Placeholder: "Company name",
+					})
+				}
+				
+				@ui.ColSpan(6) {
+					@ui.Input(&ui.InputProps{
+						Label:       "Email",
+						Name:        "email",
+						Type:        "email",
+						Placeholder: "Email address",
+						Required:    true,
+					})
+				}
+				
+				@ui.ColSpan(3) {
+					@ui.Input(&ui.InputProps{
+						Label:       "City",
+						Name:        "city",
+						Type:        "text",
+						Placeholder: "City",
+					})
+				}
+				
+				@ui.ColSpan(2) {
+					@ui.Input(&ui.InputProps{
+						Label:       "State",
+						Name:        "state",
+						Type:        "text",
+						Placeholder: "State",
+					})
+				}
+				
+				@ui.ColSpan(1) {
+					@ui.Input(&ui.InputProps{
+						Label:       "ZIP",
+						Name:        "zip",
+						Type:        "text",
+						Placeholder: "ZIP",
+					})
+				}
+				
+				@ui.GridFormActions() {
+					@ui.Submit("Save Changes")
+				}
+			}
+		</div>
+
+		<!-- Select Components -->
+		<div>
+			@ui.H3("Select Dropdowns")
+			@ui.Form(&ui.FormProps{
+				Action: "/submit-selects",
+				Method: "POST",
+			}) {
+				@ui.Select(&ui.SelectProps{
+					Name:        "country",
+					Label:       "Country",
+					Placeholder: "Select a country...",
+					Items: []ui.SelectItem{
+						{Name: "United States", Value: "us"},
+						{Name: "Canada", Value: "ca"},
+						{Name: "United Kingdom", Value: "uk"},
+						{Name: "Germany", Value: "de"},
+						{Name: "France", Value: "fr"},
+						{Name: "Japan", Value: "jp"},
+						{Name: "Australia", Value: "au"},
+					},
+				})
+				
+				@ui.Select(&ui.SelectProps{
+					Name:        "language",
+					Label:       "Preferred Language",
+					Placeholder: "Choose language...",
+					SelectedValue: "en",
+					Items: []ui.SelectItem{
+						{Name: "English", Value: "en"},
+						{Name: "Spanish", Value: "es"},
+						{Name: "French", Value: "fr"},
+						{Name: "German", Value: "de"},
+						{Name: "Chinese", Value: "zh"},
+					},
+				})
+				
+				@ui.Select(&ui.SelectProps{
+					Name:        "timezone",
+					Label:       "Timezone",
+					Placeholder: "Select timezone...",
+					Items: []ui.SelectItem{
+						{Name: "UTC-8 (Pacific Time)", Value: "UTC-8"},
+						{Name: "UTC-7 (Mountain Time)", Value: "UTC-7"},
+						{Name: "UTC-6 (Central Time)", Value: "UTC-6"},
+						{Name: "UTC-5 (Eastern Time)", Value: "UTC-5"},
+						{Name: "UTC+0 (GMT)", Value: "UTC+0"},
+						{Name: "UTC+1 (Central European)", Value: "UTC+1"},
+						{Name: "UTC+8 (China Standard)", Value: "UTC+8"},
+					},
+				})
+				
+				@ui.FormActions() {
+					@ui.Submit("Update Preferences")
+				}
+			}
+		</div>
+
+		<!-- Input Variations -->
+		<div>
+			@ui.H3("Input Type Variations")
+			@ui.Form(&ui.FormProps{
+				Action: "/submit-variations",
+				Method: "POST",
+			}) {
+				@ui.Input(&ui.InputProps{
+					Label:       "Search",
+					Name:        "search",
+					Type:        "search",
+					Placeholder: "Search for something...",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "URL",
+					Name:        "website",
+					Type:        "url",
+					Placeholder: "https://example.com",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Number",
+					Name:        "age",
+					Type:        "number",
+					Placeholder: "Enter your age",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Range",
+					Name:        "volume",
+					Type:        "range",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Color",
+					Name:        "favorite-color",
+					Type:        "color",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Time",
+					Name:        "meeting-time",
+					Type:        "time",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Month",
+					Name:        "start-month",
+					Type:        "month",
+				})
+				
+				@ui.Input(&ui.InputProps{
+					Label:       "Week",
+					Name:        "project-week",
+					Type:        "week",
+				})
+				
+				@ui.FormActions() {
+					@ui.Submit("Save Variations")
+				}
+			}
+		</div>
+
+		<!-- Form with Validation States -->
+		<div>
+			@ui.H3("Form with Validation States")
+			<div class="bg-gray-50 p-6 rounded-lg border">
+				<p class="text-sm text-gray-600 mb-4">This form demonstrates various input states and validation feedback.</p>
+				
+				@ui.Form(&ui.FormProps{
+					Action: "/submit-validation",
+					Method: "POST",
+				}) {
+					@ui.Input(&ui.InputProps{
+						Label:       "Username",
+						Name:        "username",
+						Type:        "text",
+						Placeholder: "Choose a username",
+						Required:    true,
+					})
+					
+					@ui.Input(&ui.InputProps{
+						Label:       "Email",
+						Name:        "email",
+						Type:        "email",
+						Placeholder: "your@email.com",
+						Required:    true,
+					})
+					
+					@ui.Input(&ui.InputProps{
+						Label:       "Password",
+						Name:        "password",
+						Type:        "password",
+						Placeholder: "Create a strong password",
+						Required:    true,
+					})
+					
+					@ui.Input(&ui.InputProps{
+						Label:       "Confirm Password",
+						Name:        "confirm_password",
+						Type:        "password",
+						Placeholder: "Confirm your password",
+						Required:    true,
+					})
+					
+					@ui.Input(&ui.InputProps{
+						Label:       "I accept the terms and conditions",
+						Name:        "accept_terms",
+						Type:        "checkbox",
+						Required:    true,
+					})
+					
+					@ui.FormActions() {
+						@ui.Submit("Create Account")
+					}
+				}
+			</div>
+		</div>
+
+		<!-- Horizontal Inline Form -->
+		<div>
+			@ui.H3("Horizontal Inline Form")
+			<div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+				<p class="text-sm text-blue-700 mb-4">This form demonstrates inline layout with text input, select, checkbox, and button on one horizontal line.</p>
+				
+				<form action="/submit-inline" method="POST" class="flex flex-wrap items-end gap-4">
+					<div class="flex-1 min-w-48">
+						@ui.Input(&ui.InputProps{
+							Label:       "Search Term",
+							Name:        "search-term",
+							Type:        "text",
+							Placeholder: "Enter search term...",
+						})
+					</div>
+					
+					<div class="flex-1 min-w-40">
+						@ui.Select(&ui.SelectProps{
+							Name:        "category",
+							Label:       "Category",
+							Placeholder: "All Categories",
+							Items: []ui.SelectItem{
+								{Name: "All Categories", Value: ""},
+								{Name: "Electronics", Value: "electronics"},
+								{Name: "Clothing", Value: "clothing"},
+								{Name: "Books", Value: "books"},
+								{Name: "Home & Garden", Value: "home"},
+								{Name: "Sports", Value: "sports"},
+							},
+						})
+					</div>
+					
+					<div class="flex items-center h-10">
+						@ui.Input(&ui.InputProps{
+							Label:   "Include Archived",
+							Name:    "include-archived",
+							Type:    "checkbox",
+						})
+					</div>
+					
+					<div class="flex-shrink-0">
+						@ui.Submit("Search")
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+}
+
+
