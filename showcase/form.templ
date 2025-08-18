@@ -288,9 +288,10 @@ templ forms() {
 		<!-- Form with Validation States -->
 		<div>
 			@ui.H3("Form with Validation States")
-			<div class="bg-gray-50 p-6 rounded-lg border">
-				<p class="text-sm text-gray-600 mb-4">This form demonstrates various input states and validation feedback.</p>
-				
+			@ui.Panel(&ui.PanelProps{
+				Header: "This form demonstrates various input states and validation feedback.",
+				Style: "gray",
+			}){				
 				@ui.Form(&ui.FormProps{
 					Action: "/submit-validation",
 					Method: "POST",
@@ -338,15 +339,16 @@ templ forms() {
 						@ui.Submit("Create Account")
 					}
 				}
-			</div>
+			}
 		</div>
 
 		<!-- Horizontal Inline Form -->
 		<div>
 			@ui.H3("Horizontal Inline Form")
-			<div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
-				<p class="text-sm text-blue-700 mb-4">This form demonstrates inline layout with text input, select, checkbox, and button on one horizontal line.</p>
-				
+			@ui.Panel(&ui.PanelProps{
+				Header: "This form demonstrates inline layout with text input, select, checkbox, and button on one horizontal line.",
+				Style: "blue",
+			}){
 				<form action="/submit-inline" method="POST" class="flex flex-wrap items-end gap-4">
 					<div class="flex-1 min-w-48">
 						@ui.Input(&ui.InputProps{
@@ -385,9 +387,7 @@ templ forms() {
 						@ui.Submit("Search")
 					</div>
 				</form>
-			</div>
+			}
 		</div>
 	</div>
 }
-
-
