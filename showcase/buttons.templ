@@ -1,0 +1,83 @@
+package showcase
+
+import (
+	"github.com/fbv/go-templ-ui/view/ui"
+)
+
+templ buttons() {
+	@ui.H2("Buttons")
+	
+	<div class="space-y-6">
+		<!-- Default Button Styles -->
+		<div>
+			@ui.H3("Default Button Styles")
+			<div class="flex flex-wrap gap-2">
+				@ui.Button(&ui.ButtonProps{Label: "Default", URL: "#"})
+				@ui.Button(&ui.ButtonProps{Label: "Light", URL: "#", Style: "light"})
+				@ui.Button(&ui.ButtonProps{Label: "Dark", URL: "#", Style: "dark"})
+				@ui.Button(&ui.ButtonProps{Label: "Alt", URL: "#", Style: "alt"})
+			</div>
+		</div>
+
+		<!-- Colored Button Styles -->
+		<div>
+			@ui.H3("Colored Button Styles")
+			<div class="flex flex-wrap gap-2">
+				@ui.Button(&ui.ButtonProps{Label: "Blue", URL: "#"})
+				@ui.Button(&ui.ButtonProps{Label: "Green", URL: "#", Style: "green"})
+				@ui.Button(&ui.ButtonProps{Label: "Red", URL: "#", Style: "red"})
+				@ui.Button(&ui.ButtonProps{Label: "Yellow", URL: "#", Style: "yellow"})
+				@ui.Button(&ui.ButtonProps{Label: "Purple", URL: "#", Style: "purple"})
+			</div>
+		</div>
+
+		<!-- Outline Button Styles -->
+		<div>
+			@ui.H3("Outline Button Styles")
+			<div class="flex flex-wrap gap-2">
+				@ui.Button(&ui.ButtonProps{Label: "Blue Outline", URL: "#", Outline: true})
+				@ui.Button(&ui.ButtonProps{Label: "Green Outline", URL: "#", Outline: true, Style: "green"})
+				@ui.Button(&ui.ButtonProps{Label: "Red Outline", URL: "#", Outline: true, Style: "red"})
+				@ui.Button(&ui.ButtonProps{Label: "Yellow Outline", URL: "#", Outline: true, Style: "yellow"})
+				@ui.Button(&ui.ButtonProps{Label: "Purple Outline", URL: "#", Outline: true, Style: "purple"})
+				@ui.Button(&ui.ButtonProps{Label: "Gray Outline", URL: "#", Outline: true, Style: "gray"})
+			</div>
+		</div>
+
+		<!-- Button Groups -->
+		<div>
+			@ui.H3("Button Groups")
+			<div class="space-x-4">
+				@ui.ButtonGroup([]ui.ButtonGroupItem{
+					{Name: "Left", URL: "#"},
+					{Name: "Middle", URL: "#", Active: true},
+					{Name: "Right", URL: "#"},
+				})
+				
+				@ui.ButtonGroup([]ui.ButtonGroupItem{
+					{Name: "Day", URL: "#"},
+					{Name: "Week", URL: "#"},
+					{Name: "Month", URL: "#"},
+					{Name: "Year", URL: "#"},
+				})
+			</div>
+		</div>
+
+		<!-- Links -->
+		<div>
+			@ui.H3("Link Components")
+			<div class="flex flex-wrap gap-4">
+				@ui.Link("#", "Simple Link")
+				@ui.Link("#", "Another Link")
+			</div>
+		</div>
+
+		<!-- Form Submit Button -->
+		<div>
+			@ui.H3("Form Submit Button")
+			<div class="flex flex-wrap gap-2">
+				@ui.Submit("Submit Form")
+			</div>
+		</div>
+	</div>
+}

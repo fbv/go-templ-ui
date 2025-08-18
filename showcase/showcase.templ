@@ -46,6 +46,9 @@ templ Showcase() {
 			@Sidebar()
 			<div class="flex-1 w-auto h-screen p-4">
 
+			
+			@ui.H1("UI Components showcase")
+
 			@ui.H2("Collapsible")
 			@ui.Collapsible("TEST") {
 				<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula leo vitae nisi porttitor, non sodales massa luctus. Phasellus tristique eget magna at rhoncus. In hac habitasse platea dictumst. Integer aliquet pulvinar purus nec condimentum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam odio ipsum, blandit non lacus consequat, rutrum imperdiet felis. Phasellus sapien urna, lacinia posuere accumsan quis, semper ac nisi. Donec ornare at ex ac dictum. Nulla facilisi.</div>
@@ -155,14 +158,6 @@ templ headers() {
 	@ui.H1("H1")
 	@ui.H2("H2")
 	@ui.H3("H3")
-}
-
-templ buttons() {
-	@ui.H2("Buttons")
-	//@ui.Button("#", "Do Action!")
-	<div class="m-4">
-		@ui.Link("#", "Go To Mars")
-	</div>
 }
 
 templ utils() {
