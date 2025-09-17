@@ -1,14 +1,21 @@
 package ui
 
-// templ Button(url, label string) {
-// 	<a href={ templ.URL(url) } class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{ label }</a>
-// }
+//	templ Button(url, label string) {
+//		<a href={ templ.URL(url) } class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{ label }</a>
+//	}
+
+type SVGIconProps struct {
+	SVG string
+}
 
 type ButtonProps struct {
 	Label   string
 	URL     string
 	Outline bool
 	Style   string
+	SVGIcon *SVGIconProps
+	Title   string
+	Attrs   map[string]string
 }
 
 func buttonStyle(p *ButtonProps) string {
@@ -52,6 +59,41 @@ func buttonStyle(p *ButtonProps) string {
 	return style
 }
 
+func renderAttributes(attrs map[string]string) templ.Attributes {
+	rs := templ.Attributes{}
+	for k, v := range attrs {
+		rs[k] = v
+	}
+	return rs
+}
+
+templ SVGIcon(p *SVGIconProps) {
+	<span class="[&>svg]:h-5 [&>svg]:w-5">
+		@templ.Raw(p.SVG)
+	</span>
+}
+
+templ SVGWrapper() {
+	<span class="[&>svg]:h-5 [&>svg]:w-5">
+		{ children... }
+	</span>
+}
+
 templ Button(p *ButtonProps) {
-	<a href={ templ.URL(p.URL) } type="button" class={ buttonStyle(p) }>{ p.Label }</a>
+	<a
+		if p.Title !="" {
+			title={ p.Title }
+		}
+		if p.URL !="" {
+			href={ templ.URL(p.URL) }
+		}
+		type="button"
+		class={ buttonStyle(p) }
+		{ renderAttributes(p.Attrs)... }
+	>
+		if p.SVGIcon != nil {
+			@SVGIcon(p.SVGIcon)
+		}
+		{ p.Label }
+	</a>
 }

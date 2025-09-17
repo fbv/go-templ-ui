@@ -1,9 +1,12 @@
 package ui
 
 type ButtonGroupItem struct {
-	URL    string
-	Name   string
-	Active bool
+	URL     string
+	Name    string
+	Active  bool
+	SVGIcon *SVGIconProps
+	Title   string
+	Attrs   map[string]string //Additional custom attributes (like TailWind special attributes and etc)
 }
 
 func buttonGroupItemStyle(i int, count int, active bool) string {
@@ -16,7 +19,11 @@ func buttonGroupItemStyle(i int, count int, active bool) string {
 	if i == 0 {
 		style = "border rounded-s-lg " + style
 	} else if i == count-1 {
-		style = "border rounded-e-lg " + style
+		if count > 2 {
+			style = "border rounded-e-lg " + style
+		} else {
+			style = "border-t border-b border-r rounded-e-lg " + style
+		}
 	} else {
 		style = "border-t border-b " + style
 	}
@@ -26,7 +33,19 @@ func buttonGroupItemStyle(i int, count int, active bool) string {
 templ ButtonGroup(items []ButtonGroupItem) {
 	<div class="inline-flex rounded-md shadow-xs">
 		for index, item := range items {
-			<a href={ templ.URL(item.URL) } class={ buttonGroupItemStyle(index, len(items), item.Active) }>
+			<a
+				{ renderAttributes(item.Attrs)... }
+				if item.Title !="" {
+					title={ item.Title }
+				}
+				if item.URL !="" {
+					href={ templ.URL(item.URL) }
+				}
+				class={ buttonGroupItemStyle(index, len(items), item.Active) }
+			>
+				if item.SVGIcon != nil {
+					@SVGIcon(item.SVGIcon)
+				}
 				{ item.Name }
 			</a>
 		}
