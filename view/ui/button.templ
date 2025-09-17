@@ -9,13 +9,13 @@ type SVGIconProps struct {
 }
 
 type ButtonProps struct {
-	Label      string
-	URL        string
-	Outline    bool
-	Style      string
-	SVGIcon    *SVGIconProps
-	Title      string
-	Attrs map[string]string
+	Label   string
+	URL     string
+	Outline bool
+	Style   string
+	SVGIcon *SVGIconProps
+	Title   string
+	Attrs   map[string]string
 }
 
 func buttonStyle(p *ButtonProps) string {
@@ -60,7 +60,7 @@ func buttonStyle(p *ButtonProps) string {
 }
 
 func renderAttributes(attrs map[string]string) templ.Attributes {
-	rs := templ.Attributes {}	
+	rs := templ.Attributes{}
 	for k, v := range attrs {
 		rs[k] = v
 	}
@@ -70,6 +70,12 @@ func renderAttributes(attrs map[string]string) templ.Attributes {
 templ SVGIcon(p *SVGIconProps) {
 	<span class="[&>svg]:h-5 [&>svg]:w-5">
 		@templ.Raw(p.SVG)
+	</span>
+}
+
+templ SVGWrapper() {
+	<span class="[&>svg]:h-5 [&>svg]:w-5">
+		{ children... }
 	</span>
 }
 
@@ -83,7 +89,6 @@ templ Button(p *ButtonProps) {
 		}
 		type="button"
 		class={ buttonStyle(p) }
-
 		{ renderAttributes(p.Attrs)... }
 	>
 		if p.SVGIcon != nil {
