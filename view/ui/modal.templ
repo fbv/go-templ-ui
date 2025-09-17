@@ -1,11 +1,15 @@
 package ui
 
+// ModalProps defines the minimal contract required to render a modal.
+// Implementations provide an element id and header/footer components.
 type ModalProps interface {
 	GetModalID() string
 	GetModalHeader() templ.Component
 	GetModalFooter() templ.Component
 }
 
+// ModalHeader renders the standard header section of a modal.
+// Pass children to supply the header content (e.g., title, close button).
 templ ModalHeader() {
 	<div
 		class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 
@@ -15,6 +19,8 @@ templ ModalHeader() {
 	</div>
 }
 
+// ModalFooter renders the standard footer section of a modal.
+// Pass children to supply actions (e.g., Cancel/Save buttons).
 templ ModalFooter() {
 	<div
 		class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 
@@ -24,6 +30,8 @@ templ ModalFooter() {
 	</div>
 }
 
+// Modal composes a dialog container with a header, body (children), and footer.
+// The element id comes from ModalProps and is used for toggling/targeting the modal.
 templ Modal(p ModalProps) {
 	<div
 		data-twe-modal-init
