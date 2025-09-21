@@ -1,19 +1,238 @@
-# Templ Components
+# Go Templ UI
 
-Used technologies:
+A comprehensive collection of reusable UI components built with [Templ](https://templ.guide/) and styled with [Tailwind CSS](https://tailwindcss.com/). This library provides a modern, accessible, and customizable component system for Go Web applications.
 
-- TEMPL (https://templ.guide/)
+## ✨ Features
 
-- Tailwind CSS (https://tailwindcss.com/)
+- 🎨 **Modern Design**: Clean, professional components styled with Tailwind CSS
+- ⚡ **High Performance**: Built with Templ for optimal server-side rendering
+- 🔧 **Highly Customizable**: Flexible props and styling options
+- 📱 **Responsive**: Mobile-first design approach
+- ♿ **Accessible**: Built with accessibility best practices
+- 🧪 **Well Tested**: Comprehensive test coverage
+- 📦 **Easy Integration**: Simple installation and usage
+
+## 🚀 Quick Start
 
 ### Installation
 
-```sh
+```bash
 go get github.com/fbv/go-templ-ui
 ```
 
-### List of components:
+### Basic Usage
 
-- List
-- Tabs
-- Sidebar
+```go
+package main
+
+import (
+    "github.com/fbv/go-templ-ui/view/ui"
+    "github.com/a-h/templ"
+)
+
+func main() {
+    // Create a simple form
+    form := ui.Form(&ui.FormProps{
+        Action: "/submit",
+        Method: "POST",
+    }, func() templ.Component {
+        return ui.Input(&ui.InputProps{
+            Label: "Email",
+            Name:  "email",
+            Type:  "email",
+            Required: true,
+        })
+    })
+    
+    // Render the form
+    form.Render(context.Background(), w)
+}
+```
+
+## 🎯 Available Components
+
+### Layout Components
+- **Card** - Container with shadow and padding
+- **Panel** - Content panel with optional header
+- **MasterDetails** - Two-column layout for master-detail views
+- **Columns** - Flexible column layout system
+
+### Form Components
+- **Form** - Complete form wrapper with validation
+- **GridForm** - Grid-based form layout
+- **Input** - Text, email, password, and other input types
+- **Select** - Dropdown selection component
+- **Switch** - Toggle switch component
+- **Checkbox** - Checkbox input
+- **Textarea** - Multi-line text input
+
+### Navigation Components
+- **Sidebar** - Navigation sidebar with user info
+- **Tabs** - Tab navigation component
+- **Nav** - Navigation menu
+- **Breadcrumb** - Breadcrumb navigation
+
+### Data Display
+- **Table** - Data table with sorting and pagination
+- **List** - Simple and advanced list components
+- **Badge** - Status and category badges
+- **Collapsible** - Expandable content sections
+
+### Interactive Components
+- **Modal** - Popup modal dialogs
+- **Button** - Various button styles and states
+- **ButtonGroup** - Grouped button controls
+- **Link** - Styled link component
+
+### Utility Components
+- **Headers** - H1, H2, H3 styled headers
+- **YesNo** - Boolean display component
+- **Block** - Content block wrapper
+
+## 🎨 Showcase Application
+
+The project includes a comprehensive showcase application that demonstrates all components in action.
+
+### Running the Showcase
+
+```bash
+# Clone the repository
+git clone https://github.com/fbv/go-templ-ui.git
+cd go-templ-ui
+
+# Install dependencies
+go mod download
+
+# Generate Templ components
+make templ
+
+# Build and run the showcase
+make showcase
+```
+
+The showcase will be available at `http://localhost:8080`
+
+## 🛠️ Development
+
+### Prerequisites
+
+- Go 1.24 or later
+- [Templ](https://templ.guide/) for component generation
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+
+### Development Setup
+
+```bash
+# Install Templ
+go install github.com/a-h/templ/cmd/templ@latest
+
+# Install Tailwind CSS (if not already installed)
+make install_tailwindcss
+
+# Generate components
+make templ
+
+# Watch for changes and rebuild
+make tailwind-watch
+```
+
+### Build Commands
+
+```bash
+# Generate Templ components
+make templ
+
+# Build all projects
+make build
+
+# Run tests
+make test
+
+# Clean build artifacts
+make clean
+
+# Watch Tailwind CSS changes
+make tailwind-watch
+```
+
+## 📖 Component Examples
+
+### Form with Validation
+
+```go
+ui.Form(&ui.FormProps{
+    Action: "/submit",
+    Method: "POST",
+}, func() templ.Component {
+    return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+        return ui.Input(&ui.InputProps{
+            Label: "Email Address",
+            Name: "email",
+            Type: "email",
+            Placeholder: "Enter your email",
+            Required: true,
+        }).Render(ctx, w)
+    })
+})
+```
+
+### Sidebar Navigation
+
+```go
+ui.Sidebar(&ui.SidebarProps{
+    Items: []*ui.SidebarItem{
+        {
+            Name: "Dashboard",
+            Icon: icon.Dashboard,
+            URL: "/dashboard",
+            Active: true,
+        },
+        {
+            Name: "Settings",
+            Icon: icon.Settings,
+            URL: "/settings",
+        },
+    },
+    User: &ui.UserInfo{
+        Name: "John Doe",
+        Email: "john@example.com",
+    },
+    LogoutURL: "/logout",
+})
+```
+
+### Data Table
+
+```go
+ui.Table(&ui.TableProps{
+    Headers: []string{"Name", "Email", "Status"},
+    Rows: [][]string{
+        {"John Doe", "john@example.com", "Active"},
+        {"Jane Smith", "jane@example.com", "Inactive"},
+    },
+})
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- [Templ Documentation](https://templ.guide/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/)
+- [Go Fiber Framework](https://gofiber.io/)
+
+## 📞 Support
+
+If you have any questions or need help, please open an issue on GitHub.
