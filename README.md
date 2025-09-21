@@ -26,26 +26,41 @@ go get github.com/fbv/go-templ-ui
 package main
 
 import (
+    "log"
+    "net/http"
+    
     "github.com/fbv/go-templ-ui/view/ui"
-    "github.com/a-h/templ"
+    "github.com/gofiber/fiber/v2"
 )
 
 func main() {
-    // Create a simple form
-    form := ui.Form(&ui.FormProps{
-        Action: "/submit",
-        Method: "POST",
-    }, func() templ.Component {
-        return ui.Input(&ui.InputProps{
-            Label: "Email",
-            Name:  "email",
-            Type:  "email",
-            Required: true,
+    app := fiber.New()
+    
+    // Simple page with a form
+    app.Get("/", func(c *fiber.Ctx) error {
+        form := ui.Form(&ui.FormProps{
+            Action: "/submit",
+            Method: "POST",
+        }, func() templ.Component {
+            return ui.Input(&ui.InputProps{
+                Label: "Email",
+                Name:  "email",
+                Type:  "email",
+                Required: true,
+            })
         })
+        
+        return form.Render(c.Context(), c.Response().BodyWriter())
     })
     
-    // Render the form
-    form.Render(context.Background(), w)
+    // Handle form submission
+    app.Post("/submit", func(c *fiber.Ctx) error {
+        email := c.FormValue("email")
+        log.Printf("Received email: %s", email)
+        return c.SendString("Form submitted successfully!")
+    })
+    
+    log.Fatal(app.Listen(":3000"))
 }
 ```
 
@@ -160,56 +175,69 @@ make tailwind-watch
 ### Form with Validation
 
 ```go
-ui.Form(&ui.FormProps{
-    Action: "/submit",
-    Method: "POST",
-}, func() templ.Component {
-    return templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {
+// In your route handler
+app.Get("/form", func(c *fiber.Ctx) error {
+    form := ui.Form(&ui.FormProps{
+        Action: "/submit",
+        Method: "POST",
+    }, func() templ.Component {
         return ui.Input(&ui.InputProps{
             Label: "Email Address",
             Name: "email",
             Type: "email",
             Placeholder: "Enter your email",
             Required: true,
-        }).Render(ctx, w)
+        })
     })
+    
+    return form.Render(c.Context(), c.Response().BodyWriter())
 })
 ```
 
 ### Sidebar Navigation
 
 ```go
-ui.Sidebar(&ui.SidebarProps{
-    Items: []*ui.SidebarItem{
-        {
-            Name: "Dashboard",
-            Icon: icon.Dashboard,
-            URL: "/dashboard",
-            Active: true,
+// In your route handler
+app.Get("/dashboard", func(c *fiber.Ctx) error {
+    sidebar := ui.Sidebar(&ui.SidebarProps{
+        Items: []*ui.SidebarItem{
+            {
+                Name: "Dashboard",
+                Icon: icon.Dashboard,
+                URL: "/dashboard",
+                Active: true,
+            },
+            {
+                Name: "Settings",
+                Icon: icon.Settings,
+                URL: "/settings",
+            },
         },
-        {
-            Name: "Settings",
-            Icon: icon.Settings,
-            URL: "/settings",
+        User: &ui.UserInfo{
+            Name: "John Doe",
+            Email: "john@example.com",
         },
-    },
-    User: &ui.UserInfo{
-        Name: "John Doe",
-        Email: "john@example.com",
-    },
-    LogoutURL: "/logout",
+        LogoutURL: "/logout",
+    })
+    
+    return sidebar.Render(c.Context(), c.Response().BodyWriter())
 })
 ```
 
 ### Data Table
 
 ```go
-ui.Table(&ui.TableProps{
-    Headers: []string{"Name", "Email", "Status"},
-    Rows: [][]string{
-        {"John Doe", "john@example.com", "Active"},
-        {"Jane Smith", "jane@example.com", "Inactive"},
-    },
+// In your route handler
+app.Get("/users", func(c *fiber.Ctx) error {
+    table := ui.Table(&ui.TableProps{
+        Headers: []string{"Name", "Email", "Status"},
+        Rows: [][]string{
+            {"John Doe", "john@example.com", "Active"},
+            {"Jane Smith", "jane@example.com", "Inactive"},
+        },
+    })
+    
+    return table.Render(c.Context(), c.Response().BodyWriter())
 })
 ```
 
