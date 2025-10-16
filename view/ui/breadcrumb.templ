@@ -1,0 +1,33 @@
+package ui
+
+// BreadcrumbItem describes a single item in the breadcrumb trail.
+// If Active is true, the item is rendered as plain text instead of a link.
+type BreadcrumbItem struct {
+    Title   string
+    URL     string
+    Active  bool
+}
+
+// Breadcrumb renders a navigational breadcrumb trail.
+// It uses a <nav> with aria-label for accessibility and supports RTL spacing.
+templ Breadcrumb(items ...*BreadcrumbItem) {
+    <nav class="flex mb-4" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 rtl:space-x-reverse">
+            for i, item := range items {
+                if i > 0 {
+                    // Visual separator between items
+                    <li class="text-slate-400">/
+                    </li>
+                }
+                <li class="inline-flex items-center">
+                    if item.Active {
+                        <span class="text-slate-700">{ item.Title }</span>
+                    } else {
+                        <a href={ templ.URL(item.URL) } class="text-blue-600 hover:underline">{ item.Title }</a>
+                    }
+                </li>
+            }
+        </ol>
+    </nav>
+}
+

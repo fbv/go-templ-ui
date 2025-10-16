@@ -7,12 +7,16 @@ package ui
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+// ModalProps defines the minimal contract required to render a modal.
+// Implementations provide an element id and header/footer components.
 type ModalProps interface {
 	GetModalID() string
 	GetModalHeader() templ.Component
 	GetModalFooter() templ.Component
 }
 
+// ModalHeader renders the standard header section of a modal.
+// Pass children to supply the header content (e.g., title, close button).
 func ModalHeader() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -50,6 +54,8 @@ func ModalHeader() templ.Component {
 	})
 }
 
+// ModalFooter renders the standard footer section of a modal.
+// Pass children to supply actions (e.g., Cancel/Save buttons).
 func ModalFooter() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -87,6 +93,8 @@ func ModalFooter() templ.Component {
 	})
 }
 
+// Modal composes a dialog container with a header, body (children), and footer.
+// The element id comes from ModalProps and is used for toggling/targeting the modal.
 func Modal(p ModalProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -115,7 +123,7 @@ func Modal(p ModalProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(p.GetModalID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/modal.templ`, Line: 31, Col: 21}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/modal.templ`, Line: 39, Col: 21}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {

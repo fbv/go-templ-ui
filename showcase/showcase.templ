@@ -49,6 +49,16 @@ templ Showcase() {
 			
 			@ui.H1("UI Components showcase")
 
+			@ui.H2("Breadcrumbs")
+
+			@ui.Breadcrumb(
+				&ui.BreadcrumbItem{Title: "Home", URL: "/"},
+				&ui.BreadcrumbItem{Title: "Library", URL: "/library"},
+				&ui.BreadcrumbItem{Title: "Data", Active: true},
+			)
+
+			
+
 			@ui.H2("Collapsible")
 			@ui.Collapsible("TEST") {
 				<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula leo vitae nisi porttitor, non sodales massa luctus. Phasellus tristique eget magna at rhoncus. In hac habitasse platea dictumst. Integer aliquet pulvinar purus nec condimentum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam odio ipsum, blandit non lacus consequat, rutrum imperdiet felis. Phasellus sapien urna, lacinia posuere accumsan quis, semper ac nisi. Donec ornare at ex ac dictum. Nulla facilisi.</div>
@@ -145,6 +155,9 @@ templ Showcase() {
 				@buttons()
 				@tables()
 				@utils()
+
+			@ui.H2("Code")
+			@ui.Code(&ui.CodeProps{Language: "go", Content: "package main\n\nimport (\n\t\"fmt\"\n)\n\nfunc main() {\n\tfmt.Println(\"Hello, world!\")\n}\n"})
 
 				<br/>
 

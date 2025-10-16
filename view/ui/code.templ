@@ -1,0 +1,48 @@
+package ui
+
+// CodeProps configures the Code component.
+// - Language: optional language key for syntax highlighting class (e.g., "go", "js").
+// - Content: the code to display, shown as preformatted text.
+// - Wrap: when true, wraps long lines; otherwise enables horizontal scrolling.
+type CodeProps struct {
+    Language string
+    Content  string
+    Wrap     bool
+}
+
+// Code renders a preformatted code block with optional syntax highlighting class.
+// It escapes HTML by default via templ, preserving content safety.
+templ Code(p *CodeProps) {
+    <div class="rounded-md bg-slate-900 text-slate-100">
+        if p.Wrap {
+            <pre class="whitespace-pre-wrap break-words p-4">
+                if p.Language != "" {
+                    <code class={ "language-" + p.Language }>
+                        { p.Content }
+                        { children... }
+                    </code>
+                } else {
+                    <code>
+                        { p.Content }
+                        { children... }
+                    </code>
+                }
+            </pre>
+        } else {
+            <pre class="whitespace-pre overflow-x-auto p-4">
+                if p.Language != "" {
+                    <code class={ "language-" + p.Language }>
+                        { p.Content }
+                        { children... }
+                    </code>
+                } else {
+                    <code>
+                        { p.Content }
+                        { children... }
+                    </code>
+                }
+            </pre>
+        }
+    </div>
+}
+
