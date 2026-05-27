@@ -1,0 +1,6 @@
+
+{
+    "go.toolsEnvVars": {
+        "PATH": "/usr/local/go/bin:${env:PATH}"
+    }
+}
