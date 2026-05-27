@@ -60,16 +60,17 @@ type InputProps struct {
 	Required    bool
 	Value       string
 	Checked     bool
+	Attrs       map[string]string
 }
 
 var InputBaseStyle = "border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 
 templ Input(p *InputProps) {
-	switch p.Type{
+	switch p.Type {
 		case "checkbox":
 			<div class="flex items-start">
 				<div class="flex items-center h-5">
-					<input id={ p.Name } type="checkbox" name={ p.Name } checked?={ p.Checked } required?={ p.Required } class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"/>
+					<input { renderAttributes(p.Attrs)... } id={ p.Name } type="checkbox" name={ p.Name } checked?={ p.Checked } required?={ p.Required } class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"/>
 				</div>
 				if len(p.Label) > 0 {
 					<label for={ p.Name } class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{ p.Label }</label>
@@ -80,14 +81,14 @@ templ Input(p *InputProps) {
 				if len(p.Label) > 0 {
 					<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
 				}
-				<textarea id={ p.Name } name={ p.Name } placeholder={ p.Placeholder } required?={ p.Required } rows="5" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">{ p.Value }</textarea>
+				<textarea { renderAttributes(p.Attrs)... } id={ p.Name } name={ p.Name } placeholder={ p.Placeholder } required?={ p.Required } rows="5" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">{ p.Value }</textarea>
 			</div>
 		default:
 			<div>
 				if len(p.Label) > 0 {
 					<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
 				}
-				<input type={ p.Type } id={ p.Name } name={ p.Name } value={ p.Value } placeholder={ p.Placeholder } required?={ p.Required } class={ InputBaseStyle}/>
+				<input { renderAttributes(p.Attrs)... } type={ p.Type } id={ p.Name } name={ p.Name } value={ p.Value } placeholder={ p.Placeholder } required?={ p.Required } class={ InputBaseStyle }/>
 			</div>
 	}
 }
