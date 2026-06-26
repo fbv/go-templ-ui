@@ -13,6 +13,7 @@ templ Page(p *PageProps) {
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			@ui.CollapsibleStyle()
+		@ui.SidebarStyles()
 			<title>{ p.Title }</title>
 <style>
 html { font-size: 13px; }
@@ -64,6 +65,7 @@ li.x-tab-active::before {
 			<script src="https://cdn.jsdelivr.net/npm/tw-elements/js/tw-elements.umd.min.js"></script>
 		@ui.CollapsibleScript()
 		@ui.ToastScript()
+		@ui.SidebarScript()
 	</body>
 	</html>
 }

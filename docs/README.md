@@ -2,6 +2,9 @@
 
 ## Components
 
+### Navigation
+- [Sidebar](sidebar.md) - Navigation sidebar with collapsible mode
+
 ### Feedback & Notifications
 - [Alert](alert.md) - Banner notifications (info, success, warning, error)
 - [Toast](toast.md) - Floating notifications with auto-dismiss
@@ -21,6 +24,7 @@
 
 | Component | Purpose | Key Props |
 |-----------|---------|-----------|
+| `Sidebar` | Navigation sidebar | `Items`, `User`, `Collapsible`, `ID` |
 | `Alert` | Static banner notifications | `Title`, `Style`, `Dismissible` |
 | `Toast` | Auto-hiding floating alerts | `ID`, `Title`, `Style`, `Duration` |
 | `Spinner` | Loading indicator | `Size`, `Style`, `Label` |

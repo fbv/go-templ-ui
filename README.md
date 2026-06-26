@@ -184,6 +184,7 @@ Detailed documentation for each component is available in the [docs](docs/) dire
 
 | Component | Documentation |
 |-----------|---------------|
+| Sidebar | [docs/sidebar.md](docs/sidebar.md) |
 | Alert | [docs/alert.md](docs/alert.md) |
 | Toast | [docs/toast.md](docs/toast.md) |
 | Spinner | [docs/spinner.md](docs/spinner.md) |

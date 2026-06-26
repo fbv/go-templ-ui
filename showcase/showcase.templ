@@ -36,7 +36,9 @@ templ Sidebar() {
 			Name: "Boris Fedorov",
 			Email: "boris.fedorov.ru@gmail.com",
 		},
-		LogoutURL: "#",
+		LogoutURL:   "#",
+		Collapsible: true,
+		ID:          "main-sidebar",
 	})
 }
 
@@ -44,7 +46,7 @@ templ Showcase() {
 	@layout.Page(&layout.PageProps{Title: "Showcase"}) {
 		<div class="flex flex-row">
 			@Sidebar()
-			<div class="flex-1 w-auto h-screen p-4">
+			<div class="flex-1 w-auto h-screen overflow-y-auto p-4">
 
 			
 			@ui.H1("UI Components showcase")

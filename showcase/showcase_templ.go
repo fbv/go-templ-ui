@@ -63,7 +63,9 @@ func Sidebar() templ.Component {
 				Name:  "Boris Fedorov",
 				Email: "boris.fedorov.ru@gmail.com",
 			},
-			LogoutURL: "#",
+			LogoutURL:   "#",
+			Collapsible: true,
+			ID:          "main-sidebar",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -113,7 +115,7 @@ func Showcase() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex-1 w-auto h-screen p-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex-1 w-auto h-screen overflow-y-auto p-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

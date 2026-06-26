@@ -7,44 +7,101 @@ type SidebarItem struct {
 	URL       string
 	Active    bool
 	Modifiers []templ.Component
+	Tooltip   string // Optional tooltip text (defaults to Name)
 }
 
 type UserInfo struct {
-	Name  string
-	Email string
+	Name   string
+	Email  string
 	Avatar string
 }
 
 type SidebarProps struct {
-	Items []*SidebarItem
-	User *UserInfo
-	LogoutURL string 
+	Items       []*SidebarItem
+	User        *UserInfo
+	LogoutURL   string
+	Collapsible bool   // Enable collapse/expand toggle
+	ID          string // Unique ID for the sidebar element (required if Collapsible)
+}
+
+templ SidebarScript() {
+	<script>
+		if (!window._sidebarInitialized) {
+			window._sidebarInitialized = true;
+			window.toggleSidebar = function(sidebarId) {
+				var sidebar = document.getElementById(sidebarId);
+				if (!sidebar) return;
+				sidebar.classList.toggle('sidebar-collapsed');
+				var isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+				localStorage.setItem('sidebar-' + sidebarId + '-collapsed', isCollapsed);
+			};
+			window.initSidebar = function(sidebarId) {
+				var sidebar = document.getElementById(sidebarId);
+				if (!sidebar) return;
+				var saved = localStorage.getItem('sidebar-' + sidebarId + '-collapsed');
+				if (saved === 'true') {
+					sidebar.classList.add('sidebar-collapsed');
+				}
+			};
+		}
+	</script>
+}
+
+script toggleSidebarScript(id string) {
+	toggleSidebar(id)
+}
+
+templ SidebarInit(id string) {
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			if (window.initSidebar) {
+				window.initSidebar({ fmt.Sprintf("%q", id) });
+			}
+		});
+	</script>
 }
 
 templ Sidebar(p *SidebarProps) {
-	<div class="flex flex-col w-60 bg-white h-screen border-r">
-		<div class="overflow-y-auto overflow-x-hidden flex-grow">
+	<div
+		if p.Collapsible {
+			id={ p.ID }
+		}
+		class={ "flex flex-col bg-white h-screen border-r transition-all duration-300 ease-in-out sidebar-root sticky top-0 flex-shrink-0", sidebarWidthClass(p) }
+	>
+		<div class="flex-grow">
 			<ul class="flex flex-col p-2 space-y-1">
 				for _, item := range p.Items {
 					<li>
 						if item.Active {
-							<a href={ templ.URL(item.URL) } class="relative flex flex-row items-center h-11 focus:outline-none bg-slate-100 text-gray-800 p-2 rounded-md">
-								<span class="inline-flex justify-center items-center ml-2 w-8 text-2xl">
+							<a
+								href={ templ.URL(item.URL) }
+								class="relative flex flex-row items-center h-11 focus:outline-none bg-slate-100 text-gray-800 p-2 rounded-md sidebar-item"
+								title={ sidebarTooltip(item) }
+							>
+								<span class="inline-flex justify-center items-center ml-2 w-8 text-2xl sidebar-item-icon">
 									@SidebarItemIcon(item)
 								</span>
-								<span class="ml-2 text-sm tracking-wide truncate">{ item.Name }</span>
-								if len(item.Modifiers) >0 {
-									@item.Modifiers[0]
+								<span class="ml-2 text-sm tracking-wide truncate sidebar-item-text">{ item.Name }</span>
+								if len(item.Modifiers) > 0 {
+									<span class="sidebar-item-modifier">
+										@item.Modifiers[0]
+									</span>
 								}
 							</a>
 						} else {
-							<a href={ templ.URL(item.URL) } class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-slate-50 text-gray-800 p-2 rounded-md">
-								<span class="inline-flex justify-center items-center ml-2 w-8 text-2xl">
+							<a
+								href={ templ.URL(item.URL) }
+								class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-slate-50 text-gray-800 p-2 rounded-md sidebar-item"
+								title={ sidebarTooltip(item) }
+							>
+								<span class="inline-flex justify-center items-center ml-2 w-8 text-2xl sidebar-item-icon">
 									@SidebarItemIcon(item)
 								</span>
-								<span class="ml-2 text-sm tracking-wide truncate">{ item.Name }</span>
-								if len(item.Modifiers) >0 {
-									@item.Modifiers[0]
+								<span class="ml-2 text-sm tracking-wide truncate sidebar-item-text">{ item.Name }</span>
+								if len(item.Modifiers) > 0 {
+									<span class="sidebar-item-modifier">
+										@item.Modifiers[0]
+									</span>
 								}
 							</a>
 						}
@@ -52,10 +109,9 @@ templ Sidebar(p *SidebarProps) {
 				}
 			</ul>
 		</div>
-		
 		<!-- Footer with user info and logout -->
 		if p.User != nil {
-			<div class="border-t border-gray-200 p-4">
+			<div class="border-t border-gray-200 p-4 sidebar-footer">
 				<div class="flex items-center space-x-3 mb-3">
 					<div class="flex-shrink-0">
 						if p.User.Avatar != "" {
@@ -68,23 +124,61 @@ templ Sidebar(p *SidebarProps) {
 							</div>
 						}
 					</div>
-					<div class="flex-1 min-w-0">
+					<div class="flex-1 min-w-0 sidebar-user-info">
 						<p class="text-sm font-medium text-gray-900 truncate">{ p.User.Name }</p>
 						<p class="text-xs text-gray-500 truncate">{ p.User.Email }</p>
 					</div>
 				</div>
 				if p.LogoutURL != "" {
-					<a class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
-						href={ templ.URL(p.LogoutURL) }>
-						<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<a class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 sidebar-logout"
+						href={ templ.URL(p.LogoutURL) }
+						title="Logout"
+					>
+						<svg class="w-4 h-4 sidebar-logout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
 						</svg>
-						Logout
+						<span class="ml-2 sidebar-logout-text">Logout</span>
 					</a>
 				}
 			</div>
 		}
+		<!-- Toggle button at the very bottom -->
+		if p.Collapsible {
+			<div class="border-t border-gray-200 p-2">
+				<button
+					type="button"
+					onclick={ toggleSidebarScript(p.ID) }
+					class="w-full flex items-center justify-center p-2 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+					aria-label="Toggle sidebar"
+				>
+					<svg class="w-5 h-5 sidebar-icon-expand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+					</svg>
+					<svg class="w-5 h-5 sidebar-icon-collapse hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+					</svg>
+					<span class="ml-2 text-sm sidebar-toggle-text">Collapse</span>
+				</button>
+			</div>
+		}
 	</div>
+	if p.Collapsible {
+		@SidebarInit(p.ID)
+	}
+}
+
+func sidebarWidthClass(p *SidebarProps) string {
+	if p.Collapsible {
+		return "w-60"
+	}
+	return "w-60"
+}
+
+func sidebarTooltip(item *SidebarItem) string {
+	if item.Tooltip != "" {
+		return item.Tooltip
+	}
+	return item.Name
 }
 
 templ SidebarItemIcon(item *SidebarItem) {
@@ -98,13 +192,119 @@ templ SidebarItemIcon(item *SidebarItem) {
 }
 
 templ SidebarNew() {
-	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-indigo-500 bg-indigo-50 rounded-full">New</span>
+	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-indigo-500 bg-indigo-50 rounded-full sidebar-item-modifier">New</span>
 }
 
 templ SidebarRed(label string) {
-	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-red-500 bg-red-50 rounded-full">{ label }</span>
+	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-red-500 bg-red-50 rounded-full sidebar-item-modifier">{ label }</span>
 }
 
 templ SidebarGreen(label string) {
-	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-green-500 bg-green-50 rounded-full">{ label }</span>
+	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-green-500 bg-green-50 rounded-full sidebar-item-modifier">{ label }</span>
+}
+
+templ SidebarStyles() {
+	<style>
+		.sidebar-root {
+			min-width: 15rem;
+		}
+
+		.sidebar-collapsed {
+			min-width: 4rem !important;
+			width: 4rem !important;
+		}
+
+		.sidebar-collapsed .sidebar-item-text {
+			display: none;
+		}
+
+		.sidebar-collapsed .sidebar-item-modifier {
+			display: none;
+		}
+
+		.sidebar-collapsed .sidebar-footer .sidebar-user-info {
+			display: none;
+		}
+
+		.sidebar-collapsed .sidebar-footer .sidebar-logout-text {
+			display: none;
+		}
+
+		.sidebar-collapsed .sidebar-footer {
+			padding: 1rem 0.5rem;
+		}
+
+		.sidebar-collapsed .sidebar-footer .flex.items-center {
+			justify-content: center;
+		}
+
+		.sidebar-collapsed .sidebar-icon-expand {
+			display: none;
+		}
+
+		.sidebar-collapsed .sidebar-icon-collapse {
+			display: block !important;
+		}
+
+		.sidebar-collapsed .sidebar-item {
+			justify-content: center;
+			padding-left: 0;
+			padding-right: 0;
+		}
+
+		.sidebar-collapsed .sidebar-item-icon {
+			margin-left: 0;
+		}
+
+		.sidebar-collapsed .sidebar-logout {
+			padding-left: 0.5rem;
+			padding-right: 0.5rem;
+		}
+
+		.sidebar-collapsed .sidebar-logout-icon {
+			margin-right: 0;
+		}
+
+		.sidebar-collapsed .sidebar-toggle-text {
+			display: none;
+		}
+
+		/* Tooltip on hover in collapsed mode */
+		.sidebar-collapsed .sidebar-item {
+			position: relative;
+		}
+
+		.sidebar-collapsed .sidebar-item:hover::after {
+			content: attr(title);
+			position: absolute;
+			left: 100%;
+			top: 50%;
+			transform: translateY(-50%);
+			margin-left: 0.5rem;
+			padding: 0.5rem 0.75rem;
+			background: #1f2937;
+			color: white;
+			font-size: 0.75rem;
+			border-radius: 0.375rem;
+			white-space: nowrap;
+			z-index: 50;
+			pointer-events: none;
+			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+		}
+
+		/* Arrow for tooltip */
+		.sidebar-collapsed .sidebar-item:hover::before {
+			content: '';
+			position: absolute;
+			left: 100%;
+			top: 50%;
+			transform: translateY(-50%);
+			border-width: 4px;
+			border-style: solid;
+			border-color: transparent transparent transparent #1f2937;
+			margin-left: 0;
+			z-index: 50;
+			pointer-events: none;
+		}
+	</style>
 }
