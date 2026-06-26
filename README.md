@@ -79,22 +79,30 @@ func main() {
 - **Select** - Dropdown selection component
 - **Switch** - Toggle switch component
 - **Checkbox** - Checkbox input
-- **Textarea** - Multi-line text input
+- **DatePicker** - Date and time picker with multiple variants
 
 ### Navigation Components
 - **Sidebar** - Navigation sidebar with user info
 - **Tabs** - Tab navigation component
 - **Nav** - Navigation menu
 - **Breadcrumb** - Breadcrumb navigation
+- **Pagination** - Page navigation for lists and tables
 
 ### Data Display
 - **Table** - Data table with sorting and pagination
 - **List** - Simple and advanced list components
 - **Badge** - Status and category badges
 - **Collapsible** - Expandable content sections
+- **Skeleton** - Placeholder content while loading
+
+### Feedback Components
+- **Alert** - Banner notifications (info, success, warning, error)
+- **Toast** - Floating notifications with auto-dismiss
+- **Spinner** - Loading indicators with multiple sizes and styles
 
 ### Interactive Components
 - **Modal** - Popup modal dialogs
+- **ConfirmDialog** - Confirmation dialog for dangerous actions
 - **Button** - Various button styles and states
 - **ButtonGroup** - Grouped button controls
 - **Link** - Styled link component
@@ -169,6 +177,20 @@ make clean
 # Watch Tailwind CSS changes
 make tailwind-watch
 ```
+
+## 📖 Documentation
+
+Detailed documentation for each component is available in the [docs](docs/) directory:
+
+| Component | Documentation |
+|-----------|---------------|
+| Alert | [docs/alert.md](docs/alert.md) |
+| Toast | [docs/toast.md](docs/toast.md) |
+| Spinner | [docs/spinner.md](docs/spinner.md) |
+| Skeleton | [docs/skeleton.md](docs/skeleton.md) |
+| Pagination | [docs/pagination.md](docs/pagination.md) |
+| DatePicker | [docs/datepicker.md](docs/datepicker.md) |
+| ConfirmDialog | [docs/confirm_dialog.md](docs/confirm_dialog.md) |
 
 ## 📖 Component Examples
 

@@ -1,0 +1,128 @@
+package ui
+
+import "fmt"
+
+type DatePickerProps struct {
+	Name        string
+	Label       string
+	Value       string
+	Placeholder string
+	Required    bool
+	Min         string
+	Max         string
+	Step        string
+	Type        string
+	Attrs       map[string]string
+}
+
+templ DatePicker(p *DatePickerProps) {
+	<div>
+		if p.Label != "" {
+			<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
+		}
+		<div class="relative">
+			<div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+				<svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+					<path d="M0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm14-7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM20 8a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5V8ZM0 4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2Z"/>
+				</svg>
+			</div>
+			<input
+				{ renderAttributes(p.Attrs)... }
+				type={ datePickerType(p.Type) }
+				id={ p.Name }
+				name={ p.Name }
+				value={ p.Value }
+				placeholder={ datePickerPlaceholder(p) }
+				required?={ p.Required }
+				if p.Min != "" {
+					min={ p.Min }
+				}
+				if p.Max != "" {
+					max={ p.Max }
+				}
+				if p.Step != "" {
+					step={ p.Step }
+				}
+				class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+			/>
+		</div>
+	</div>
+}
+
+func datePickerType(pickerType string) string {
+	switch pickerType {
+	case "time":
+		return "time"
+	case "month":
+		return "month"
+	case "week":
+		return "week"
+	case "datetime-local":
+		return "datetime-local"
+	default:
+		return "date"
+	}
+}
+
+func datePickerPlaceholder(p *DatePickerProps) string {
+	if p.Placeholder != "" {
+		return p.Placeholder
+	}
+	switch p.Type {
+	case "time":
+		return "HH:MM"
+	case "month":
+		return "YYYY-MM"
+	case "week":
+		return "YYYY-WXX"
+	case "datetime-local":
+		return "YYYY-MM-DD HH:MM"
+	default:
+		return "YYYY-MM-DD"
+	}
+}
+
+templ TimePicker(p *DatePickerProps) {
+	@DatePicker(&DatePickerProps{
+		Name:        p.Name,
+		Label:       p.Label,
+		Value:       p.Value,
+		Placeholder: p.Placeholder,
+		Required:    p.Required,
+		Min:         p.Min,
+		Max:         p.Max,
+		Step:        p.Step,
+		Type:        "time",
+		Attrs:       p.Attrs,
+	})
+}
+
+templ DateTimePicker(p *DatePickerProps) {
+	@DatePicker(&DatePickerProps{
+		Name:        p.Name,
+		Label:       p.Label,
+		Value:       p.Value,
+		Placeholder: p.Placeholder,
+		Required:    p.Required,
+		Min:         p.Min,
+		Max:         p.Max,
+		Step:        p.Step,
+		Type:        "datetime-local",
+		Attrs:       p.Attrs,
+	})
+}
+
+templ DateRangePicker(startName string, endName string, label string) {
+	<div class="grid grid-cols-2 gap-4">
+		@DatePicker(&DatePickerProps{
+			Name:  startName,
+			Label: fmt.Sprintf("%s (%s)", label, "От"),
+			Type:  "date",
+		})
+		@DatePicker(&DatePickerProps{
+			Name:  endName,
+			Label: fmt.Sprintf("%s (%s)", label, "До"),
+			Type:  "date",
+		})
+	</div>
+}

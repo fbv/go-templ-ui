@@ -156,6 +156,13 @@ templ Showcase() {
 				@tables()
 				@utils()
 
+			@alerts()
+			@toasts()
+			@spinners()
+			@skeletons()
+			@datepickers()
+			@paginationSection()
+
 			@ui.H2("Code")
 			@ui.Code(&ui.CodeProps{Language: "go", Content: "package main\n\nimport (\n\t\"fmt\"\n)\n\nfunc main() {\n\tfmt.Println(\"Hello, world!\")\n}\n"})
 
@@ -180,5 +187,103 @@ templ utils() {
 	</div>
 	<div class="m-4">
 		@ui.YesNo(false)
+	</div>
+}
+
+templ alerts() {
+	@ui.H2("Alerts")
+	<div class="space-y-4">
+		@ui.Alert(&ui.AlertProps{Title: "Info!", Style: "info"}) {
+			This is an info alert — check it out!
+		}
+		@ui.Alert(&ui.AlertProps{Title: "Success!", Style: "success"}) {
+			Your changes have been saved successfully.
+		}
+		@ui.Alert(&ui.AlertProps{Title: "Warning!", Style: "warning"}) {
+			Your session is about to expire.
+		}
+		@ui.Alert(&ui.AlertProps{Title: "Error!", Style: "error"}) {
+			Something went wrong. Please try again.
+		}
+		@ui.Alert(&ui.AlertProps{Title: "Dismissible", Style: "info", Dismissible: true}) {
+			Click X to close this alert.
+		}
+	</div>
+}
+
+templ toasts() {
+	@ui.H2("Toasts")
+	<div class="space-y-4">
+		<p class="text-sm text-gray-500">Click buttons to show toasts:</p>
+		<div class="flex gap-2">
+			<button type="button" onclick={ showToastScript("toast-info") } class="px-4 py-2 text-sm text-white bg-blue-700 rounded-lg hover:bg-blue-800">Info Toast</button>
+			<button type="button" onclick={ showToastScript("toast-success") } class="px-4 py-2 text-sm text-white bg-green-700 rounded-lg hover:bg-green-800">Success Toast</button>
+			<button type="button" onclick={ showToastScript("toast-warning") } class="px-4 py-2 text-sm text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">Warning Toast</button>
+			<button type="button" onclick={ showToastScript("toast-error") } class="px-4 py-2 text-sm text-white bg-red-700 rounded-lg hover:bg-red-800">Error Toast</button>
+		</div>
+		@ui.Toast(&ui.ToastProps{ID: "toast-info", Title: "Info", Style: "info", Duration: 5000}) {
+			This is an info message.
+		}
+		@ui.Toast(&ui.ToastProps{ID: "toast-success", Title: "Success", Style: "success", Duration: 5000}) {
+			Operation completed successfully!
+		}
+		@ui.Toast(&ui.ToastProps{ID: "toast-warning", Title: "Warning", Style: "warning", Duration: 5000}) {
+			Please review your input.
+		}
+		@ui.Toast(&ui.ToastProps{ID: "toast-error", Title: "Error", Style: "error", Duration: 5000}) {
+			An error occurred.
+		}
+	</div>
+}
+
+script showToastScript(id string) {
+	showToast(id)
+}
+
+templ spinners() {
+	@ui.H2("Spinners")
+	<div class="space-y-4">
+		<div class="flex items-center gap-4">
+			@ui.Spinner(&ui.SpinnerProps{Size: "sm"})
+			@ui.Spinner(&ui.SpinnerProps{Size: "md"})
+			@ui.Spinner(&ui.SpinnerProps{Size: "lg"})
+			@ui.Spinner(&ui.SpinnerProps{Size: "xl"})
+		</div>
+		<div class="flex items-center gap-4">
+			@ui.Spinner(&ui.SpinnerProps{Style: "blue"})
+			@ui.Spinner(&ui.SpinnerProps{Style: "success"})
+			@ui.Spinner(&ui.SpinnerProps{Style: "error"})
+			@ui.Spinner(&ui.SpinnerProps{Style: "white"})
+		</div>
+		@ui.Spinner(&ui.SpinnerProps{Label: "Loading..."})
+	</div>
+}
+
+templ skeletons() {
+	@ui.H2("Skeletons")
+	<div class="space-y-6 max-w-md">
+		@ui.Skeleton(&ui.SkeletonProps{Lines: 3})
+		@ui.SkeletonAvatar()
+		@ui.SkeletonCard()
+		@ui.SkeletonTable(4, 4)
+	</div>
+}
+
+templ datepickers() {
+	@ui.H2("Date Pickers")
+	<div class="space-y-4 max-w-md">
+		@ui.DatePicker(&ui.DatePickerProps{Name: "date", Label: "Date"})
+		@ui.TimePicker(&ui.DatePickerProps{Name: "time", Label: "Time"})
+		@ui.DateTimePicker(&ui.DatePickerProps{Name: "datetime", Label: "Date & Time"})
+		@ui.DateRangePicker("date_from", "date_to", "Date Range")
+	</div>
+}
+
+templ paginationSection() {
+	@ui.H2("Pagination")
+	<div class="space-y-4">
+		@ui.Pagination(&ui.PaginationProps{CurrentPage: 1, TotalPages: 10, BaseURL: "/showcase?page", ShowFirst: true, ShowLast: true})
+		@ui.Pagination(&ui.PaginationProps{CurrentPage: 5, TotalPages: 10, BaseURL: "/showcase?page", ShowFirst: true, ShowLast: true})
+		@ui.Pagination(&ui.PaginationProps{CurrentPage: 10, TotalPages: 10, BaseURL: "/showcase?page", ShowFirst: true, ShowLast: true})
 	</div>
 }

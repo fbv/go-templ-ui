@@ -1,0 +1,103 @@
+package ui
+
+type SkeletonProps struct {
+	Lines  int
+	Style  string
+	Width  string
+	Height string
+	Attrs  map[string]string
+}
+
+func skeletonBaseClass() string {
+	return "animate-pulse rounded bg-gray-200 dark:bg-gray-700"
+}
+
+templ Skeleton(p *SkeletonProps) {
+	<div class="space-y-3" { renderAttributes(p.Attrs)... }>
+		if p.Lines > 0 {
+			for i := 0; i < p.Lines; i++ {
+				if i == 0 && p.Width != "" {
+					<div class={ skeletonBaseClass() } style={ "height: " + p.Height + "; width: " + p.Width }></div>
+				} else {
+					<div class={ skeletonBaseClass() } style={ "height: " + skeletonLineHeight(p) }></div>
+				}
+			}
+		} else {
+			<div class={ skeletonBaseClass() } style={ "height: " + skeletonHeight(p) + "; width: " + skeletonWidth(p) }></div>
+		}
+	</div>
+}
+
+func skeletonLineHeight(p *SkeletonProps) string {
+	if p.Height != "" {
+		return p.Height
+	}
+	return "0.75rem"
+}
+
+func skeletonHeight(p *SkeletonProps) string {
+	if p.Height != "" {
+		return p.Height
+	}
+	switch p.Style {
+	case "avatar":
+		return "3rem"
+	case "card":
+		return "10rem"
+	case "button":
+		return "2.5rem"
+	default:
+		return "1rem"
+	}
+}
+
+func skeletonWidth(p *SkeletonProps) string {
+	if p.Width != "" {
+		return p.Width
+	}
+	switch p.Style {
+	case "avatar":
+		return "3rem"
+	case "button":
+		return "6rem"
+	case "title":
+		return "50%"
+	default:
+		return "100%"
+	}
+}
+
+templ SkeletonCard() {
+	<div class="p-4 border rounded-lg dark:border-gray-700">
+		<div class="animate-pulse space-y-4">
+			<div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-3/4"></div>
+			<div class="space-y-2">
+				<div class="h-3 bg-gray-200 rounded dark:bg-gray-700"></div>
+				<div class="h-3 bg-gray-200 rounded dark:bg-gray-700 w-5/6"></div>
+				<div class="h-3 bg-gray-200 rounded dark:bg-gray-700 w-4/6"></div>
+			</div>
+		</div>
+	</div>
+}
+
+templ SkeletonTable(rows int, cols int) {
+	<div class="w-full">
+		for r := 0; r < rows; r++ {
+			<div class="flex space-x-4 py-3 border-b dark:border-gray-700">
+				for c := 0; c < cols; c++ {
+					<div class="flex-1 h-3 bg-gray-200 rounded dark:bg-gray-700"></div>
+				}
+			</div>
+		}
+	</div>
+}
+
+templ SkeletonAvatar() {
+	<div class="flex items-center space-x-4">
+		<div class="animate-pulse w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+		<div class="flex-1 space-y-2">
+			<div class="h-3 bg-gray-200 rounded dark:bg-gray-700 w-1/3"></div>
+			<div class="h-3 bg-gray-200 rounded dark:bg-gray-700 w-1/4"></div>
+		</div>
+	</div>
+}
