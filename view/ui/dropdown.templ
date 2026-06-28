@@ -1,0 +1,103 @@
+package ui
+
+type DropdownItem struct {
+	Label    string
+	URL      string
+	Icon     string // SVG path
+	Divider  bool
+	Disabled bool
+	Style    string // red for danger items
+}
+
+type DropdownProps struct {
+	ID       string
+	Items    []DropdownItem
+	Position string // bottom-left, bottom-right, top-left, top-right
+}
+
+func dropdownPositionStyle(position string) string {
+	switch position {
+	case "top-left":
+		return "bottom-full left-0 mb-2"
+	case "top-right":
+		return "bottom-full right-0 mb-2"
+	case "bottom-right":
+		return "top-full right-0 mt-2"
+	default:
+		return "top-full left-0 mt-2"
+	}
+}
+
+func dropdownItemStyle(item DropdownItem) string {
+	if item.Disabled {
+		return "block w-full text-left px-4 py-2 text-sm text-gray-400 dark:text-gray-500 cursor-not-allowed"
+	}
+	if item.Style == "red" {
+		return "block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+	}
+	return "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600"
+}
+
+templ DropdownScript() {
+	<script>
+		if (!window._dropdownInitialized) {
+			window._dropdownInitialized = true;
+			document.addEventListener('click', function(e) {
+				var dropdowns = document.querySelectorAll('[data-dropdown]');
+				dropdowns.forEach(function(dropdown) {
+					var trigger = dropdown.querySelector('[data-dropdown-trigger]');
+					var menu = dropdown.querySelector('[data-dropdown-menu]');
+					if (trigger && menu) {
+						if (trigger.contains(e.target)) {
+							menu.classList.toggle('hidden');
+						} else if (!menu.contains(e.target)) {
+							menu.classList.add('hidden');
+						}
+					}
+				});
+			});
+		}
+	</script>
+}
+
+templ DropdownButton(p *DropdownProps, btn *ButtonProps) {
+	<div class="relative inline-block" data-dropdown>
+		<div data-dropdown-trigger>
+			@Button(btn)
+		</div>
+		<div
+			data-dropdown-menu
+			class={ "absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 hidden", dropdownPositionStyle(p.Position) }
+		>
+			<ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+				for _, item := range p.Items {
+					if item.Divider {
+						<li class="border-t border-gray-100 dark:border-gray-600 my-1"></li>
+					} else {
+						<li>
+							if item.URL != "" && !item.Disabled {
+								<a href={ templ.URL(item.URL) } class={ dropdownItemStyle(item) }>
+									if item.Icon != "" {
+										<svg class="w-4 h-4 me-2 inline" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+											<path fill-rule="evenodd" d={ item.Icon } clip-rule="evenodd"></path>
+										</svg>
+									}
+									{ item.Label }
+								</a>
+							} else {
+								<span class={ dropdownItemStyle(item) }>
+									if item.Icon != "" {
+										<svg class="w-4 h-4 me-2 inline" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+											<path fill-rule="evenodd" d={ item.Icon } clip-rule="evenodd"></path>
+										</svg>
+									}
+									{ item.Label }
+								</span>
+							}
+						</li>
+					}
+				}
+			</ul>
+		</div>
+	</div>
+}

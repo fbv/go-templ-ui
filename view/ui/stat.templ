@@ -1,0 +1,102 @@
+package ui
+
+type StatProps struct {
+	Title      string
+	Value      string
+	Change     string // "+12%", "-5%"
+	ChangeType string // up, down, neutral
+	Icon       string // SVG path
+	Prefix     string // "$", "₽"
+	Suffix     string // "/мес", "шт"
+	Style      string // blue, green, red, yellow, purple
+}
+
+func statCardStyle(style string) string {
+	switch style {
+	case "green":
+		return "bg-green-50 dark:bg-green-900/20"
+	case "red":
+		return "bg-red-50 dark:bg-red-900/20"
+	case "yellow":
+		return "bg-yellow-50 dark:bg-yellow-900/20"
+	case "purple":
+		return "bg-purple-50 dark:bg-purple-900/20"
+	default:
+		return "bg-blue-50 dark:bg-blue-900/20"
+	}
+}
+
+func statIconStyle(style string) string {
+	switch style {
+	case "green":
+		return "text-green-600 dark:text-green-400"
+	case "red":
+		return "text-red-600 dark:text-red-400"
+	case "yellow":
+		return "text-yellow-600 dark:text-yellow-400"
+	case "purple":
+		return "text-purple-600 dark:text-purple-400"
+	default:
+		return "text-blue-600 dark:text-blue-400"
+	}
+}
+
+func statChangeStyle(changeType string) string {
+	switch changeType {
+	case "up":
+		return "text-green-600 dark:text-green-400"
+	case "down":
+		return "text-red-600 dark:text-red-400"
+	default:
+		return "text-gray-500 dark:text-gray-400"
+	}
+}
+
+templ StatCard(p *StatProps) {
+	<div class={ "p-4 rounded-lg", statCardStyle(p.Style) }>
+		<div class="flex items-center justify-between">
+			<div>
+				<p class="text-sm font-medium text-gray-600 dark:text-gray-400">{ p.Title }</p>
+				<p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+					if p.Prefix != "" {
+						<span>{ p.Prefix }</span>
+					}
+					{ p.Value }
+					if p.Suffix != "" {
+						<span class="text-sm font-normal text-gray-500 dark:text-gray-400">{ p.Suffix }</span>
+					}
+				</p>
+			</div>
+			if p.Icon != "" {
+				<div class={ "p-3 rounded-full", statCardStyle(p.Style) }>
+					<svg class={ "w-6 h-6", statIconStyle(p.Style) } fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" d={ p.Icon } clip-rule="evenodd"></path>
+					</svg>
+				</div>
+			}
+		</div>
+		if p.Change != "" {
+			<div class="flex items-center mt-2">
+				if p.ChangeType == "up" {
+					<svg class={ "w-3 h-3 me-1", statChangeStyle(p.ChangeType) } fill="none" viewBox="0 0 10 14">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4"/>
+					</svg>
+				} else if p.ChangeType == "down" {
+					<svg class={ "w-3 h-3 me-1", statChangeStyle(p.ChangeType) } fill="none" viewBox="0 0 10 14">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1v12m0 0 4-4m-4 4-4-4"/>
+					</svg>
+				}
+				<span class={ "text-sm font-medium", statChangeStyle(p.ChangeType) }>{ p.Change }</span>
+				<span class="text-xs text-gray-500 dark:text-gray-400 ms-2">vs прошлый период</span>
+			</div>
+		}
+	</div>
+}
+
+templ StatGroup(stats []StatProps) {
+	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+		for i := range stats {
+			@StatCard(&stats[i])
+		}
+	</div>
+}

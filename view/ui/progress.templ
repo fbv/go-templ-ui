@@ -1,0 +1,88 @@
+package ui
+
+import "fmt"
+
+type ProgressProps struct {
+	Value      int // 0-100
+	Max        int
+	Color      string // blue, green, red, yellow, purple
+	Label      string
+	ShowValue  bool
+	Size       string // sm, md, lg
+	Striped    bool
+	Animated   bool
+}
+
+func progressBarColor(color string) string {
+	switch color {
+	case "green":
+		return "bg-green-500"
+	case "red":
+		return "bg-red-500"
+	case "yellow":
+		return "bg-yellow-400"
+	case "purple":
+		return "bg-purple-500"
+	default:
+		return "bg-blue-600"
+	}
+}
+
+func progressBarSize(size string) string {
+	switch size {
+	case "sm":
+		return "h-1.5"
+	case "lg":
+		return "h-5"
+	default:
+		return "h-3"
+	}
+}
+
+func progressPercent(value, max int) int {
+	if max <= 0 {
+		return 0
+	}
+	if value > max {
+		return 100
+	}
+	return (value * 100) / max
+}
+
+templ ProgressBar(p *ProgressProps) {
+	{{ 
+		max := p.Max
+		if max <= 0 {
+			max = 100
+		}
+		percent := progressPercent(p.Value, max)
+	}}
+	if p.Label != "" || p.ShowValue {
+		<div class="flex items-center justify-between mb-1">
+			if p.Label != "" {
+				<span class="text-sm font-medium text-gray-700 dark:text-gray-300">{ p.Label }</span>
+			}
+			if p.ShowValue {
+				<span class="text-sm font-medium text-gray-700 dark:text-gray-300">{ fmt.Sprintf("%d%%", percent) }</span>
+			}
+		</div>
+	}
+	<div class={ "w-full bg-gray-200 rounded-full dark:bg-gray-700", progressBarSize(p.Size) }>
+		<div
+			class={ "bg-blue-600 rounded-full", progressBarColor(p.Color), progressBarSize(p.Size), templ.KV("animate-pulse", p.Animated) }
+			style={ fmt.Sprintf("width: %d%%", percent) }
+			role="progressbar"
+			aria-valuenow={ fmt.Sprintf("%d", p.Value) }
+			aria-valuemin="0"
+			aria-valuemax={ fmt.Sprintf("%d", max) }
+		></div>
+	</div>
+}
+
+templ ProgressGroup(items []ProgressProps) {
+	<div class="space-y-3">
+		for i := range items {
+			@ProgressBar(&items[i])
+		}
+	</div>
+}

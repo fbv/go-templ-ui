@@ -126,44 +126,22 @@ templ Showcase() {
 						})
 					}
 				</div>
-				@ui.H2("Timeline")
-				// @ui.LinearTimeline(ui.TimelineProps{
-				// 	Items: []ui.TimeLineItem{
-				// 		{Value: "Android 5.0 Lollipop", Date: "2011"},
-				// 		{Value: "iPhone", Date: "2015"},
-				// 		// Add more items as needed
-				// 	},
-				// })
-				// @ui.VerticalTimeline(ui.TimelineProps{
-				// 	Items: []ui.TimeLineItem{
-				// 		{Value: "Apple Watch", Date: "2015"},
-				// 		{Value: "Apple TV", Date: "2007"},
-				// 		// Add more items as needed
-				// 	},
-				// })
-				// @ui.DotTimeline(ui.TimelineProps{
-				// 	Items: []ui.TimeLineItem{
-				// 		{Value: "Apple Watch", Date: "2015"},
-				// 		{Value: "Apple TV", Date: "2007"},
-				// 		// Add more items as needed
-				// 	},
-				// })
-				// <h1>Cards</h1>
-				// @ui.Card2(ui.CardProps{
-				// 	Title:   "Test",
-				// 	Content: "Nullam a euismod massa, non cursus odio. Fusce augue ex, finibus nec tempor nec, lacinia in mauris. Cras id interdum diam.",
-				// })
-				@headers()
-				@buttons()
-				@tables()
-				@utils()
+			@timelineSection()
+			@statCardsSection()
+			@progressSection()
+			@dropdownSection()
 
-			@alerts()
-			@toasts()
-			@spinners()
-			@skeletons()
-			@datepickers()
-			@paginationSection()
+			@headers()
+			@buttons()
+			@tables()
+			@utils()
+
+		@alerts()
+		@toasts()
+		@spinners()
+		@skeletons()
+		@datepickers()
+		@paginationSection()
 
 			@ui.H2("Code")
 			@ui.Code(&ui.CodeProps{Language: "go", Content: "package main\n\nimport (\n\t\"fmt\"\n)\n\nfunc main() {\n\tfmt.Println(\"Hello, world!\")\n}\n"})
@@ -287,5 +265,71 @@ templ paginationSection() {
 		@ui.Pagination(&ui.PaginationProps{CurrentPage: 1, TotalPages: 10, BaseURL: "/showcase?page", ShowFirst: true, ShowLast: true})
 		@ui.Pagination(&ui.PaginationProps{CurrentPage: 5, TotalPages: 10, BaseURL: "/showcase?page", ShowFirst: true, ShowLast: true})
 		@ui.Pagination(&ui.PaginationProps{CurrentPage: 10, TotalPages: 10, BaseURL: "/showcase?page", ShowFirst: true, ShowLast: true})
+	</div>
+}
+
+templ timelineSection() {
+	@ui.H2("Timeline")
+	<div class="space-y-8">
+		@ui.H3("Vertical Timeline")
+		@ui.VerticalTimeline([]ui.TimelineItem{
+			{Title: "Project Started", Date: "01.01.2024", Content: "Начало разработки нового проекта", Color: "blue", Active: true},
+			{Title: "Design Completed", Date: "15.01.2024", Content: "Дизайн-макеты утверждены", Color: "green"},
+			{Title: "Development Phase", Date: "01.02.2024", Content: "Начало разработки компонентов", Color: "yellow"},
+			{Title: "Testing", Date: "01.03.2024", Content: "QA тестирование", Color: "gray"},
+			{Title: "Deployment", Date: "15.03.2024", Content: "Запуск в продакшн", Color: "red"},
+		})
+		
+		@ui.H3("Horizontal Timeline")
+		@ui.HorizontalTimeline([]ui.TimelineItem{
+			{Title: "Step 1", Date: "Янв", Color: "blue", Active: true},
+			{Title: "Step 2", Date: "Фев", Color: "green"},
+			{Title: "Step 3", Date: "Мар", Color: "yellow"},
+			{Title: "Step 4", Date: "Апр", Color: "gray"},
+		})
+	</div>
+}
+
+templ statCardsSection() {
+	@ui.H2("Stat Cards")
+	@ui.StatGroup([]ui.StatProps{
+		{Title: "Выручка", Value: "1,234,567", Prefix: "₽", Change: "+12.5%", ChangeType: "up", Style: "blue"},
+		{Title: "Клиенты", Value: "1,234", Change: "+8.2%", ChangeType: "up", Style: "green"},
+		{Title: "Заказы", Value: "567", Change: "-3.1%", ChangeType: "down", Style: "red"},
+		{Title: "Конверсия", Value: "3.24", Suffix: "%", Change: "+0.5%", ChangeType: "up", Style: "purple"},
+	})
+}
+
+templ progressSection() {
+	@ui.H2("Progress Bars")
+	<div class="space-y-4 max-w-md">
+		@ui.ProgressBar(&ui.ProgressProps{Value: 25, Label: "Загрузка", ShowValue: true})
+		@ui.ProgressBar(&ui.ProgressProps{Value: 50, Color: "green", Label: "Завершено", ShowValue: true})
+		@ui.ProgressBar(&ui.ProgressProps{Value: 75, Color: "yellow", Label: "В процессе", ShowValue: true})
+		@ui.ProgressBar(&ui.ProgressProps{Value: 100, Color: "green", Label: "Готово", ShowValue: true})
+		@ui.H3("Размеры")
+		@ui.ProgressGroup([]ui.ProgressProps{
+			{Value: 30, Size: "sm", Color: "blue"},
+			{Value: 50, Size: "md", Color: "green"},
+			{Value: 70, Size: "lg", Color: "purple"},
+		})
+	</div>
+}
+
+templ dropdownSection() {
+	@ui.H2("Dropdown Menu")
+	<div class="space-y-4">
+		@ui.DropdownScript()
+		@ui.DropdownButton(&ui.DropdownProps{
+			ID:       "dropdown-1",
+			Position: "bottom-left",
+			Items: []ui.DropdownItem{
+				{Label: "Dashboard", URL: "#"},
+				{Label: "Settings", URL: "#"},
+				{Label: "Earnings", URL: "#"},
+				{Divider: true},
+				{Label: "Sign out", URL: "#"},
+			},
+		}, &ui.ButtonProps{Label: "Dropdown Button", Style: "alt"})
 	</div>
 }
