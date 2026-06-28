@@ -1,0 +1,136 @@
+package showcase
+
+import (
+	"github.com/fbv/go-templ-ui/view/icon"
+	"github.com/fbv/go-templ-ui/view/ui"
+	"github.com/fbv/go-templ-ui/view/layout"
+)
+
+type iconItem struct {
+	Name string
+	Path string
+}
+
+templ iconCard(name, path string) {
+	<div class="flex flex-col items-center p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+		<svg class="w-8 h-8 text-gray-700 dark:text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+			<path stroke-linecap="round" stroke-linejoin="round" d={ path }></path>
+		</svg>
+		<span class="text-xs text-gray-500 dark:text-gray-400 text-center break-all">{ name }</span>
+	</div>
+}
+
+templ IconsPage() {
+	@layout.Page(&layout.PageProps{Title: "Icons - Showcase"}) {
+		<div class="flex flex-row">
+			@Sidebar()
+			<div class="flex-1 w-auto h-screen overflow-y-auto p-4">
+				@ui.H1("Icons")
+				@ui.H2("Navigation")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("Home", icon.Home)
+					@iconCard("Dashboard", icon.Dashboard)
+					@iconCard("Menu", icon.Menu)
+					@iconCard("Search", icon.Search)
+					@iconCard("Filter", icon.Filter)
+					@iconCard("Sort", icon.Sort)
+					@iconCard("Refresh", icon.Refresh)
+					@iconCard("Back", icon.Back)
+					@iconCard("Close", icon.Close)
+				</div>
+
+				@ui.H2("CRUD Operations")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("Add", icon.Add)
+					@iconCard("Edit", icon.Edit)
+					@iconCard("Delete", icon.Delete)
+					@iconCard("Copy", icon.Copy)
+					@iconCard("Download", icon.Download)
+					@iconCard("Upload", icon.Upload)
+					@iconCard("Save", icon.Save)
+					@iconCard("Print", icon.Print)
+				</div>
+
+				@ui.H2("Finance")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("Money", icon.Money)
+					@iconCard("CreditCard", icon.CreditCard)
+					@iconCard("Invoice", icon.Invoice)
+					@iconCard("Cart", icon.Cart)
+					@iconCard("Wallet", icon.Wallet)
+					@iconCard("TrendUp", icon.TrendUp)
+					@iconCard("TrendDown", icon.TrendDown)
+					@iconCard("Chart", icon.Chart)
+					@iconCard("PieChart", icon.PieChart)
+				</div>
+
+				@ui.H2("Status")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("Check", icon.Check)
+					@iconCard("Warning", icon.Warning)
+					@iconCard("Error", icon.Error)
+					@iconCard("Info", icon.Info)
+					@iconCard("Clock", icon.Clock)
+					@iconCard("Lock", icon.Lock)
+					@iconCard("Unlock", icon.Unlock)
+				</div>
+
+				@ui.H2("Users & Access")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("User", icon.User)
+					@iconCard("Users", icon.Users)
+					@iconCard("Key", icon.Key)
+					@iconCard("Shield", icon.Shield)
+					@iconCard("Profile", icon.Profile)
+					@iconCard("Clients", icon.Clients)
+				</div>
+
+				@ui.H2("Documents")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("File", icon.File)
+					@iconCard("FileText", icon.FileText)
+					@iconCard("Folder", icon.Folder)
+					@iconCard("Attachment", icon.Attachment)
+				</div>
+
+				@ui.H2("Communication")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("Email", icon.Email)
+					@iconCard("Phone", icon.Phone)
+					@iconCard("Chat", icon.Chat)
+					@iconCard("Messages", icon.Messages)
+					@iconCard("Send", icon.Send)
+					@iconCard("Share", icon.Share)
+					@iconCard("Inbox", icon.Inbox)
+				</div>
+
+				@ui.H2("System")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("Calendar", icon.Calendar)
+					@iconCard("Tag", icon.Tag)
+					@iconCard("Star", icon.Star)
+					@iconCard("Eye", icon.Eye)
+					@iconCard("EyeOff", icon.EyeOff)
+					@iconCard("ExternalLink", icon.ExternalLink)
+					@iconCard("Notifications", icon.Notifications)
+					@iconCard("Tasks", icon.Tasks)
+					@iconCard("Settings", icon.Settings)
+				</div>
+
+				@ui.H2("Arrows")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("ArrowUp", icon.ArrowUp)
+					@iconCard("ArrowDown", icon.ArrowDown)
+					@iconCard("ChevronLeft", icon.ChevronLeft)
+					@iconCard("ChevronRight", icon.ChevronRight)
+					@iconCard("ChevronDown", icon.ChevronDown)
+				</div>
+
+				@ui.H2("Logout")
+				<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+					@iconCard("Logout", icon.Logoutn)
+				</div>
+			</div>
+		</div>
+	}
+}

@@ -38,21 +38,30 @@ func Sidebar() templ.Component {
 		templ_7745c5c3_Err = ui.Sidebar(&ui.SidebarProps{
 			Items: []*ui.SidebarItem{
 				&ui.SidebarItem{
-					Name:   "Applications",
+					Name:   "Components",
 					Icon:   icon.Dashboard,
-					URL:    "/admin/app",
-					Active: view.PathPrefixIs(ctx, "/showcase"),
-				}, &ui.SidebarItem{
+					URL:    "/showcase",
+					Active: view.PathPrefixIs(ctx, "/showcase") && !view.PathPrefixIs(ctx, "/showcase/icons"),
+				},
+				&ui.SidebarItem{
+					Name:   "Icons",
+					Icon:   icon.Tag,
+					URL:    "/showcase/icons",
+					Active: view.PathPrefixIs(ctx, "/showcase/icons"),
+				},
+				&ui.SidebarItem{
 					Name:   "Payments",
 					Icon:   icon.Tasks,
 					URL:    "/admin/payments/status",
 					Active: view.PathPrefixIs(ctx, "/admin/payments"),
-				}, &ui.SidebarItem{
+				},
+				&ui.SidebarItem{
 					Name:   "Synchronization",
 					Icon:   icon.Profile,
 					URL:    "/admin/sync/data",
 					Active: view.PathPrefixIs(ctx, "/admin/sync"),
-				}, &ui.SidebarItem{
+				},
+				&ui.SidebarItem{
 					Name:   "Settings",
 					Icon:   icon.Settings,
 					URL:    "/admin/settings",
