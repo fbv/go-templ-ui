@@ -53,22 +53,20 @@ templ Sidebar() {
 
 templ Showcase() {
 	@layout.Page(&layout.PageProps{Title: "Showcase"}) {
+		@ui.ToastScript()
+		@ui.ToastContainer("bottom-right")
 		<div class="flex flex-row">
 			@Sidebar()
 			<div class="flex-1 w-auto h-screen overflow-y-auto p-4">
-
 			
 			@ui.H1("UI Components showcase")
 
 			@ui.H2("Breadcrumbs")
-
 			@ui.Breadcrumb(
 				&ui.BreadcrumbItem{Title: "Home", URL: "/"},
 				&ui.BreadcrumbItem{Title: "Library", URL: "/library"},
 				&ui.BreadcrumbItem{Title: "Data", Active: true},
 			)
-
-			
 
 			@ui.H2("Collapsible")
 			@ui.Collapsible("TEST") {
@@ -139,12 +137,10 @@ templ Showcase() {
 			@statCardsSection()
 			@progressSection()
 			@dropdownSection()
-
 			@headers()
 			@buttons()
 			@tables()
 			@utils()
-
 		@alerts()
 		@toasts()
 		@spinners()
@@ -156,7 +152,6 @@ templ Showcase() {
 			@ui.Code(&ui.CodeProps{Language: "go", Content: "package main\n\nimport (\n\t\"fmt\"\n)\n\nfunc main() {\n\tfmt.Println(\"Hello, world!\")\n}\n"})
 
 				<br/>
-
 			</div>
 		</div>
 	}
@@ -203,6 +198,7 @@ templ alerts() {
 templ toasts() {
 	@ui.H2("Toasts")
 	<div class="space-y-4">
+		@ui.H3("Default Style Icons")
 		<p class="text-sm text-gray-500">Click buttons to show toasts:</p>
 		<div class="flex gap-2">
 			<button type="button" onclick={ showToastScript("toast-info") } class="px-4 py-2 text-sm text-white bg-blue-700 rounded-lg hover:bg-blue-800">Info Toast</button>
@@ -221,6 +217,27 @@ templ toasts() {
 		}
 		@ui.Toast(&ui.ToastProps{ID: "toast-error", Title: "Error", Style: "error", Duration: 5000}) {
 			An error occurred.
+		}
+		
+		@ui.H3("Custom Icons")
+		<p class="text-sm text-gray-500">Using standard icons from icon package:</p>
+		<div class="flex gap-2 flex-wrap">
+			<button type="button" onclick={ showToastScript("toast-cart") } class="px-4 py-2 text-sm text-white bg-purple-700 rounded-lg hover:bg-purple-800">Cart Toast</button>
+			<button type="button" onclick={ showToastScript("toast-money") } class="px-4 py-2 text-sm text-white bg-green-700 rounded-lg hover:bg-green-800">Money Toast</button>
+			<button type="button" onclick={ showToastScript("toast-download") } class="px-4 py-2 text-sm text-white bg-blue-700 rounded-lg hover:bg-blue-800">Download Toast</button>
+			<button type="button" onclick={ showToastScript("toast-star") } class="px-4 py-2 text-sm text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">Favorite Toast</button>
+		</div>
+		@ui.Toast(&ui.ToastProps{ID: "toast-cart", Title: "Added to Cart", Style: "success", Icon: icon.Cart, Duration: 5000}) {
+			Item added to your cart.
+		}
+		@ui.Toast(&ui.ToastProps{ID: "toast-money", Title: "Payment Received", Style: "success", Icon: icon.Money, Duration: 5000}) {
+			$150.00 has been credited.
+		}
+		@ui.Toast(&ui.ToastProps{ID: "toast-download", Title: "Download Started", Style: "info", Icon: icon.Download, Duration: 5000}) {
+			Your file is being downloaded.
+		}
+		@ui.Toast(&ui.ToastProps{ID: "toast-star", Title: "Added to Favorites", Style: "warning", Icon: icon.Star, Duration: 5000}) {
+			Item saved to your favorites.
 		}
 	</div>
 }
