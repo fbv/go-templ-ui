@@ -45,9 +45,9 @@ templ Sidebar() {
 			Name: "Boris Fedorov",
 			Email: "boris.fedorov.ru@gmail.com",
 		},
-		LogoutURL:   "#",
-		Collapsible: true,
-		ID:          "main-sidebar",
+		LogoutURL:     "/showcase/login",
+		Collapsible:   true,
+		ID:            "main-sidebar",
 	})
 }
 
@@ -55,6 +55,8 @@ templ Showcase() {
 	@layout.Page(&layout.PageProps{Title: "Showcase"}) {
 		@ui.ToastScript()
 		@ui.ToastContainer("bottom-right")
+		@LoginModalScript()
+		@LoginModal()
 		<div class="flex flex-row">
 			@Sidebar()
 			<div class="flex-1 w-auto h-screen overflow-y-auto p-4">
@@ -147,6 +149,7 @@ templ Showcase() {
 		@skeletons()
 		@datepickers()
 		@paginationSection()
+		@loginSection()
 
 			@ui.H2("Code")
 			@ui.Code(&ui.CodeProps{Language: "go", Content: "package main\n\nimport (\n\t\"fmt\"\n)\n\nfunc main() {\n\tfmt.Println(\"Hello, world!\")\n}\n"})
@@ -358,4 +361,9 @@ templ dropdownSection() {
 			},
 		}, &ui.ButtonProps{Label: "Dropdown Button", Style: "alt"})
 	</div>
+}
+
+templ loginSection() {
+	@ui.H2("Login Dialog")
+	<p class="text-sm text-gray-500 mb-4">Click the Logout button in the sidebar to see the login modal.</p>
 }

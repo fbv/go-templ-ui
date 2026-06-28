@@ -1,0 +1,75 @@
+package showcase
+
+templ LoginModal() {
+	<div
+		id="login-modal"
+		class="fixed inset-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+		tabindex="-1"
+		aria-hidden="true"
+	>
+		<div class="pointer-events-none relative w-auto min-h-screen flex items-center justify-center p-4">
+			<div
+				class="pointer-events-auto relative w-full max-w-md bg-white rounded-lg shadow-2xl dark:bg-gray-800 opacity-0 translate-y-[-50px] transition-all duration-300"
+				data-modal-dialog
+			>
+				<div class="p-6">
+					<div class="flex justify-between items-center mb-4">
+						<div></div>
+						<button
+							type="button"
+							class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+							onclick="document.getElementById('login-modal').classList.add('hidden')"
+						>
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+							</svg>
+						</button>
+					</div>
+					@LoginForm()
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ LoginModalScript() {
+	<script>
+		if (!window._loginModalInitialized) {
+			window._loginModalInitialized = true;
+			window.showLoginModal = function() {
+				var modal = document.getElementById('login-modal');
+				if (modal) {
+					modal.classList.remove('hidden');
+					var dialog = modal.querySelector('[data-modal-dialog]');
+					if (dialog) {
+						dialog.classList.remove('translate-y-[-50px]', 'opacity-0');
+						dialog.classList.add('translate-y-0', 'opacity-100');
+					}
+				}
+			};
+			window.hideLoginModal = function() {
+				var modal = document.getElementById('login-modal');
+				if (modal) {
+					var dialog = modal.querySelector('[data-modal-dialog]');
+					if (dialog) {
+						dialog.classList.add('translate-y-[-50px]', 'opacity-0');
+						dialog.classList.remove('translate-y-0', 'opacity-100');
+					}
+					setTimeout(function() {
+						modal.classList.add('hidden');
+					}, 300);
+				}
+			};
+			document.addEventListener('click', function(e) {
+				var modal = document.getElementById('login-modal');
+				if (modal && e.target === modal) {
+					window.hideLoginModal();
+				}
+			});
+		}
+	</script>
+}
+
+script showLoginModalScript() {
+	showLoginModal()
+}

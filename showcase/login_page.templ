@@ -1,0 +1,25 @@
+package showcase
+
+import (
+	"github.com/fbv/go-templ-ui/view/layout"
+)
+
+templ LoginPage() {
+	@layout.Page(&layout.PageProps{Title: "Вход в систему"}) {
+		<div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4">
+			<div class="w-full max-w-md">
+				<div class="bg-white rounded-lg shadow-lg dark:bg-gray-800">
+					<div class="p-8">
+						@LoginForm()
+					</div>
+				</div>
+				<p class="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
+					Входя в систему, вы соглашаетесь с 
+					<a href="#" class="underline">условиями использования</a> 
+					и 
+					<a href="#" class="underline">политикой конфиденциальности</a>
+				</p>
+			</div>
+		</div>
+	}
+}

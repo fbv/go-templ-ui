@@ -32,6 +32,7 @@ func (s *Server) Run() error {
 		Browse: true,
 	}))
 	r.Get("/", view.StaticPage(showcase.Showcase()))
+	r.Get("/login", view.StaticPage(showcase.LoginPage()))
 	r.Get("/icons", view.StaticPage(showcase.IconsPage()))
 	//r.Get("/alert", view.StaticPage(showcase.AlertPage()))
 	//r.Get("/breadcrumb", view.StaticPage(showcase.BreadcrumbsPage()))

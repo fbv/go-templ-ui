@@ -17,11 +17,12 @@ type UserInfo struct {
 }
 
 type SidebarProps struct {
-	Items       []*SidebarItem
-	User        *UserInfo
-	LogoutURL   string
-	Collapsible bool   // Enable collapse/expand toggle
-	ID          string // Unique ID for the sidebar element (required if Collapsible)
+	Items         []*SidebarItem
+	User          *UserInfo
+	LogoutURL     string
+	LogoutOnClick string // JS function to call on logout click (overrides LogoutURL)
+	Collapsible   bool   // Enable collapse/expand toggle
+	ID            string // Unique ID for the sidebar element (required if Collapsible)
 }
 
 templ SidebarScript() {
@@ -59,6 +60,12 @@ templ SidebarInit(id string) {
 			}
 		});
 	</script>
+}
+
+script logoutOnClickScript(js string) {
+	if (js) {
+		eval(js);
+	}
 }
 
 templ Sidebar(p *SidebarProps) {
@@ -129,16 +136,30 @@ templ Sidebar(p *SidebarProps) {
 						<p class="text-xs text-gray-500 truncate">{ p.User.Email }</p>
 					</div>
 				</div>
-				if p.LogoutURL != "" {
-					<a class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 sidebar-logout"
-						href={ templ.URL(p.LogoutURL) }
-						title="Logout"
-					>
-						<svg class="w-4 h-4 sidebar-logout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-						</svg>
-						<span class="ml-2 sidebar-logout-text">Logout</span>
-					</a>
+				if p.LogoutURL != "" || p.LogoutOnClick != "" {
+					if p.LogoutOnClick != "" {
+						<button
+							type="button"
+							onclick={ logoutOnClickScript(p.LogoutOnClick) }
+							class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 sidebar-logout"
+							title="Logout"
+						>
+							<svg class="w-4 h-4 sidebar-logout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+							</svg>
+							<span class="ml-2 sidebar-logout-text">Logout</span>
+						</button>
+					} else {
+						<a class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 sidebar-logout"
+							href={ templ.URL(p.LogoutURL) }
+							title="Logout"
+						>
+							<svg class="w-4 h-4 sidebar-logout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+							</svg>
+							<span class="ml-2 sidebar-logout-text">Logout</span>
+						</a>
+					}
 				}
 			</div>
 		}
