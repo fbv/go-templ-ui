@@ -86,7 +86,7 @@ func VerticalTimeline(items []TimelineItem) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, item := range items {
-			var templ_7745c5c3_Var2 = []any{"mb-4 ml-6", timelineLineColor(item.Color)}
+			var templ_7745c5c3_Var2 = []any{"my-2 ml-6", timelineLineColor(item.Color)}
 			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
