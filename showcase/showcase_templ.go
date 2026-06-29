@@ -40,14 +40,20 @@ func Sidebar() templ.Component {
 				&ui.SidebarItem{
 					Name:   "Components",
 					Icon:   icon.Dashboard,
-					URL:    "/showcase",
-					Active: view.PathPrefixIs(ctx, "/showcase") && !view.PathPrefixIs(ctx, "/showcase/icons"),
+					URL:    "/showcase/components",
+					Active: view.PathPrefixIs(ctx, "/showcase/components"),
 				},
 				&ui.SidebarItem{
 					Name:   "Icons",
 					Icon:   icon.Tag,
 					URL:    "/showcase/icons",
 					Active: view.PathPrefixIs(ctx, "/showcase/icons"),
+				},
+				&ui.SidebarItem{
+					Name:   "Panels",
+					Icon:   icon.Dashboard,
+					URL:    "/showcase/panels",
+					Active: view.PathPrefixIs(ctx, "/showcase/panels"),
 				},
 				&ui.SidebarItem{
 					Name:   "Payments",

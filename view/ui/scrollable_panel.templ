@@ -1,0 +1,136 @@
+package ui
+
+type ScrollablePanelProps struct {
+	Header    string
+	Style     string
+	MaxHeight string
+	Overflow  string
+	NoShadow  bool
+	FadeEdge  bool
+}
+
+func scrollablePanelClasses(p *ScrollablePanelProps) string {
+	classes := "rounded-lg border overflow-hidden"
+	switch p.Style {
+	case "blue":
+		classes += " bg-blue-50 border-blue-200"
+	case "dark":
+		classes += " bg-gray-800 border-gray-700"
+	default:
+		classes += " bg-gray-50"
+	}
+	if !p.NoShadow {
+		classes += " shadow-sm"
+	}
+	return classes
+}
+
+func scrollablePanelHeaderClasses(p *ScrollablePanelProps) string {
+	classes := "text-sm font-medium px-4 py-2 border-b"
+	switch p.Style {
+	case "blue":
+		classes += " text-blue-700 bg-blue-50 border-blue-200"
+	case "dark":
+		classes += " text-gray-200 bg-gray-800 border-gray-700"
+	default:
+		classes += " text-gray-600 bg-gray-50 border-gray-200"
+	}
+	return classes
+}
+
+func scrollableBodyClasses(p *ScrollablePanelProps) string {
+	maxHeight := p.MaxHeight
+	if maxHeight == "" {
+		maxHeight = "h-64"
+	}
+	overflow := p.Overflow
+	switch overflow {
+	case "x":
+		return maxHeight + " overflow-x-auto overflow-y-hidden"
+	case "both":
+		return maxHeight + " overflow-auto"
+	case "auto":
+		return maxHeight + " overflow-auto"
+	default:
+		return maxHeight + " overflow-y-auto overflow-x-hidden"
+	}
+}
+
+templ ScrollablePanelStyle() {
+	<style>
+		.scrollable-fade-top::before,
+		.scrollable-fade-bottom::after {
+			content: '';
+			position: sticky;
+			display: block;
+			height: 1.5rem;
+			left: 0;
+			right: 0;
+			z-index: 1;
+			pointer-events: none;
+		}
+		.scrollable-fade-top::before {
+			top: 0;
+			background: linear-gradient(to bottom, var(--fade-color, #f9fafb), transparent);
+		}
+		.scrollable-fade-bottom::after {
+			bottom: 0;
+			background: linear-gradient(to top, var(--fade-color, #f9fafb), transparent);
+		}
+		.scrollable-fade-top.dark-fade::before {
+			background: linear-gradient(to bottom, var(--fade-color-dark, #1f2937), transparent);
+		}
+		.scrollable-fade-bottom.dark-fade::after {
+			background: linear-gradient(to top, var(--fade-color-dark, #1f2937), transparent);
+		}
+		.scrollable-fade-top.blue-fade::before {
+			background: linear-gradient(to bottom, var(--fade-color-blue, #eff6ff), transparent);
+		}
+		.scrollable-fade-bottom.blue-fade::after {
+			background: linear-gradient(to top, var(--fade-color-blue, #eff6ff), transparent);
+		}
+		.scrollable-panel::-webkit-scrollbar {
+			width: 6px;
+			height: 6px;
+		}
+		.scrollable-panel::-webkit-scrollbar-track {
+			background: transparent;
+		}
+		.scrollable-panel::-webkit-scrollbar-thumb {
+			background-color: rgba(156, 163, 175, 0.5);
+			border-radius: 3px;
+		}
+		.scrollable-panel::-webkit-scrollbar-thumb:hover {
+			background-color: rgba(156, 163, 175, 0.7);
+		}
+	</style>
+}
+
+templ ScrollablePanel(p *ScrollablePanelProps) {
+	<div class={ scrollablePanelClasses(p) }>
+		if p.Header != "" {
+			<div class={ scrollablePanelHeaderClasses(p) }>
+				{ p.Header }
+			</div>
+		}
+		<div class={ "relative " + scrollableBodyClasses(p) }>
+			if p.FadeEdge {
+				<div class={
+					"scrollable-fade-top pointer-events-none absolute top-0 left-0 right-0 z-10",
+					templ.KV("blue-fade", p.Style == "blue"),
+					templ.KV("dark-fade", p.Style == "dark"),
+				}></div>
+			}
+			<div class="scrollable-panel">
+				{ children... }
+			</div>
+			if p.FadeEdge {
+				<div class={
+					"scrollable-fade-bottom pointer-events-none absolute bottom-0 left-0 right-0 z-10",
+					templ.KV("blue-fade", p.Style == "blue"),
+					templ.KV("dark-fade", p.Style == "dark"),
+				}></div>
+			}
+		</div>
+	</div>
+}

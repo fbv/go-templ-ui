@@ -1,0 +1,133 @@
+package ui
+
+import "fmt"
+
+type AccordionProps struct {
+	ID         string
+	Items      []*AccordionItem
+	SingleOpen bool
+	Style      string
+}
+
+type AccordionItem struct {
+	Title    string
+	Content  templ.Component
+	Disabled bool
+}
+
+func accordionClasses(p *AccordionProps) string {
+	switch p.Style {
+	case "bordered":
+		return "border rounded-lg divide-y divide-gray-200"
+	case "separated":
+		return "space-y-2"
+	default:
+		return "divide-y divide-gray-200"
+	}
+}
+
+func accordionItemClasses(p *AccordionProps) string {
+	switch p.Style {
+	case "bordered":
+		return ""
+	case "separated":
+		return "border rounded-lg overflow-hidden"
+	default:
+		return ""
+	}
+}
+
+func accordionButtonClasses(item *AccordionItem) string {
+	classes := "w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-inset transition-colors"
+	if item.Disabled {
+		classes = "w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium text-gray-400 cursor-not-allowed focus:outline-none"
+	}
+	return classes
+}
+
+templ AccordionStyle() {
+	<style>
+		.accordion-content {
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
+			opacity: 0;
+		}
+		.accordion-open > .accordion-content {
+			max-height: 1000px;
+			opacity: 1;
+		}
+		.accordion-chevron {
+			transition: transform 0.2s ease-in-out;
+		}
+		.accordion-open .accordion-chevron {
+			transform: rotate(180deg);
+		}
+	</style>
+}
+
+templ AccordionScript() {
+	<script>
+		if (!window._accordionInitialized) {
+			window._accordionInitialized = true;
+			window.toggleAccordion = function(buttonId) {
+				var button = document.getElementById(buttonId);
+				if (!button) return;
+				var item = button.closest('.accordion-item');
+				if (!item) return;
+				var singleOpen = item.getAttribute('data-single-open') === 'true';
+				if (singleOpen) {
+					var container = item.closest('.accordion-container');
+					if (container) {
+						var openItems = container.querySelectorAll('.accordion-open');
+						for (var i = 0; i < openItems.length; i++) {
+							if (openItems[i] !== item) {
+								openItems[i].classList.remove('accordion-open');
+							}
+						}
+					}
+				}
+				item.classList.toggle('accordion-open');
+			};
+		}
+	</script>
+}
+
+script accordionToggleScript(id string) {
+	toggleAccordion(id)
+}
+
+templ Accordion(p *AccordionProps) {
+	<div class={ "accordion-container " + accordionClasses(p) }>
+		for i, item := range p.Items {
+			<div class={ "accordion-item " + accordionItemClasses(p) }>
+				<button
+					type="button"
+					id={ p.ID + "-btn-" + fmt.Sprintf("%d", i) }
+					class={ accordionButtonClasses(item) }
+					if !item.Disabled {
+						onclick={ accordionToggleScript(p.ID + "-btn-" + fmt.Sprintf("%d", i)) }
+					}
+					aria-expanded="false"
+				>
+					<span class="flex items-center gap-2">
+						{ item.Title }
+					</span>
+					<svg
+						class="accordion-chevron w-4 h-4 text-gray-500 shrink-0"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+					</svg>
+				</button>
+				<div class="accordion-content">
+					<div class="px-4 pb-4 pt-1 text-sm text-gray-700">
+						@item.Content
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+}

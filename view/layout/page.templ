@@ -13,7 +13,10 @@ templ Page(p *PageProps) {
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			@ui.CollapsibleStyle()
-		@ui.SidebarStyles()
+			@ui.SidebarStyles()
+			@ui.ScrollablePanelStyle()
+			@ui.AccordionStyle()
+			@ui.DrawerStyle()
 			<title>{ p.Title }</title>
 <style>
 html { font-size: 13px; }
@@ -66,6 +69,10 @@ li.x-tab-active::before {
 		@ui.CollapsibleScript()
 		@ui.ToastScript()
 		@ui.SidebarScript()
+		@ui.AccordionScript()
+		@ui.DrawerScript()
+		@ui.TabPanelScript()
+		@ui.SplitPanelScript()
 	</body>
 	</html>
 }

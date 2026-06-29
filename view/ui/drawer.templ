@@ -1,0 +1,147 @@
+package ui
+
+type DrawerProps struct {
+	ID      string
+	Title   string
+	Side    string
+	Width   string
+	Height  string
+	Overlay bool
+}
+
+func drawerSize(p *DrawerProps) string {
+	switch p.Side {
+	case "top", "bottom":
+		if p.Height != "" {
+			return p.Height
+		}
+		return "h-80"
+	default:
+		if p.Width != "" {
+			return p.Width
+		}
+		return "w-80"
+	}
+}
+
+func drawerTranslateInitial(p *DrawerProps) string {
+	switch p.Side {
+	case "left":
+		return "-translate-x-full"
+	case "top":
+		return "-translate-y-full"
+	case "bottom":
+		return "translate-y-full"
+	default:
+		return "translate-x-full"
+	}
+}
+
+func drawerPosition(p *DrawerProps) string {
+	switch p.Side {
+	case "left":
+		return "fixed inset-y-0 left-0"
+	case "top":
+		return "fixed inset-x-0 top-0"
+	case "bottom":
+		return "fixed inset-x-0 bottom-0"
+	default:
+		return "fixed inset-y-0 right-0"
+	}
+}
+
+templ DrawerScript() {
+	<script>
+		if (!window._drawerInitialized) {
+			window._drawerInitialized = true;
+			window.openDrawer = function(drawerId) {
+				var drawer = document.getElementById(drawerId);
+				if (!drawer) return;
+				drawer.classList.remove('hidden');
+				requestAnimationFrame(function() {
+					var backdrop = drawer.querySelector('.drawer-backdrop');
+					var panel = drawer.querySelector('.drawer-panel');
+					if (backdrop) backdrop.classList.add('drawer-backdrop-open');
+					if (panel) {
+						panel.classList.remove(drawer.getAttribute('data-initial-translate'));
+						panel.classList.add('drawer-panel-open');
+					}
+				});
+			};
+			window.closeDrawer = function(drawerId) {
+				var drawer = document.getElementById(drawerId);
+				if (!drawer) return;
+				var backdrop = drawer.querySelector('.drawer-backdrop');
+				var panel = drawer.querySelector('.drawer-panel');
+				if (backdrop) backdrop.classList.remove('drawer-backdrop-open');
+				if (panel) {
+					panel.classList.remove('drawer-panel-open');
+					panel.classList.add(drawer.getAttribute('data-initial-translate'));
+				}
+				setTimeout(function() {
+					if (backdrop && !backdrop.classList.contains('drawer-backdrop-open')) {
+						drawer.classList.add('hidden');
+					}
+				}, 300);
+			};
+		}
+	</script>
+}
+
+script OpenDrawerScript(id string) {
+	openDrawer(id)
+}
+
+script CloseDrawerScript(id string) {
+	closeDrawer(id)
+}
+
+templ DrawerStyle() {
+	<style>
+		.drawer-backdrop {
+			background-color: rgba(0, 0, 0, 0);
+			transition: background-color 0.3s ease-in-out;
+		}
+		.drawer-backdrop-open {
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+		.drawer-panel {
+			transition: transform 0.3s ease-in-out;
+		}
+		.drawer-panel-open {
+			transform: translate(0, 0) !important;
+		}
+	</style>
+}
+
+templ Drawer(p *DrawerProps) {
+	<div
+		id={ p.ID }
+		class="hidden fixed inset-0 z-[1060]"
+		data-initial-translate={ drawerTranslateInitial(p) }
+	>
+		if p.Overlay {
+			<div
+				class={ "drawer-backdrop absolute inset-0" }
+				onclick={ CloseDrawerScript(p.ID) }
+			></div>
+		}
+		<div class={ "drawer-panel absolute " + drawerPosition(p) + " " + drawerSize(p) + " " + drawerTranslateInitial(p) + " bg-white shadow-xl flex flex-col" }>
+			<div class="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+				<h3 class="text-lg font-medium text-gray-900">{ p.Title }</h3>
+				<button
+					type="button"
+					class="text-gray-400 hover:text-gray-600 focus:outline-none"
+					onclick={ CloseDrawerScript(p.ID) }
+				>
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+					</svg>
+				</button>
+			</div>
+			<div class="flex-1 overflow-y-auto p-4">
+				{ children... }
+			</div>
+		</div>
+	</div>
+}

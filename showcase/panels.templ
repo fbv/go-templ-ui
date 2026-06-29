@@ -1,0 +1,421 @@
+package showcase
+
+import (
+	"github.com/fbv/go-templ-ui/view/icon"
+	"github.com/fbv/go-templ-ui/view/ui"
+	"github.com/fbv/go-templ-ui/view/layout"
+)
+
+templ PanelsPage() {
+	@layout.Page(&layout.PageProps{Title: "Panels Showcase"}) {
+		@ui.SidebarStyles()
+		@ui.SidebarScript()
+		<div class="flex flex-row">
+			@Sidebar()
+			<div class="flex-1 w-auto h-screen overflow-y-auto p-4">
+				<div class="max-w-6xl mx-auto p-6 space-y-12">
+					@ui.H1("Panels")
+			<!-- ScrollablePanel -->
+			<section>
+				@ui.H2("ScrollablePanel")
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<!-- Vertical scroll -->
+					<div>
+						@ui.H3("Vertical Scroll")
+						@ui.ScrollablePanel(&ui.ScrollablePanelProps{
+							Header:    "Длинный список (вертикальный скролл)",
+							MaxHeight: "h-48",
+						}) {
+							<div class="p-4 space-y-2">
+								for i := 1; i <= 30; i++ {
+									<div class="p-2 bg-white rounded border text-sm">
+										Элемент списка #{ i }
+									</div>
+								}
+							</div>
+						}
+					</div>
+					<!-- Horizontal scroll -->
+					<div>
+						@ui.H3("Horizontal Scroll")
+						@ui.ScrollablePanel(&ui.ScrollablePanelProps{
+							MaxHeight: "h-32",
+							Overflow:  "x",
+						}) {
+							<div class="p-4 flex gap-4" style="min-width: 800px;">
+								for i := 1; i <= 10; i++ {
+									<div class="flex-shrink-0 w-32 h-20 bg-blue-100 rounded-lg flex items-center justify-center text-sm">
+										Карточка { i }
+									</div>
+								}
+							</div>
+						}
+					</div>
+					<!-- Blue style -->
+					<div>
+						@ui.H3("Blue Style + Fade Edge")
+						@ui.ScrollablePanel(&ui.ScrollablePanelProps{
+							Header:    "Синяя панель с fade-эффектом",
+							Style:     "blue",
+							MaxHeight: "h-48",
+							FadeEdge:  true,
+						}) {
+							<div class="p-4 space-y-2">
+								for i := 1; i <= 20; i++ {
+									<div class="p-2 bg-white/50 rounded text-sm">
+										Контент { i } — прокрутите вниз, чтобы увидеть fade-эффект
+									</div>
+								}
+							</div>
+						}
+					</div>
+					<!-- Custom scrollbar -->
+					<div>
+						@ui.H3("Кастомный скроллбар")
+						@ui.ScrollablePanel(&ui.ScrollablePanelProps{
+							MaxHeight: "h-48",
+						}) {
+							<div class="p-4 space-y-2">
+								for i := 1; i <= 25; i++ {
+									<div class="p-2 bg-gray-100 rounded text-sm">
+										Элемент { i } — скроллбар стилизован
+									</div>
+								}
+							</div>
+						}
+					</div>
+				</div>
+			</section>
+			<!-- Accordion -->
+			<section>
+				@ui.H2("Accordion")
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<!-- Default style -->
+					<div>
+						@ui.H3("Default Style")
+						@ui.Accordion(&ui.AccordionProps{
+							ID: "accordion-default",
+							Items: []*ui.AccordionItem{
+								{Title: "Что такое Go?", Content: templComponent("Go — компилируемый язык программирования, разработанный в Google. Он спроектирован для простоты и эффективности.")},
+								{Title: "Что такое Templ?", Content: templComponent("Templ — язык шаблонов для Go, который компилируется в типобезопасный Go-код.")},
+								{Title: "Что такое Tailwind CSS?", Content: templComponent("Tailwind CSS — фреймворк утилитарного CSS, который позволяет создавать пользовательские интерфейсы быстро.")},
+							},
+						})
+					</div>
+					<!-- Single open -->
+					<div>
+						@ui.H3("Single Open")
+						@ui.Accordion(&ui.AccordionProps{
+							ID:         "accordion-single",
+							SingleOpen: true,
+							Items: []*ui.AccordionItem{
+								{Title: "Секция 1", Content: templComponent("Только одна секция может быть открыта одновременно.")},
+								{Title: "Секция 2", Content: templComponent("При открытии этой секции, предыдущая закроется автоматически.")},
+								{Title: "Секция 3", Content: templComponent("Это удобно для FAQ и подобных элементов.")},
+							},
+						})
+					</div>
+					<!-- Bordered style -->
+					<div>
+						@ui.H3("Bordered Style")
+						@ui.Accordion(&ui.AccordionProps{
+							ID:    "accordion-bordered",
+							Style: "bordered",
+							Items: []*ui.AccordionItem{
+								{Title: "Границы", Content: templComponent("Каждая секция обрамлена границей.")},
+								{Title: "Разделители", Content: templComponent("Секции разделены линиями.")},
+							},
+						})
+					</div>
+					<!-- Separated style -->
+					<div>
+						@ui.H3("Separated Style")
+						@ui.Accordion(&ui.AccordionProps{
+							ID:    "accordion-separated",
+							Style: "separated",
+							Items: []*ui.AccordionItem{
+								{Title: "Разделённые секции", Content: templComponent("Каждая секция — отдельный блок с отступом.")},
+								{Title: "С закруглёнными углами", Content: templComponent("Каждый блок имеет скруглённые углы и тень.")},
+							},
+						})
+					</div>
+				</div>
+			</section>
+			<!-- InfoPanel -->
+			<section>
+				@ui.H2("InfoPanel")
+				<div class="space-y-4 max-w-2xl">
+					@ui.InfoPanel(&ui.InfoPanelProps{
+						Title:   "Информация",
+						Variant: "info",
+					}) {
+						Это информационная панель. Используйте её для отображения справочной информации.
+					}
+					@ui.InfoPanel(&ui.InfoPanelProps{
+						Title:   "Совет",
+						Variant: "tip",
+					}) {
+						Это совет. Здесь можно дать полезную подсказку пользователю.
+					}
+					@ui.InfoPanel(&ui.InfoPanelProps{
+						Title:   "Внимание",
+						Variant: "warning",
+					}) {
+						Это предупреждение. Обратите внимание на важную информацию.
+					}
+					@ui.InfoPanel(&ui.InfoPanelProps{
+						Title:   "Примечание",
+						Variant: "note",
+					}) {
+						Это примечание. Дополнительные сведения по теме.
+					}
+				</div>
+			</section>
+			<!-- TabPanel -->
+			<section>
+				@ui.H2("TabPanel")
+				<div class="space-y-8 max-w-3xl">
+					<!-- Underline style -->
+					<div>
+						@ui.H3("Underline Style (по умолчанию)")
+						@ui.TabPanel(&ui.TabPanelProps{
+							ID: "tabs-underline",
+							Items: []*ui.TabPanelItem{
+								{Title: "Обзор", Content: templComponent("Содержимое вкладки «Обзор». Здесь может быть информация о проекте."), Active: true},
+								{Title: "Настройки", Content: templComponent("Содержимое вкладки «Настройки». Формы и параметры.")},
+								{Title: "Уведомления", Content: templComponent("Содержимое вкладки «Уведомления». Список событий.")},
+							},
+						})
+					</div>
+					<!-- Pills style -->
+					<div>
+						@ui.H3("Pills Style")
+						@ui.TabPanel(&ui.TabPanelProps{
+							ID:    "tabs-pills",
+							Style: "pills",
+							Items: []*ui.TabPanelItem{
+								{Title: "Профиль", Content: templComponent("Информация профиля пользователя."), Active: true},
+								{Title: "Безопасность", Content: templComponent("Настройки безопасности и пароль.")},
+								{Title: "Интеграции", Content: templComponent("Подключённые сервисы и API.")},
+							},
+						})
+					</div>
+					<!-- Boxed style -->
+					<div>
+						@ui.H3("Boxed Style")
+						@ui.TabPanel(&ui.TabPanelProps{
+							ID:    "tabs-boxed",
+							Style: "boxed",
+							Items: []*ui.TabPanelItem{
+								{Title: "Код", Content: templComponent("Исходный код компонента."), Active: true},
+								{Title: "Превью", Content: templComponent("Визуальное представление.")},
+								{Title: "Документация", Content: templComponent("Описание API и использование.")},
+								{Title: "История", Content: templComponent("История изменений.")},
+							},
+						})
+					</div>
+				</div>
+			</section>
+			<!-- Drawer -->
+			<section>
+				@ui.H2("Drawer")
+				<div class="flex gap-4 flex-wrap">
+					@ui.Drawer(&ui.DrawerProps{
+						ID:    "drawer-right",
+						Title: "Правая панель",
+						Side:  "right",
+					}) {
+						<div class="space-y-4">
+							<p class="text-sm text-gray-600">Это выдвижная панель справа.</p>
+							<p class="text-sm text-gray-600">Можно разместить фильтры, детали или навигацию.</p>
+							@ui.Button(&ui.ButtonProps{Label: "Действие", Style: "blue"})
+						</div>
+					}
+					<button
+						type="button"
+						onclick={ ui.OpenDrawerScript("drawer-right") }
+						class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+					>
+						Открыть справа →
+					</button>
+					@ui.Drawer(&ui.DrawerProps{
+						ID:    "drawer-left",
+						Title: "Левая панель",
+						Side:  "left",
+					}) {
+						<div class="space-y-4">
+							<p class="text-sm text-gray-600">Это выдвижная панель слева.</p>
+							<p class="text-sm text-gray-600">Идеально для навигации или списка объектов.</p>
+						</div>
+					}
+					<button
+						type="button"
+						onclick={ ui.OpenDrawerScript("drawer-left") }
+						class="px-4 py-2 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700"
+					>
+						← Открыть слева
+					</button>
+					@ui.Drawer(&ui.DrawerProps{
+						ID:      "drawer-bottom",
+						Title:   "Нижняя панель",
+						Side:    "bottom",
+						Height:  "h-64",
+					}) {
+						<div class="space-y-4">
+							<p class="text-sm text-gray-600">Это выдвижная панель снизу.</p>
+							<p class="text-sm text-gray-600">Подходит для уведомлений, корзины или быстрых действий.</p>
+						</div>
+					}
+					<button
+						type="button"
+						onclick={ ui.OpenDrawerScript("drawer-bottom") }
+						class="px-4 py-2 text-sm text-white bg-yellow-600 rounded-lg hover:bg-yellow-700"
+					>
+						↑ Открыть снизу
+					</button>
+				</div>
+			</section>
+			<!-- SplitPanel -->
+			<section>
+				@ui.H2("SplitPanel")
+				<!-- Horizontal split -->
+				<div>
+					@ui.H3("Horizontal Split")
+					<div class="h-64 border rounded-lg overflow-hidden">
+						@ui.SplitPanel(&ui.SplitPanelProps{
+							ID:          "split-h",
+							Direction:   "horizontal",
+							InitialSize: "1/3",
+							Left:        splitLeftContent(),
+							Right:       splitRightContent(),
+						})
+					</div>
+				</div>
+				<!-- Vertical split -->
+				<div class="mt-6">
+					@ui.H3("Vertical Split")
+					<div class="h-80 border rounded-lg overflow-hidden">
+						@ui.SplitPanel(&ui.SplitPanelProps{
+							ID:          "split-v",
+							Direction:   "vertical",
+							InitialSize: "1/2",
+							Left:        splitTopContent(),
+							Right:       splitBottomContent(),
+						})
+					</div>
+				</div>
+			</section>
+			<!-- Sidebar -->
+			<section>
+				@ui.H2("Sidebar")
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<!-- Basic sidebar -->
+					<div>
+						@ui.H3("Basic Sidebar")
+						<div class="border rounded-lg overflow-hidden">
+							@ui.Sidebar(&ui.SidebarProps{
+								Items: []*ui.SidebarItem{
+									{Name: "Dashboard", Icon: icon.Dashboard, URL: "#", Active: true},
+									{Name: "Users", Icon: icon.Clients, URL: "#"},
+									{Name: "Settings", Icon: icon.Settings, URL: "#"},
+								},
+								User: &ui.UserInfo{
+									Name:  "John Doe",
+									Email: "john@example.com",
+								},
+								LogoutURL: "#",
+							})
+						</div>
+					</div>
+					<!-- Collapsible sidebar -->
+					<div>
+						@ui.H3("Collapsible Sidebar")
+						<div class="border rounded-lg overflow-hidden">
+							@ui.Sidebar(&ui.SidebarProps{
+								Items: []*ui.SidebarItem{
+									{Name: "Home", Icon: icon.Dashboard, URL: "#", Active: true},
+									{Name: "Messages", Icon: icon.Messages, URL: "#"},
+									{Name: "Tasks", Icon: icon.Tasks, URL: "#"},
+									{Name: "Profile", Icon: icon.Profile, URL: "#"},
+								},
+								User: &ui.UserInfo{
+									Name:  "Jane Smith",
+									Email: "jane@example.com",
+								},
+								LogoutURL:   "#",
+								Collapsible: true,
+								ID:          "showcase-sidebar-1",
+							})
+						</div>
+					</div>
+					<!-- Sidebar with modifiers -->
+					<div>
+						@ui.H3("Sidebar with Badges")
+						<div class="border rounded-lg overflow-hidden">
+							@ui.Sidebar(&ui.SidebarProps{
+								Items: []*ui.SidebarItem{
+									{Name: "Dashboard", Icon: icon.Dashboard, URL: "#", Active: true},
+									{Name: "Messages", Icon: icon.Messages, URL: "#",
+										Modifiers: []templ.Component{ui.SidebarNew()}},
+									{Name: "Tasks", Icon: icon.Tasks, URL: "#",
+										Modifiers: []templ.Component{ui.SidebarRed("3")}},
+									{Name: "Projects", Icon: icon.Project, URL: "#",
+										Modifiers: []templ.Component{ui.SidebarGreen("New")}},
+								},
+							})
+						</div>
+					</div>
+					<!-- Minimal sidebar -->
+					<div>
+						@ui.H3("Minimal Sidebar (no user)")
+						<div class="border rounded-lg overflow-hidden">
+							@ui.Sidebar(&ui.SidebarProps{
+								Items: []*ui.SidebarItem{
+									{Name: "Overview", Icon: icon.Dashboard, URL: "#", Active: true},
+									{Name: "Analytics", Icon: icon.Statistics, URL: "#"},
+									{Name: "Reports", Icon: icon.File, URL: "#"},
+									{Name: "Settings", Icon: icon.Settings, URL: "#"},
+								},
+							})
+						</div>
+					</div>
+				</div>
+			</section>
+				<br/>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+templ templComponent(text string) {
+	<p class="text-sm text-gray-700">{ text }</p>
+}
+
+templ splitLeftContent() {
+	<div class="p-4 bg-blue-50 h-full">
+		<h4 class="text-sm font-medium text-blue-800 mb-2">Левая панель</h4>
+		<p class="text-xs text-blue-600">Перетаскивайте разделитель для изменения размера.</p>
+	</div>
+}
+
+templ splitRightContent() {
+	<div class="p-4 bg-green-50 h-full">
+		<h4 class="text-sm font-medium text-green-800 mb-2">Правая панель</h4>
+		<p class="text-xs text-green-600">Эта панель занимает оставшееся пространство.</p>
+	</div>
+}
+
+templ splitTopContent() {
+	<div class="p-4 bg-purple-50 h-full">
+		<h4 class="text-sm font-medium text-purple-800 mb-2">Верхняя панель</h4>
+		<p class="text-xs text-purple-600">Перетаскивайте разделитель вверх-вниз.</p>
+	</div>
+}
+
+templ splitBottomContent() {
+	<div class="p-4 bg-orange-50 h-full">
+		<h4 class="text-sm font-medium text-orange-800 mb-2">Нижняя панель</h4>
+		<p class="text-xs text-orange-600">Эта панель занимает оставшееся пространство.</p>
+	</div>
+}
