@@ -1,0 +1,89 @@
+package main
+
+import "github.com/fbv/go-templ-ui/view/ui"
+
+templ DashboardPage() {
+	@Layout("Дашборд — CRM", "dashboard") {
+		<div class="p-6">
+			@ui.H1("Дашборд")
+			<div class="mt-6">
+				@ui.StatGroup([]ui.StatProps{
+					{Title: "Выручка", Value: "9 610 000", Prefix: "", Suffix: " ₽", Change: "+18.2%", ChangeType: "up", Style: "blue"},
+					{Title: "Клиенты", Value: "12", Change: "+3 за месяц", ChangeType: "up", Style: "green"},
+					{Title: "Сделки", Value: "10", Change: "3 в работе", ChangeType: "neutral", Style: "yellow"},
+					{Title: "Конверсия", Value: "30", Suffix: "%", Change: "+5%", ChangeType: "up", Style: "purple"},
+				})
+			</div>
+			<div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+				<div>
+					@ui.H2("Последние сделки")
+					@ui.Panel(&ui.PanelProps{}) {
+						@ui.DynamicTable(DealDataSource(deals[:5]))
+					}
+				</div>
+				<div>
+					@ui.H2("Активность")
+					@ui.Panel(&ui.PanelProps{}) {
+						@ui.VerticalTimeline([]ui.TimelineItem{
+							{Title: "Новая сделка", Date: "15.11", Content: "Миграция в облако — ООО Дельта", Color: "blue"},
+							{Title: "Задача завершена", Date: "15.11", Content: "Презентация демо ООО Бета", Color: "green"},
+							{Title: "Клиент добавлен", Date: "14.11", Content: "ПАО Тета — новый лид", Color: "yellow"},
+						})
+					}
+				</div>
+			</div>
+			<div class="mt-8">
+				@ui.H2("Ближайшие задачи")
+				@ui.Panel(&ui.PanelProps{}) {
+					@taskList()
+				}
+			</div>
+		</div>
+	}
+}
+
+templ taskList() {
+	<div class="space-y-2">
+		for _, t := range tasks[:4] {
+			<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+				<div class="flex items-center space-x-3">
+					<input type="checkbox" checked?={ t.Status == "done" } class="w-4 h-4 text-blue-600 rounded"/>
+					<div>
+						<p class={ "text-sm font-medium", taskTextStyle(t.Status) }>{ t.Title }</p>
+						<p class="text-xs text-gray-500">{ t.Client } — { t.DueDate }</p>
+					</div>
+				</div>
+				@ui.Badge(&ui.BadgeProps{Name: taskPriorityName(t.Priority), Style: taskPriorityStyle(t.Priority)})
+			</div>
+		}
+	</div>
+}
+
+func taskTextStyle(status string) string {
+	if status == "done" {
+		return "line-through text-gray-400"
+	}
+	return "text-gray-900"
+}
+
+func taskPriorityName(p string) string {
+	switch p {
+	case "high":
+		return "Высокий"
+	case "medium":
+		return "Средний"
+	default:
+		return "Низкий"
+	}
+}
+
+func taskPriorityStyle(p string) string {
+	switch p {
+	case "high":
+		return "red"
+	case "medium":
+		return "yellow"
+	default:
+		return "gray"
+	}
+}

@@ -1,0 +1,66 @@
+package main
+
+import (
+	"github.com/fbv/go-templ-ui/view/icon"
+	"github.com/fbv/go-templ-ui/view/layout"
+)
+
+templ Layout(title string, active string) {
+	@layout.Page(&layout.PageProps{Title: title}) {
+		<div class="flex flex-row h-screen">
+			@crmSidebar(active)
+			<div class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+				{ children... }
+			</div>
+		</div>
+	}
+}
+
+templ crmSidebar(active string) {
+	<div class="flex flex-col w-60 bg-white h-screen border-r flex-shrink-0">
+		<div class="p-4 border-b">
+			<h1 class="text-lg font-bold text-gray-900">CRM System</h1>
+		</div>
+		<div class="flex-grow">
+			<ul class="flex flex-col p-2 space-y-1">
+				@crmSidebarItem("Дашборд", "/crm", icon.Dashboard, active == "dashboard")
+				@crmSidebarItem("Клиенты", "/crm/clients", icon.Clients, active == "clients")
+				@crmSidebarItem("Сделки", "/crm/deals", icon.Money, active == "deals")
+				@crmSidebarItem("Задачи", "/crm/tasks", icon.Tasks, active == "tasks")
+			</ul>
+		</div>
+		<div class="border-t p-4">
+			<div class="flex items-center space-x-3">
+				<div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+					<svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+					</svg>
+				</div>
+				<div class="flex-1 min-w-0">
+					<p class="text-sm font-medium text-gray-900 truncate">Менеджер</p>
+					<p class="text-xs text-gray-500 truncate">manager@crm.ru</p>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ crmSidebarItem(label, url, iconPath string, active bool) {
+	<li>
+		if active {
+			<a href={ templ.URL(url) } class="flex items-center h-10 px-3 text-sm font-medium rounded-md bg-blue-50 text-blue-700">
+				<svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={ iconPath }></path>
+				</svg>
+				{ label }
+			</a>
+		} else {
+			<a href={ templ.URL(url) } class="flex items-center h-10 px-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-md">
+				<svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={ iconPath }></path>
+				</svg>
+				{ label }
+			</a>
+		}
+	</li>
+}

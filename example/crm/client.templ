@@ -1,0 +1,95 @@
+package main
+
+import "github.com/fbv/go-templ-ui/view/ui"
+
+templ ClientPage() {
+	@Layout("Карточка клиента — CRM", "clients") {
+		<div class="p-6">
+			@ui.Breadcrumb(
+				&ui.BreadcrumbItem{Title: "Клиенты", URL: "/crm/clients"},
+				&ui.BreadcrumbItem{Title: "ООО Ромашка", Active: true},
+			)
+			<div class="flex items-center justify-between mb-6">
+				<div class="flex items-center space-x-4">
+					<div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+						<span class="text-lg font-bold text-blue-600">ОО</span>
+					</div>
+					<div>
+						<h1 class="text-2xl font-bold text-gray-900">ООО Ромашка</h1>
+						<p class="text-sm text-gray-500">Иван Петров — ivan@example.com</p>
+					</div>
+					@ui.Badge(&ui.BadgeProps{Name: "Активный", Style: "green"})
+				</div>
+				<div class="flex space-x-2">
+					<button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+						Редактировать
+					</button>
+					<button type="button" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+						Удалить
+					</button>
+				</div>
+			</div>
+			@ui.Tabs(
+				&ui.TabItem{Title: "Информация", URL: "#info", Active: true},
+				&ui.TabItem{Title: "Сделки", URL: "#deals"},
+				&ui.TabItem{Title: "Задачи", URL: "#tasks"},
+				&ui.TabItem{Title: "История", URL: "#history"},
+			)
+			<div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+				<div class="lg:col-span-2">
+					@ui.Panel(&ui.PanelProps{Header: "Основная информация"}) {
+						@ui.Values() {
+							@ui.Value("Компания") {
+								ООО Ромашка
+							}
+							@ui.Value("ИНН") {
+								7701234567
+							}
+							@ui.Value("Контактное лицо") {
+								Иван Петров
+							}
+							@ui.Value("Email") {
+								ivan@example.com
+							}
+							@ui.Value("Телефон") {
+								+7 900 123-45-67
+							}
+							@ui.Value("Адрес") {
+								г. Москва, ул. Примерная, д. 1
+							}
+							@ui.Value("Дата добавления") {
+								15.01.2024
+							}
+						}
+					}
+					<div class="mt-6">
+						@ui.Panel(&ui.PanelProps{Header: "Сделки клиента"}) {
+							@ui.DynamicTable(DealDataSource(deals[:2]))
+						}
+					</div>
+				</div>
+				<div>
+					@ui.Panel(&ui.PanelProps{Header: "История"}) {
+						@ui.VerticalTimeline([]ui.TimelineItem{
+							{Title: "Созвон по проекту", Date: "15.11.2024", Content: "Обсудили требования", Color: "blue"},
+							{Title: "Отправлено КП", Date: "10.11.2024", Content: "1 500 000 ₽", Color: "green"},
+							{Title: "Первичный контакт", Date: "01.11.2024", Content: "Заявка на сайте", Color: "yellow"},
+						})
+					}
+					<div class="mt-6">
+						@ui.Panel(&ui.PanelProps{Header: "Задачи"}) {
+							<div class="space-y-2">
+								for _, t := range tasks[:2] {
+									<div class="flex items-center space-x-2 p-2 bg-gray-50 rounded">
+										<input type="checkbox" class="w-4 h-4 text-blue-600 rounded"/>
+										<span class="text-sm">{ t.Title }</span>
+									</div>
+								}
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}

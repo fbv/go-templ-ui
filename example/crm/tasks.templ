@@ -1,0 +1,102 @@
+package main
+
+import "github.com/fbv/go-templ-ui/view/ui"
+
+templ TasksPage() {
+	@Layout("Задачи — CRM", "tasks") {
+		<div class="p-6">
+			<div class="flex items-center justify-between mb-6">
+				@ui.H1("Задачи")
+				<button
+					type="button"
+					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
+				>
+					+ Новая задача
+				</button>
+			</div>
+			<div class="flex space-x-4 mb-6">
+				@ui.Switch([]ui.SwitchItem{
+					{Name: "Все", URL: "/crm/tasks", Active: true},
+					{Name: "Активные", URL: "/crm/tasks?status=active"},
+					{Name: "Завершённые", URL: "/crm/tasks?status=done"},
+				})
+			</div>
+			<div class="space-y-4">
+				@ui.H2("Высокий приоритет")
+				@ui.Panel(&ui.PanelProps{}) {
+					@taskCardList("high")
+				}
+				@ui.H2("Средний приоритет")
+				@ui.Panel(&ui.PanelProps{}) {
+					@taskCardList("medium")
+				}
+				@ui.H2("Низкий приоритет")
+				@ui.Panel(&ui.PanelProps{}) {
+					@taskCardList("low")
+				}
+			</div>
+		</div>
+	}
+}
+
+templ taskCardList(priority string) {
+	<div class="space-y-2">
+		for _, t := range tasks {
+			if t.Priority == priority {
+				<div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
+					<div class="flex items-center space-x-4">
+						<input
+							type="checkbox"
+							checked?={ t.Status == "done" }
+							class="w-5 h-5 text-blue-600 rounded"
+						/>
+						<div>
+							<p class={ "text-sm font-medium", taskTextStyle(t.Status) }>{ t.Title }</p>
+							<div class="flex items-center space-x-2 mt-1">
+								if t.Client != "" {
+									<span class="text-xs text-gray-500">{ t.Client }</span>
+									<span class="text-xs text-gray-400">•</span>
+								}
+								<span class="text-xs text-gray-500">Срок: { t.DueDate }</span>
+							</div>
+						</div>
+					</div>
+					<div class="flex items-center space-x-2">
+						@ui.Badge(&ui.BadgeProps{Name: taskStatusName(t.Status), Style: taskStatusStyle(t.Status)})
+						<button type="button" class="text-gray-400 hover:text-red-500">
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+							</svg>
+						</button>
+					</div>
+				</div>
+			}
+		}
+	</div>
+}
+
+func taskStatusName(s string) string {
+	switch s {
+	case "todo":
+		return "К выполнению"
+	case "in_progress":
+		return "В работе"
+	case "done":
+		return "Завершено"
+	default:
+		return s
+	}
+}
+
+func taskStatusStyle(s string) string {
+	switch s {
+	case "todo":
+		return "blue"
+	case "in_progress":
+		return "yellow"
+	case "done":
+		return "green"
+	default:
+		return "gray"
+	}
+}

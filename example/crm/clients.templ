@@ -1,0 +1,88 @@
+package main
+
+import "github.com/fbv/go-templ-ui/view/ui"
+
+templ ClientsPage() {
+	@Layout("Клиенты — CRM", "clients") {
+		<div class="p-6">
+			<div class="flex items-center justify-between mb-6">
+				@ui.H1("Клиенты")
+				<button
+					type="button"
+					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
+					onclick="document.getElementById('add-client-modal').classList.remove('hidden')"
+				>
+					+ Добавить клиента
+				</button>
+			</div>
+			@ui.Alert(&ui.AlertProps{Title: "Информация", Style: "info"}) {
+				Всего клиентов: 12. Активных: 8. Лидов: 3.
+			}
+			@ui.Panel(&ui.PanelProps{}) {
+				@ui.DynamicTable(ClientDataSource(clients))
+			}
+			<div class="mt-4">
+				@ui.Pagination(&ui.PaginationProps{CurrentPage: 1, TotalPages: 3, BaseURL: "/crm/clients?page"})
+			</div>
+		</div>
+		@addClientModal()
+	}
+}
+
+templ addClientModal() {
+	<div
+		id="add-client-modal"
+		class="fixed inset-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none bg-black/50"
+		tabindex="-1"
+	>
+		<div class="pointer-events-none relative w-auto min-h-screen flex items-center justify-center p-4">
+			<div class="pointer-events-auto relative w-full max-w-lg bg-white rounded-lg shadow-2xl">
+				<div class="p-6">
+					<div class="flex justify-between items-center mb-4">
+						<h3 class="text-lg font-semibold text-gray-900">Новый клиент</h3>
+						<button
+							type="button"
+							class="text-gray-400 hover:text-gray-600"
+							onclick="document.getElementById('add-client-modal').classList.add('hidden')"
+						>
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+							</svg>
+						</button>
+					</div>
+					<form action="/crm/clients" method="POST" class="space-y-4">
+						@ui.Input(&ui.InputProps{Label: "Имя", Name: "name", Type: "text", Placeholder: "Иван Иванов", Required: true})
+						@ui.Input(&ui.InputProps{Label: "Email", Name: "email", Type: "email", Placeholder: "ivan@example.com", Required: true})
+						@ui.Input(&ui.InputProps{Label: "Телефон", Name: "phone", Type: "tel", Placeholder: "+7 900 123-45-67"})
+						@ui.Input(&ui.InputProps{Label: "Компания", Name: "company", Type: "text", Placeholder: "ООО Компания"})
+						@ui.Select(&ui.SelectProps{
+							Name:        "status",
+							Label:       "Статус",
+							Placeholder: "Выберите статус",
+							Items: []ui.SelectItem{
+								{Name: "Активный", Value: "active"},
+								{Name: "Лид", Value: "lead"},
+								{Name: "Неактивный", Value: "inactive"},
+							},
+						})
+						<div class="flex justify-end space-x-3 mt-6">
+							<button
+								type="button"
+								class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+								onclick="document.getElementById('add-client-modal').classList.add('hidden')"
+							>
+								Отмена
+							</button>
+							<button
+								type="submit"
+								class="px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800"
+							>
+								Сохранить
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+}

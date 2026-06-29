@@ -1,0 +1,35 @@
+package main
+
+import "github.com/fbv/go-templ-ui/view/ui"
+
+templ DealsPage() {
+	@Layout("Сделки — CRM", "deals") {
+		<div class="p-6">
+			<div class="flex items-center justify-between mb-6">
+				@ui.H1("Сделки")
+				<div class="flex space-x-2">
+					@ui.DateRangePicker("date_from", "date_to", "Период")
+					<button
+						type="button"
+						class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
+					>
+						+ Новая сделка
+					</button>
+				</div>
+			</div>
+			<div class="flex space-x-4 mb-6">
+				@ui.Badge(&ui.BadgeProps{Name: "Все: 10", Style: "gray"})
+				@ui.Badge(&ui.BadgeProps{Name: "Новые: 2", Style: "blue"})
+				@ui.Badge(&ui.BadgeProps{Name: "В работе: 2", Style: "yellow"})
+				@ui.Badge(&ui.BadgeProps{Name: "Выиграны: 3", Style: "green"})
+				@ui.Badge(&ui.BadgeProps{Name: "Проиграны: 1", Style: "red"})
+			</div>
+			@ui.Panel(&ui.PanelProps{}) {
+				@ui.DynamicTable(DealDataSource(deals))
+			}
+			<div class="mt-4">
+				@ui.Pagination(&ui.PaginationProps{CurrentPage: 1, TotalPages: 2, BaseURL: "/crm/deals?page"})
+			</div>
+		</div>
+	}
+}
