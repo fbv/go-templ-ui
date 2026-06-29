@@ -54,10 +54,10 @@ func timelineLineColor(color string) string {
 }
 
 templ VerticalTimeline(items []TimelineItem) {
-	<ol class="relative border-l border-gray-200 dark:border-gray-700">
+	<ol class="relative border-l border-gray-200 dark:border-gray-700 ml-4">
 		for _, item := range items {
-			<li class={ "mb-10 ml-6", timelineLineColor(item.Color) }>
-				<span class={ "absolute flex items-center justify-center w-6 h-6 rounded-full -left-3 ring-8 ring-white dark:ring-gray-900", timelineDotColor(item.Color) }>
+			<li class={ "mb-4 ml-6", timelineLineColor(item.Color) }>
+				<span class={ "absolute flex items-center justify-center w-6 h-6 rounded-full -left-3 ring-1 ring-white dark:ring-gray-900", timelineDotColor(item.Color) }>
 					if item.Icon != "" {
 						<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 							<path fill-rule="evenodd" d={ item.Icon } clip-rule="evenodd"></path>
