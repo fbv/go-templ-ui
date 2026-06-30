@@ -1,0 +1,13 @@
+package main
+
+import (
+	"github.com/fbv/go-templ-ui/view/layout"
+)
+
+templ Layout(title string) {
+	@layout.Page(&layout.PageProps{Title: title}) {
+		<div class="flex flex-row h-screen">
+			{ children... }
+		</div>
+	}
+}

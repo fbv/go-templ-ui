@@ -6,7 +6,7 @@ all: build test
 clean:
 	@rm -rf bin/*
 
-build: $(projects) crm
+build: $(projects) crm chat
 
 templ:
 	templ generate -include-version=false
@@ -17,6 +17,9 @@ $(projects): templ
 crm: templ
 	go build -C example/crm -o ../../bin/crm
 
+chat: templ
+	go build -C example/chat -o ../../bin/chat
+
 test:
 	go test ./...
 
@@ -26,4 +29,4 @@ tailwind-watch:
 tailwind:
 	./tailwindcss -i ./view/input.css -o ./view/style.css --minify
 
-.PHONY: all clean build test templ tailwind-watch tailwind $(projects) crm
+.PHONY: all clean build test templ tailwind-watch tailwind $(projects) crm chat

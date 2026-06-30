@@ -1,0 +1,35 @@
+package main
+
+import (
+	"github.com/fbv/go-templ-ui/view/ui"
+)
+
+templ ChatPage() {
+	@Layout("Chat") {
+		@ui.SplitPanel(&ui.SplitPanelProps{
+			ID:          "chat-split",
+			Direction:   "horizontal",
+			InitialSize: "1/3",
+			MinLeft:     "250",
+			MinRight:    "400",
+			Left:        chatListPanel(),
+			Right:       chatViewPanel("chat1"),
+		})
+	}
+}
+
+templ chatListPanel() {
+	@ui.ChatList(&ui.ChatListProps{
+		ID:    "chat-list",
+		Title: "Чаты",
+	}, GetChatListItems())
+}
+
+templ chatViewPanel(chatID string) {
+	@ui.Chat(&ui.ChatProps{
+		ID:             chatID,
+		CurrentUserID:  currentUserID,
+		HeaderTitle:    GetChatName(chatID),
+		HeaderSubtitle: "в сети",
+	}, GetChatMessages(chatID))
+}

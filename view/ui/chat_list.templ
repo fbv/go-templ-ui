@@ -1,0 +1,67 @@
+package ui
+
+import "fmt"
+
+type ChatListItem struct {
+	ID          string
+	Name        string
+	LastMessage string
+	Time        string
+	UnreadCount int
+	Avatar      string
+	Active      bool
+}
+
+type ChatListProps struct {
+	ID    string
+	Title string
+}
+
+templ ChatListItemComponent(item *ChatListItem) {
+	<a
+		href={ templ.URL(fmt.Sprintf("/chat/%s", item.ID)) }
+		class={
+			"flex items-center gap-3 px-4 py-3 border-b border-gray-100 cursor-pointer transition-colors",
+			templ.KV("bg-blue-50 border-l-2 border-l-blue-600", item.Active),
+			templ.KV("hover:bg-gray-50", !item.Active),
+		}
+		if item.Active {
+			data-chat-active="true"
+		}
+	>
+		<div class="relative flex-shrink-0">
+			<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+				<svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+				</svg>
+			</div>
+			if item.UnreadCount > 0 {
+				<span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+					{ fmt.Sprintf("%d", item.UnreadCount) }
+				</span>
+			}
+		</div>
+		<div class="flex-1 min-w-0">
+			<div class="flex items-center justify-between">
+				<h4 class={ "text-sm font-medium truncate", templ.KV("text-gray-900", item.Active), templ.KV("text-gray-700", !item.Active) }>
+					{ item.Name }
+				</h4>
+				<span class="text-[10px] text-gray-400 flex-shrink-0 ml-2">{ item.Time }</span>
+			</div>
+			<p class="text-xs text-gray-500 truncate mt-0.5">{ item.LastMessage }</p>
+		</div>
+	</a>
+}
+
+templ ChatList(p *ChatListProps, items []ChatListItem) {
+	<div id={ p.ID } class="flex flex-col h-full bg-white border-r border-gray-200">
+		<div class="px-4 py-3 border-b border-gray-200">
+			<h2 class="text-base font-semibold text-gray-900">{ p.Title }</h2>
+		</div>
+		<div class="flex-1 overflow-y-auto">
+			for _, item := range items {
+				@ChatListItemComponent(&item)
+			}
+		</div>
+	</div>
+}
