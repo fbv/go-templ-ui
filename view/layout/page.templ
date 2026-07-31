@@ -17,7 +17,8 @@ templ Page(p *PageProps) {
 			@ui.ScrollablePanelStyle()
 			@ui.AccordionStyle()
 			@ui.DrawerStyle()
-		@ui.ChatStyle()
+			@ui.ChatStyle()
+			@ui.TreeStyle()
 			<title>{ p.Title }</title>
 <style>
 html { font-size: 13px; }
@@ -75,6 +76,7 @@ li.x-tab-active::before {
 		@ui.TabPanelScript()
 		@ui.SplitPanelScript()
 		@ui.ChatScript()
+		@ui.TreeScript()
 	</body>
 	</html>
 }

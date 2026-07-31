@@ -56,6 +56,12 @@ func Sidebar() templ.Component {
 					Active: view.PathPrefixIs(ctx, "/showcase/panels"),
 				},
 				&ui.SidebarItem{
+					Name:   "Tree",
+					Icon:   icon.Folder,
+					URL:    "/showcase/tree",
+					Active: view.PathPrefixIs(ctx, "/showcase/tree"),
+				},
+				&ui.SidebarItem{
 					Name:   "Payments",
 					Icon:   icon.Tasks,
 					URL:    "/admin/payments/status",

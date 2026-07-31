@@ -1,0 +1,236 @@
+package ui
+
+import "fmt"
+
+templ TreeStyle() {
+	<style>
+		.tree-children {
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.25s ease-in-out, opacity 0.2s ease-in-out;
+			opacity: 0;
+		}
+		.tree-expanded > .tree-node-children {
+			max-height: 5000px;
+			opacity: 1;
+		}
+		.tree-chevron {
+			transition: transform 0.2s ease-in-out;
+		}
+		.tree-expanded > .tree-node-label .tree-chevron {
+			transform: rotate(90deg);
+		}
+		.tree-node-label {
+			position: relative;
+		}
+		.tree-selected > .tree-node-label {
+			background-color: rgb(239 246 255);
+			color: rgb(30 64 175);
+		}
+		.tree-selected > .tree-node-label::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 3px;
+			background-color: rgb(37 99 235);
+		}
+	</style>
+}
+
+templ TreeScript() {
+	<script>
+		if (!window._treeInitialized) {
+			window._treeInitialized = true;
+			window.toggleTreeNode = function(treeId, nodeId) {
+				var node = document.getElementById(nodeId);
+				if (!node) return;
+				var container = document.getElementById(nodeId + '-children');
+				if (!container) return;
+				var isExpanded = node.classList.contains('tree-expanded');
+				if (isExpanded) {
+					node.classList.remove('tree-expanded');
+					container.setAttribute('aria-hidden', 'true');
+				} else {
+					node.classList.add('tree-expanded');
+					container.setAttribute('aria-hidden', 'false');
+					if (node.hasAttribute('data-tree-lazy') && !container.hasAttribute('data-tree-loaded')) {
+						htmx.ajax('GET', node.getAttribute('data-tree-lazy-url'), {
+							target: '#' + nodeId + '-children',
+							swap: 'innerHTML'
+						});
+						container.setAttribute('data-tree-loaded', 'true');
+					}
+				}
+				if (node.hasAttribute('data-tree-persist')) {
+					var state = JSON.parse(localStorage.getItem('tree-' + treeId) || '{}');
+					state[nodeId] = !isExpanded;
+					localStorage.setItem('tree-' + treeId, JSON.stringify(state));
+				}
+			};
+			window.selectTreeNode = function(treeId, nodeId, multi) {
+				var tree = document.getElementById(treeId);
+				if (!tree) return;
+				if (!multi) {
+					var selected = tree.querySelectorAll('.tree-selected');
+					for (var i = 0; i < selected.length; i++) {
+						selected[i].classList.remove('tree-selected');
+					}
+				}
+				var node = document.getElementById(nodeId);
+				if (!node) return;
+				node.classList.toggle('tree-selected');
+				var isSelected = node.classList.contains('tree-selected');
+				var callback = tree.getAttribute('data-tree-onselect');
+				if (callback && window[callback]) {
+					window[callback](nodeId, isSelected);
+				}
+				if (tree.hasAttribute('data-tree-persist')) {
+					var state = JSON.parse(localStorage.getItem('tree-' + treeId + '-sel') || '{}');
+					if (isSelected) state[nodeId] = true;
+					else delete state[nodeId];
+					localStorage.setItem('tree-' + treeId + '-sel', JSON.stringify(state));
+				}
+			};
+			window.expandAllTreeNodes = function(treeId) {
+				var tree = document.getElementById(treeId);
+				if (!tree) return;
+				var nodes = tree.querySelectorAll('[data-tree-lazy]');
+				for (var i = 0; i < nodes.length; i++) {
+					if (!nodes[i].classList.contains('tree-expanded')) {
+						toggleTreeNode(treeId, nodes[i].id);
+					}
+				}
+			};
+			window.collapseAllTreeNodes = function(treeId) {
+				var tree = document.getElementById(treeId);
+				if (!tree) return;
+				var expanded = tree.querySelectorAll('.tree-expanded');
+				for (var i = 0; i < expanded.length; i++) {
+					toggleTreeNode(treeId, expanded[i].id);
+				}
+			};
+		}
+	</script>
+}
+
+script toggleNodeScript(treeId string, nodeId string) {
+	toggleTreeNode(treeId, nodeId)
+}
+
+script selectNodeScript(treeId string, nodeId string, multi bool) {
+	selectTreeNode(treeId, nodeId, multi)
+}
+
+templ Tree(p *TreeProps) {
+	<div
+		id={ p.ID }
+		class={ "tree-root " + treeContainerClasses(p) }
+		if p.OnSelect != "" {
+			data-tree-onselect={ p.OnSelect }
+		}
+		if p.PersistState {
+			data-tree-persist="true"
+		}
+		role="tree"
+	>
+		for i, node := range p.Nodes {
+			@TreeNodeItem(node, 0, p, fmt.Sprintf("%d", i))
+		}
+	</div>
+}
+
+templ TreeNodeItem(node *TreeNode, depth int, props *TreeProps, nodePath string) {
+	{{ nodeID := props.ID + "-node-" + node.ID }}
+	<div
+		id={ nodeID }
+		class={
+			"tree-node",
+			templ.KV("tree-expanded", node.Expanded && len(node.Children) > 0),
+			templ.KV("tree-selected", node.Selected),
+			templ.KV("opacity-50 cursor-not-allowed", node.Disabled),
+		}
+		role="treeitem"
+		aria-expanded={ fmt.Sprintf("%t", node.Expanded && len(node.Children) > 0) }
+		style={ "padding-left: calc(" + fmt.Sprintf("%d", depth) + " * 1.25rem)" }
+		if props.LazyLoad && len(node.Children) > 0 {
+			data-tree-lazy="true"
+			data-tree-lazy-url={ props.LazyLoadURL + "/" + node.ID }
+		}
+	>
+		<div class="tree-node-label flex items-center gap-2 px-3 py-1.5 hover:bg-gray-50 rounded cursor-pointer select-none">
+			if len(node.Children) > 0 || props.LazyLoad {
+				<button
+					type="button"
+					class="tree-chevron flex-shrink-0 w-4 h-4 text-gray-400"
+					onclick={ toggleNodeScript(props.ID, nodeID) }
+					aria-label="Toggle"
+				>
+					<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+					</svg>
+				</button>
+			} else {
+				<span class="w-4 h-4 flex-shrink-0"></span>
+			}
+			if props.ShowIcons && (node.Icon != "" || node.IconRaw != "") {
+				@TreeNodeIcon(node)
+			}
+			if node.URL != "" && !node.Disabled {
+				<a href={ templ.URL(node.URL) } class="flex-1 truncate text-sm">{ node.Label }</a>
+			} else {
+				<span
+					class={ "flex-1 truncate text-sm", templ.KV("cursor-not-allowed", node.Disabled) }
+					if !node.Disabled && props.Selection != TreeSelectionNone {
+						onclick={ selectNodeScript(props.ID, nodeID, props.Selection == TreeSelectionMulti) }
+					}
+				>{ node.Label }</span>
+			}
+			if node.Badge != "" {
+				@TreeNodeBadge(node)
+			}
+			if node.Actions != nil {
+				<span class="flex-shrink-0 ml-auto">
+					@node.Actions
+				</span>
+			}
+		</div>
+		if len(node.Children) > 0 || props.LazyLoad {
+			@TreeNodeChildren(node, depth, props, nodeID, nodePath)
+		}
+	</div>
+}
+
+templ TreeNodeChildren(node *TreeNode, depth int, props *TreeProps, nodeID string, nodePath string) {
+	<div
+		id={ nodeID + "-children" }
+		class="tree-node-children tree-children"
+		role="group"
+		aria-hidden="true"
+	>
+		if !props.LazyLoad {
+			for i, child := range node.Children {
+				@TreeNodeItem(child, depth+1, props, nodePath+"."+fmt.Sprintf("%d", i))
+			}
+		}
+	</div>
+}
+
+templ TreeNodeIcon(node *TreeNode) {
+	if node.Icon != "" {
+		<svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={ node.Icon }></path>
+		</svg>
+	} else if node.IconRaw != "" {
+		<span class="flex-shrink-0 text-gray-500 [&>svg]:w-4 [&>svg]:h-4">
+			@templ.Raw(node.IconRaw)
+		</span>
+	}
+}
+
+templ TreeNodeBadge(node *TreeNode) {
+	<span class="px-1.5 py-0.5 text-[10px] font-medium rounded-full bg-blue-100 text-blue-700 flex-shrink-0">
+		{ node.Badge }
+	</span>
+}
