@@ -1,0 +1,163 @@
+package ui
+
+import (
+	"fmt"
+	"time"
+)
+
+type CalendarWeekProps struct {
+	ID          string
+	StartDate   time.Time
+	Events      []CalendarEvent
+	LoadURL     string
+	OnEventClick string
+	HourHeight  int
+}
+
+templ CalendarWeekScript() {
+	<script>
+		if (!window._calendarWeekInitialized) {
+			window._calendarWeekInitialized = true;
+			window.calendarWeekScrollToHour = function(containerId, hour) {
+				var container = document.getElementById(containerId);
+				if (!container) return;
+				var scrollArea = container.querySelector('.calendar-week-scroll');
+				if (!scrollArea) return;
+				var hourHeight = parseInt(container.getAttribute('data-hour-height') || '48');
+				scrollArea.scrollTop = hour * hourHeight;
+			};
+			window.calendarWeekNowIndicator = function(containerId) {
+				var container = document.getElementById(containerId);
+				if (!container) return;
+				var indicator = container.querySelector('.calendar-current-time');
+				if (!indicator) return;
+				var now = new Date();
+				var hourHeight = parseInt(container.getAttribute('data-hour-height') || '48');
+				var top = (now.getHours() * 60 + now.getMinutes()) * hourHeight / 60;
+				indicator.style.top = top + 'px';
+				indicator.style.display = 'block';
+			};
+		}
+	</script>
+}
+
+script calendarWeekScrollToHourScript(containerId string, hour int) {
+	calendarWeekScrollToHour(containerId, hour)
+}
+
+templ CalendarWeek(p *CalendarWeekProps) {
+	{{ weekDays := weekStart(p.StartDate) }}
+	{{ today := time.Now() }}
+	{{ hourHeight := 48 }}
+	if p.HourHeight > 0 {
+		{{ hourHeight = p.HourHeight }}
+	}
+	<div id={ p.ID } class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" data-hour-height={ fmt.Sprintf("%d", hourHeight) }>
+		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+			<div class="flex items-center gap-2">
+				<button
+					type="button"
+					class="calendar-header-btn text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+					hx-get={ prevWeekURL(p.LoadURL, p.StartDate) }
+					hx-target={ "#" + p.ID }
+					hx-swap="outerHTML"
+				>
+					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+				</button>
+				<h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+					{ fmt.Sprintf("%s — %s", formatDate(weekDays), formatDate(weekDays.AddDate(0, 0, 6))) }
+				</h3>
+				<button
+					type="button"
+					class="calendar-header-btn text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+					hx-get={ nextWeekURL(p.LoadURL, p.StartDate) }
+					hx-target={ "#" + p.ID }
+					hx-swap="outerHTML"
+				>
+					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+				</button>
+			</div>
+			<button
+				type="button"
+				class="calendar-header-btn text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-gray-700"
+				hx-get={ todayWeekURL(p.LoadURL, today) }
+				hx-target={ "#" + p.ID }
+				hx-swap="outerHTML"
+			>
+				Сегодня
+			</button>
+		</div>
+		{{ allDayEvts := allDayEvents(p.Events) }}
+		if len(allDayEvts) > 0 {
+			<div class="border-b border-gray-200 dark:border-gray-700 px-2 py-1">
+				<div class="grid grid-cols-[4rem_repeat(7,1fr)] gap-px">
+					<div class="text-[0.625rem] text-gray-400 dark:text-gray-500 flex items-center justify-end pr-2">Весь день</div>
+					for i := 0; i < 7; i++ {
+						{{ day := weekDays.AddDate(0, 0, i) }}
+						{{ dayEvts := eventsForDay(allDayEvts, day) }}
+						<div class="min-h-[1.5rem] px-1">
+							for _, ev := range dayEvts {
+								<div class={ "calendar-event-badge " + calendarEventColor(ev.Color) + " text-[0.5rem]" }>
+									<span>{ ev.Title }</span>
+								</div>
+							}
+						</div>
+					}
+				</div>
+			</div>
+		}
+		<div class="calendar-week-scroll overflow-y-auto" style="max-height: 600px;">
+			<div class="grid grid-cols-[4rem_repeat(7,1fr)] relative">
+				<div class="border-r border-gray-200 dark:border-gray-700">
+					for _, h := range hourSlots() {
+						<div class="calendar-time-slot relative" style={ fmt.Sprintf("height: %dpx", hourHeight) }>
+							<span class="calendar-time-label">{ fmt.Sprintf("%02d:00", h) }</span>
+						</div>
+					}
+				</div>
+				for i := 0; i < 7; i++ {
+					{{ day := weekDays.AddDate(0, 0, i) }}
+					{{ dayEvts := timedEvents(eventsForDay(p.Events, day)) }}
+					{{ isToday := isSameDay(day, today) }}
+					<div class={ "relative border-r border-gray-100 dark:border-gray-700", templ.KV("bg-blue-50/30 dark:bg-blue-900/10", isToday) }>
+						for _, _ = range hourSlots() {
+							<div class="calendar-time-slot" style={ fmt.Sprintf("height: %dpx", hourHeight) }></div>
+						}
+						for _, ev := range dayEvts {
+							<div
+								class={ "calendar-event-card " + calendarEventColor(ev.Color) }
+								style={ calendarEventPosition(ev.Start, ev.End, hourHeight) }
+							>
+								<div class="font-medium text-xs truncate">{ ev.Title }</div>
+								<div class="text-[0.625rem] opacity-70">{ formatTime(ev.Start) } — { formatTime(ev.End) }</div>
+							</div>
+						}
+						if isToday {
+							<div class="calendar-current-time" style="display: none;"></div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+	@CalendarWeekScript()
+	<script>
+		calendarWeekNowIndicator({ p.ID });
+		calendarWeekScrollToHour({ p.ID }, new Date().getHours() > 0 ? new Date().getHours() - 1 : 0);
+	</script>
+}
+
+func prevWeekURL(baseURL string, startDate time.Time) string {
+	prev := startDate.AddDate(0, 0, -7)
+	return fmt.Sprintf("%s?start=%s", baseURL, prev.Format("2006-01-02"))
+}
+
+func nextWeekURL(baseURL string, startDate time.Time) string {
+	next := startDate.AddDate(0, 0, 7)
+	return fmt.Sprintf("%s?start=%s", baseURL, next.Format("2006-01-02"))
+}
+
+func todayWeekURL(baseURL string, t time.Time) string {
+	start := weekStart(t)
+	return fmt.Sprintf("%s?start=%s", baseURL, start.Format("2006-01-02"))
+}

@@ -56,6 +56,12 @@ func Sidebar() templ.Component {
 					Active: view.PathPrefixIs(ctx, "/showcase/panels"),
 				},
 				&ui.SidebarItem{
+					Name:   "Calendar",
+					Icon:   icon.Calendar,
+					URL:    "/showcase/calendar",
+					Active: view.PathPrefixIs(ctx, "/showcase/calendar"),
+				},
+				&ui.SidebarItem{
 					Name:   "Payments",
 					Icon:   icon.Tasks,
 					URL:    "/admin/payments/status",
@@ -361,6 +367,10 @@ func Showcase() templ.Component {
 				return templ_7745c5c3_Err
 			}
 			templ_7745c5c3_Err = paginationSection().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = calendarSection().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

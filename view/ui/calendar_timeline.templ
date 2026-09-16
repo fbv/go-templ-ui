@@ -1,0 +1,149 @@
+package ui
+
+import (
+	"fmt"
+	"time"
+)
+
+type CalendarTimelineProps struct {
+	ID            string
+	Events        []CalendarEvent
+	LoadMoreURL   string
+	OnEventClick  string
+	HasMore       bool
+	NextCursor    string
+}
+
+templ CalendarTimelineScript() {
+	<script>
+		if (!window._calendarTimelineInitialized) {
+			window._calendarTimelineInitialized = true;
+			window.calendarTimelineObserver = null;
+			window.calendarTimelineSetup = function(containerId) {
+				var sentinel = document.querySelector('#' + containerId + ' .calendar-timeline-sentinel');
+				if (!sentinel) return;
+				if (window.calendarTimelineObserver) {
+					window.calendarTimelineObserver.disconnect();
+				}
+				window.calendarTimelineObserver = new IntersectionObserver(function(entries) {
+					entries.forEach(function(entry) {
+						if (entry.isIntersecting) {
+							var loadMore = entry.target.getAttribute('data-load-more');
+							if (loadMore && loadMore !== '') {
+								var loading = entry.target.parentElement.querySelector('.calendar-timeline-loading');
+								if (loading) loading.style.display = 'flex';
+								entry.target.setAttribute('data-load-more', '');
+							}
+						}
+					});
+				}, { threshold: 0.9 });
+				window.calendarTimelineObserver.observe(sentinel);
+			};
+		}
+	</script>
+}
+
+templ CalendarTimelineDayGroup(date time.Time, events []CalendarEvent) {
+	{{ weekdayNames := []string{"Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"} }}
+	{{ today := time.Now() }}
+	{{ isToday := isSameDay(date, today) }}
+	<div class="mb-6">
+		<div class="flex items-center gap-2 mb-3 sticky top-0 bg-white dark:bg-gray-800 z-10 py-2 border-b border-gray-100 dark:border-gray-700">
+			if isToday {
+				<span class="w-2 h-2 rounded-full bg-blue-500"></span>
+			}
+			<h4 class={ "text-sm font-semibold", templ.KV("text-blue-600 dark:text-blue-400", isToday), templ.KV("text-gray-900 dark:text-white", !isToday) }>
+				{ weekdayNames[date.Weekday()] }, { formatDate(date) }
+			</h4>
+			<span class="text-xs text-gray-400 dark:text-gray-500 ml-auto">
+				{ fmt.Sprintf("%d событий", len(events)) }
+			</span>
+		</div>
+		<div class="space-y-2 ml-4 border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+			for _, ev := range events {
+				<div class={ "relative p-3 rounded-lg border " + calendarEventColor(ev.Color) }>
+					<div class={ "absolute -left-[1.375rem] top-3 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-gray-800 " + calendarEventDotColor(ev.Color) }></div>
+					<div class="flex items-start justify-between gap-2">
+						<div class="min-w-0">
+							<h5 class="text-sm font-medium truncate">{ ev.Title }</h5>
+							<div class="flex items-center gap-2 mt-1">
+								<span class="text-xs opacity-70">
+									{ formatTime(ev.Start) } — { formatTime(ev.End) }
+								</span>
+								if ev.AllDay {
+									<span class="text-[0.625rem] px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-600 opacity-70">Весь день</span>
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+}
+
+templ CalendarTimelinePage(events []CalendarEvent, hasMore bool, nextCursor string) {
+	{{ grouped := groupEventsByDay(events) }}
+	for date, dayEvents := range grouped {
+		@CalendarTimelineDayGroup(date, dayEvents)
+	}
+	if hasMore {
+		<div class="calendar-timeline-loading hidden items-center justify-center py-4 text-sm text-gray-400">
+			Загрузка...
+		</div>
+		<div
+			class="calendar-timeline-sentinel"
+			data-load-more={ nextCursor }
+			hx-get={ fmt.Sprintf("%s?cursor=%s", "", nextCursor) }
+			hx-trigger="intersect threshold:0.9"
+			hx-swap="beforeend"
+			hx-target="closest div"
+		></div>
+	}
+}
+
+templ CalendarTimeline(p *CalendarTimelineProps) {
+	{{ grouped := groupEventsByDay(p.Events) }}
+	<div id={ p.ID } class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+		<div class="mb-4">
+			<h3 class="text-sm font-semibold text-gray-900 dark:text-white">Календарь событий</h3>
+		</div>
+		<div class="calendar-timeline-scroll">
+			if len(grouped) == 0 {
+				<div class="text-center py-8">
+					<p class="text-sm text-gray-400 dark:text-gray-500">Нет событий</p>
+				</div>
+			} else {
+				for date, dayEvents := range grouped {
+					@CalendarTimelineDayGroup(date, dayEvents)
+				}
+			}
+			if p.HasMore {
+				<div class="calendar-timeline-loading hidden items-center justify-center py-4 text-sm text-gray-400">
+					Загрузка...
+				</div>
+				<div
+					class="calendar-timeline-sentinel"
+					data-load-more={ p.NextCursor }
+					hx-get={ fmt.Sprintf("%s?cursor=%s", p.LoadMoreURL, p.NextCursor) }
+					hx-trigger="intersect threshold:0.9"
+					hx-swap="beforeend"
+					hx-target={ "#" + p.ID + " .calendar-timeline-scroll" }
+				></div>
+			}
+		</div>
+	</div>
+	@CalendarTimelineScript()
+	<script>
+		calendarTimelineSetup({ p.ID });
+	</script>
+}
+
+func groupEventsByDay(events []CalendarEvent) map[time.Time][]CalendarEvent {
+	grouped := make(map[time.Time][]CalendarEvent)
+	for _, ev := range events {
+		day := time.Date(ev.Start.Year(), ev.Start.Month(), ev.Start.Day(), 0, 0, 0, 0, time.UTC)
+		grouped[day] = append(grouped[day], ev)
+	}
+	return grouped
+}

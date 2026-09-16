@@ -29,6 +29,12 @@ templ Sidebar() {
 				Active: view.PathPrefixIs(ctx, "/showcase/panels"),
 			},
 			&ui.SidebarItem{
+				Name:   "Calendar",
+				Icon:   icon.Calendar,
+				URL:    "/showcase/calendar",
+				Active: view.PathPrefixIs(ctx, "/showcase/calendar"),
+			},
+			&ui.SidebarItem{
 				Name:   "Payments",
 				Icon:   icon.Tasks,
 				URL:    "/admin/payments/status",
@@ -155,6 +161,7 @@ templ Showcase() {
 		@skeletons()
 		@datepickers()
 		@paginationSection()
+		@calendarSection()
 		@loginSection()
 
 			@ui.H2("Code")

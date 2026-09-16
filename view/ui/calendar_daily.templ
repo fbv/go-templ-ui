@@ -1,0 +1,166 @@
+package ui
+
+import (
+	"fmt"
+	"time"
+)
+
+type CalendarDayProps struct {
+	ID           string
+	Date         time.Time
+	Events       []CalendarEvent
+	LoadURL      string
+	OnEventClick string
+	HourHeight   int
+}
+
+templ CalendarDayScript() {
+	<script>
+		if (!window._calendarDayInitialized) {
+			window._calendarDayInitialized = true;
+			window.calendarDayScrollToHour = function(containerId, hour) {
+				var container = document.getElementById(containerId);
+				if (!container) return;
+				var scrollArea = container.querySelector('.calendar-day-scroll');
+				if (!scrollArea) return;
+				var hourHeight = parseInt(container.getAttribute('data-hour-height') || '48');
+				scrollArea.scrollTop = hour * hourHeight;
+			};
+			window.calendarDayNowIndicator = function(containerId) {
+				var container = document.getElementById(containerId);
+				if (!container) return;
+				var indicator = container.querySelector('.calendar-current-time');
+				if (!indicator) return;
+				var now = new Date();
+				var hourHeight = parseInt(container.getAttribute('data-hour-height') || '48');
+				var top = (now.getHours() * 60 + now.getMinutes()) * hourHeight / 60;
+				indicator.style.top = top + 'px';
+				indicator.style.display = 'block';
+			};
+			window.calendarDayUpdateIndicator = function(containerId) {
+				var container = document.getElementById(containerId);
+				if (!container) return;
+				var indicator = container.querySelector('.calendar-current-time');
+				if (!indicator) return;
+				var now = new Date();
+				var hourHeight = parseInt(container.getAttribute('data-hour-height') || '48');
+				var top = (now.getHours() * 60 + now.getMinutes()) * hourHeight / 60;
+				indicator.style.top = top + 'px';
+			};
+		}
+	</script>
+}
+
+script calendarDayScrollToHourScript(containerId string, hour int) {
+	calendarDayScrollToHour(containerId, hour)
+}
+
+templ CalendarDay(p *CalendarDayProps) {
+	{{ today := time.Now() }}
+	{{ hourHeight := 48 }}
+	if p.HourHeight > 0 {
+		{{ hourHeight = p.HourHeight }}
+	}
+	{{ isToday := isSameDay(p.Date, today) }}
+	{{ dayEvts := timedEvents(p.Events) }}
+	{{ allDayEvts := allDayEvents(p.Events) }}
+	{{ weekdayNames := []string{"Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"} }}
+	<div id={ p.ID } class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" data-hour-height={ fmt.Sprintf("%d", hourHeight) }>
+		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+			<div class="flex items-center gap-2">
+				<button
+					type="button"
+					class="calendar-header-btn text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+					hx-get={ prevDayURL(p.LoadURL, p.Date) }
+					hx-target={ "#" + p.ID }
+					hx-swap="outerHTML"
+				>
+					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+				</button>
+				<div>
+					<h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+						{ weekdayNames[p.Date.Weekday()] }, { formatDate(p.Date) }
+					</h3>
+				</div>
+				<button
+					type="button"
+					class="calendar-header-btn text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+					hx-get={ nextDayURL(p.LoadURL, p.Date) }
+					hx-target={ "#" + p.ID }
+					hx-swap="outerHTML"
+				>
+					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+				</button>
+			</div>
+			<button
+				type="button"
+				class="calendar-header-btn text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-gray-700"
+				hx-get={ todayDayURL(p.LoadURL, today) }
+				hx-target={ "#" + p.ID }
+				hx-swap="outerHTML"
+			>
+				Сегодня
+			</button>
+		</div>
+		if len(allDayEvts) > 0 {
+			<div class="border-b border-gray-200 dark:border-gray-700 px-4 py-2">
+				<div class="text-[0.625rem] text-gray-400 dark:text-gray-500 mb-1">Весь день</div>
+				<div class="space-y-1">
+					for _, ev := range allDayEvts {
+						<div class={ "calendar-event-badge " + calendarEventColor(ev.Color) }>
+							<span>{ ev.Title }</span>
+						</div>
+					}
+				</div>
+			</div>
+		}
+		<div class="calendar-day-scroll overflow-y-auto" style="max-height: 600px;">
+			<div class="grid grid-cols-[4rem_1fr] relative">
+				<div class="border-r border-gray-200 dark:border-gray-700">
+					for _, h := range hourSlots() {
+						<div class="calendar-time-slot relative" style={ fmt.Sprintf("height: %dpx", hourHeight) }>
+							<span class="calendar-time-label">{ fmt.Sprintf("%02d:00", h) }</span>
+						</div>
+					}
+				</div>
+				<div class={ "relative", templ.KV("bg-blue-50/30 dark:bg-blue-900/10", isToday) }>
+					for _, _ = range hourSlots() {
+						<div class="calendar-time-slot" style={ fmt.Sprintf("height: %dpx", hourHeight) }></div>
+					}
+					for _, ev := range dayEvts {
+						<div
+							class={ "calendar-event-card " + calendarEventColor(ev.Color) }
+							style={ calendarEventPosition(ev.Start, ev.End, hourHeight) }
+						>
+							<div class="font-medium text-xs truncate">{ ev.Title }</div>
+							<div class="text-[0.625rem] opacity-70">{ formatTime(ev.Start) } — { formatTime(ev.End) }</div>
+						</div>
+					}
+					if isToday {
+						<div class="calendar-current-time" style="display: none;"></div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+	@CalendarDayScript()
+	<script>
+		calendarDayNowIndicator({ p.ID });
+		calendarDayScrollToHour({ p.ID }, new Date().getHours() > 0 ? new Date().getHours() - 1 : 0);
+		setInterval(function() { calendarDayUpdateIndicator({ p.ID }); }, 60000);
+	</script>
+}
+
+func prevDayURL(baseURL string, date time.Time) string {
+	prev := date.AddDate(0, 0, -1)
+	return fmt.Sprintf("%s?date=%s", baseURL, prev.Format("2006-01-02"))
+}
+
+func nextDayURL(baseURL string, date time.Time) string {
+	next := date.AddDate(0, 0, 1)
+	return fmt.Sprintf("%s?date=%s", baseURL, next.Format("2006-01-02"))
+}
+
+func todayDayURL(baseURL string, t time.Time) string {
+	return fmt.Sprintf("%s?date=%s", baseURL, t.Format("2006-01-02"))
+}

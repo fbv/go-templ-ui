@@ -1,0 +1,128 @@
+package showcase
+
+import (
+	"time"
+
+	"github.com/fbv/go-templ-ui/view"
+	"github.com/fbv/go-templ-ui/view/icon"
+	"github.com/fbv/go-templ-ui/view/ui"
+	"github.com/fbv/go-templ-ui/view/layout"
+)
+
+templ CalendarPage() {
+	@layout.Page(&layout.PageProps{Title: "Calendar Showcase"}) {
+		@ui.ToastScript()
+		@ui.ToastContainer("bottom-right")
+		@CalendarSidebar()
+		<div class="flex flex-row">
+			<div class="flex-1 w-auto h-screen overflow-y-auto p-4">
+				@calendarSection()
+			</div>
+		</div>
+	}
+}
+
+templ CalendarSidebar() {
+	@ui.Sidebar(&ui.SidebarProps{
+		Items: []*ui.SidebarItem{
+			&ui.SidebarItem{
+				Name:   "Components",
+				Icon:   icon.Dashboard,
+				URL:    "/showcase/components",
+				Active: view.PathPrefixIs(ctx, "/showcase/components"),
+			},
+			&ui.SidebarItem{
+				Name:   "Calendar",
+				Icon:   icon.Calendar,
+				URL:    "/showcase/calendar",
+				Active: view.PathPrefixIs(ctx, "/showcase/calendar"),
+			},
+		},
+		User: &ui.UserInfo{
+			Name:  "Boris Fedorov",
+			Email: "boris.fedorov.ru@gmail.com",
+		},
+		LogoutURL:   "/showcase/login",
+		Collapsible: true,
+		ID:          "calendar-sidebar",
+	})
+}
+
+templ calendarSection() {
+	@ui.H2("Calendar")
+	<div class="space-y-8">
+		@ui.H3("Monthly View")
+		@ui.CalendarMonth(&ui.CalendarMonthProps{
+			ID:      "calendar-month",
+			Year:    time.Now().Year(),
+			Month:   time.Now().Month(),
+			LoadURL: "/showcase/calendar/month",
+			Events: []ui.CalendarEvent{
+				{ID: "1", Title: "Совещание команды", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 10, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 11, 30, 0, 0, time.UTC), Color: "blue"},
+				{ID: "2", Title: "Обед", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 13, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 14, 0, 0, 0, time.UTC), Color: "green"},
+				{ID: "3", Title: "Дедлайн проекта", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+1, 17, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+1, 18, 0, 0, 0, time.UTC), Color: "red"},
+				{ID: "4", Title: "Код ревью", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+2, 14, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+2, 15, 0, 0, 0, time.UTC), Color: "purple"},
+				{ID: "5", Title: "Спринт планирование", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+3, 9, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+3, 10, 30, 0, 0, time.UTC), Color: "yellow"},
+				{ID: "6", Title: "Встреча с клиентом", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 15, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 16, 0, 0, 0, time.UTC), Color: "blue"},
+				{ID: "7", Title: "Релиз v2.0", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+5, 0, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+5, 23, 59, 0, 0, time.UTC), Color: "red", AllDay: true},
+			},
+		})
+		@ui.CalendarMonthScript()
+		@ui.CalendarStyles()
+
+		@ui.H3("Weekly View")
+		@ui.CalendarWeek(&ui.CalendarWeekProps{
+			ID:        "calendar-week",
+			StartDate: weekStart(time.Now()),
+			LoadURL:   "/showcase/calendar/week",
+			HourHeight: 48,
+			Events: []ui.CalendarEvent{
+				{ID: "w1", Title: "Утренний стендап", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 9, 30, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 9, 45, 0, 0, time.UTC), Color: "blue"},
+				{ID: "w2", Title: "Разработка", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 10, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 12, 0, 0, 0, time.UTC), Color: "green"},
+				{ID: "w3", Title: "Обеденный перерыв", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 13, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 14, 0, 0, 0, time.UTC), Color: "yellow"},
+				{ID: "w4", Title: "Код ревью", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+1, 14, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+1, 15, 30, 0, 0, time.UTC), Color: "purple"},
+				{ID: "w5", Title: "Тестирование", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+2, 11, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()+2, 12, 30, 0, 0, time.UTC), Color: "red"},
+			},
+		})
+		@ui.CalendarWeekScript()
+
+		@ui.H3("Daily View")
+		@ui.CalendarDay(&ui.CalendarDayProps{
+			ID:         "calendar-day",
+			Date:       time.Now(),
+			LoadURL:    "/showcase/calendar/day",
+			HourHeight: 48,
+			Events: []ui.CalendarEvent{
+				{ID: "d1", Title: "Утренняя йога", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 7, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 7, 45, 0, 0, time.UTC), Color: "green"},
+				{ID: "d2", Title: "Совещание по проекту", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 10, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 11, 30, 0, 0, time.UTC), Color: "blue"},
+				{ID: "d3", Title: "Обед", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 13, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 14, 0, 0, 0, time.UTC), Color: "yellow"},
+				{ID: "d4", Title: "Работа над фичей", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 14, 30, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 17, 0, 0, 0, time.UTC), Color: "purple"},
+				{ID: "d5", Title: "Деплой в staging", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 17, 30, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 18, 0, 0, 0, time.UTC), Color: "red"},
+			},
+		})
+		@ui.CalendarDayScript()
+
+		@ui.H3("Timeline View (Infinite Scroll)")
+		@ui.CalendarTimeline(&ui.CalendarTimelineProps{
+			ID:          "calendar-timeline",
+			LoadMoreURL: "/showcase/calendar/timeline/more",
+			HasMore:     true,
+			NextCursor:  "cursor_1",
+			Events: []ui.CalendarEvent{
+				{ID: "t1", Title: "Планерка", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 9, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 9, 30, 0, 0, time.UTC), Color: "blue"},
+				{ID: "t2", Title: "Разработка API", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 10, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 12, 0, 0, 0, time.UTC), Color: "green"},
+				{ID: "t3", Title: "Обед", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 13, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 14, 0, 0, 0, time.UTC), Color: "yellow"},
+				{ID: "t4", Title: "Код ревью PR #123", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()-1, 14, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()-1, 15, 0, 0, 0, time.UTC), Color: "purple"},
+				{ID: "t5", Title: "Релиз v1.9", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()-1, 16, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()-1, 17, 0, 0, 0, time.UTC), Color: "red"},
+				{ID: "t6", Title: "Встреча с заказчиком", Start: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()-2, 11, 0, 0, 0, time.UTC), End: time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day()-2, 12, 0, 0, 0, time.UTC), Color: "blue"},
+			},
+		})
+		@ui.CalendarTimelineScript()
+	</div>
+}
+
+func weekStart(date time.Time) time.Time {
+	weekday := date.Weekday()
+	offset := (int(weekday) + 6) % 7
+	return date.AddDate(0, 0, -offset)
+}

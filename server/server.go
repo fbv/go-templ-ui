@@ -38,5 +38,6 @@ func (s *Server) Run() error {
 	r.Get("/login", view.StaticPage(showcase.LoginPage()))
 	r.Get("/icons", view.StaticPage(showcase.IconsPage()))
 	r.Get("/panels", view.StaticPage(showcase.PanelsPage()))
+	r.Get("/calendar", view.StaticPage(showcase.CalendarPage()))
 	return s.fiber.Listen(":8082")
 }

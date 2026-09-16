@@ -1,0 +1,197 @@
+package ui
+
+import (
+	"fmt"
+	"time"
+)
+
+type CalendarMonthProps struct {
+	ID           string
+	Year         int
+	Month        time.Month
+	Events       []CalendarEvent
+	LoadURL      string
+	OnEventClick string
+	MaxBadges    int
+}
+
+templ CalendarMonthScript() {
+	<script>
+		if (!window._calendarMonthInitialized) {
+			window._calendarMonthInitialized = true;
+			window.calendarMonthSelectDay = function(containerId, year, month, day) {
+				var container = document.getElementById(containerId);
+				if (!container) return;
+				var cells = container.querySelectorAll('.calendar-day-cell');
+				for (var i = 0; i < cells.length; i++) {
+					cells[i].classList.remove('active');
+				}
+				var target = container.querySelector('[data-day="' + day + '"]');
+				if (target) {
+					target.classList.add('active');
+				}
+				var eventsSection = container.querySelector('.calendar-day-events');
+				if (!eventsSection) return;
+				var events = window['calendarEvents_' + containerId] || [];
+				var filtered = events.filter(function(e) {
+					var d = new Date(e.start);
+					return d.getFullYear() === year && d.getMonth() === (month - 1) && d.getDate() === day;
+				});
+				var html = '';
+				if (filtered.length === 0) {
+					html = '<p class="text-sm text-gray-400 dark:text-gray-500">Нет событий</p>';
+				} else {
+					for (var i = 0; i < filtered.length; i++) {
+						var e = filtered[i];
+						var colorClass = 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900 dark:text-blue-300 dark:border-blue-700';
+						var dotClass = 'bg-blue-500';
+						if (e.color === 'red') { colorClass = 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900 dark:text-red-300 dark:border-red-700'; dotClass = 'bg-red-500'; }
+						else if (e.color === 'green') { colorClass = 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-700'; dotClass = 'bg-green-500'; }
+						else if (e.color === 'yellow') { colorClass = 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900 dark:text-yellow-300 dark:border-yellow-700'; dotClass = 'bg-yellow-500'; }
+						else if (e.color === 'purple') { colorClass = 'bg-purple-100 text-purple-800 border-purple-300 dark:bg-purple-900 dark:text-purple-300 dark:border-purple-700'; dotClass = 'bg-purple-500'; }
+						else if (e.color === 'gray') { colorClass = 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600'; dotClass = 'bg-gray-400'; }
+						var sd = new Date(e.start);
+						var timeStr = String(sd.getHours()).padStart(2,'0') + ':' + String(sd.getMinutes()).padStart(2,'0');
+						html += '<div class="flex items-center gap-2 px-3 py-2 rounded-lg border mb-2 ' + colorClass + '">';
+						html += '<span class="w-2 h-2 rounded-full flex-shrink-0 ' + dotClass + '"></span>';
+						html += '<div class="flex-1 min-w-0">';
+						html += '<span class="text-sm font-medium">' + e.title + '</span>';
+						html += '<span class="ml-2 text-xs opacity-70">' + timeStr + '</span>';
+						html += '</div></div>';
+					}
+				}
+				eventsSection.innerHTML = html;
+			};
+		}
+	</script>
+}
+
+script calendarMonthSelectDayScript(containerId string, year int, month int, day int) {
+	calendarMonthSelectDay(containerId, year, month, day)
+}
+
+templ CalendarMonth(p *CalendarMonthProps) {
+	{{ grid := calendarGrid(p.Year, p.Month) }}
+	{{ today := time.Now() }}
+	{{ maxBadges := 3 }}
+	if p.MaxBadges > 0 {
+		{{ maxBadges = p.MaxBadges }}
+	}
+	<div id={ p.ID } class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+			<div class="flex items-center gap-2">
+				<button
+					type="button"
+					class="calendar-header-btn text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+					hx-get={ prevMonthURL(p.LoadURL, p.Year, p.Month) }
+					hx-target={ "#" + p.ID }
+					hx-swap="outerHTML"
+				>
+					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+				</button>
+				<h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+					{ formatMonthYear(time.Date(p.Year, p.Month, 1, 0, 0, 0, 0, time.UTC)) }
+				</h3>
+				<button
+					type="button"
+					class="calendar-header-btn text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+					hx-get={ nextMonthURL(p.LoadURL, p.Year, p.Month) }
+					hx-target={ "#" + p.ID }
+					hx-swap="outerHTML"
+				>
+					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+				</button>
+			</div>
+			<button
+				type="button"
+				class="calendar-header-btn text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-gray-700"
+				hx-get={ todayMonthURL(p.LoadURL, today) }
+				hx-target={ "#" + p.ID }
+				hx-swap="outerHTML"
+			>
+				Сегодня
+			</button>
+		</div>
+		<div class="overflow-x-auto">
+			<table class="calendar-month-grid">
+				<thead>
+					<tr>
+						for _, header := range dayOfWeekHeaders() {
+							<th class="text-gray-500 dark:text-gray-400">{ header }</th>
+						}
+					</tr>
+				</thead>
+				<tbody>
+					for _, row := range grid {
+						<tr>
+							for _, day := range row {
+								if day.IsZero() {
+									<td class="calendar-day-cell other-month bg-gray-50 dark:bg-gray-900"></td>
+								} else {
+									{{ dayEvents := eventsForDay(p.Events, day) }}
+									{{ isToday := isSameDay(day, today) }}
+									<td
+										class={
+											"calendar-day-cell",
+											templ.KV("today", isToday),
+										}
+										data-day={ fmt.Sprintf("%d", day.Day()) }
+										onclick={ calendarMonthSelectDayScript(p.ID, day.Year(), int(day.Month()), day.Day()) }
+									>
+										<div class="calendar-day-number text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+											{ fmt.Sprintf("%d", day.Day()) }
+										</div>
+										<div class="space-y-0.5">
+											for i, ev := range dayEvents {
+												if i < maxBadges {
+													<div class={ "calendar-event-badge " + calendarEventColor(ev.Color) }>
+														<span class={ "w-1.5 h-1.5 rounded-full flex-shrink-0 " + calendarEventDotColor(ev.Color) }></span>
+														<span class="truncate">{ ev.Title }</span>
+													</div>
+												}
+											}
+											if len(dayEvents) > maxBadges {
+												<div class="text-[0.625rem] text-gray-400 dark:text-gray-500 px-1">
+													+{ fmt.Sprintf("%d", len(dayEvents)-maxBadges) } ещё
+												</div>
+											}
+										</div>
+									</td>
+								}
+							}
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+		<div class="calendar-day-events border-t border-gray-200 dark:border-gray-700 p-3">
+			<p class="text-sm text-gray-400 dark:text-gray-500">Выберите день</p>
+		</div>
+	</div>
+	<script>
+		(function() {
+			var key = 'calendarEvents_' + { p.ID };
+			if (!window[key]) {
+				window[key] = [
+					for _, ev := range p.Events {
+						{ id: "{ ev.ID }", title: "{ ev.Title }", start: "{ ev.Start.Format("2006-01-02T15:04") }", end: "{ ev.End.Format("2006-01-02T15:04") }", color: "{ ev.Color }" },
+					}
+				];
+			}
+		})();
+	</script>
+}
+
+func prevMonthURL(baseURL string, year int, month time.Month) string {
+	d := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC).AddDate(0, -1, 0)
+	return fmt.Sprintf("%s?year=%d&month=%d", baseURL, d.Year(), d.Month())
+}
+
+func nextMonthURL(baseURL string, year int, month time.Month) string {
+	d := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC).AddDate(0, 1, 0)
+	return fmt.Sprintf("%s?year=%d&month=%d", baseURL, d.Year(), d.Month())
+}
+
+func todayMonthURL(baseURL string, t time.Time) string {
+	return fmt.Sprintf("%s?year=%d&month=%d", baseURL, t.Year(), t.Month())
+}
