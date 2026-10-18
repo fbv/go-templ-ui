@@ -39,5 +39,9 @@ func (s *Server) Run() error {
 	r.Get("/icons", view.StaticPage(showcase.IconsPage()))
 	r.Get("/panels", view.StaticPage(showcase.PanelsPage()))
 	r.Get("/calendar", view.StaticPage(showcase.CalendarPage()))
+	r.Post("/api/selected", func(c *fiber.Ctx) error {
+		ids := c.FormValue("ids")
+		return c.SendString("Выбраны элементы: " + ids)
+	})
 	return s.fiber.Listen(":8082")
 }

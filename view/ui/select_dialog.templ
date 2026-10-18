@@ -1,0 +1,128 @@
+package ui
+
+import "fmt"
+
+script selectDialogToggleAll(modalID string) {
+  var modal = document.getElementById(modalID);
+  var allCb = modal.querySelector('.sd-toggle-all');
+  modal.querySelectorAll('input[name="ids"]').forEach(function(cb){
+    cb.checked = allCb.checked;
+  });
+}
+
+templ SelectDialog(p *SelectDialogProps) {
+	<div
+		data-twe-modal-init
+		class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+		id={ p.ModalID }
+		tabindex="-1"
+		aria-hidden="true"
+	>
+		<div
+			data-twe-modal-dialog-ref
+			class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[700px]"
+		>
+			<div class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-4 outline-none dark:bg-surface-dark">
+				<div class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 p-4 dark:border-white/10">
+					<h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200">
+						{ p.Title }
+					</h5>
+					<button
+						type="button"
+						class="box-content rounded-none border-none text-neutral-500 hover:text-neutral-800 hover:no-underline focus:text-neutral-800 focus:no-underline focus:outline-none dark:text-neutral-400 dark:hover:text-neutral-300"
+						data-twe-modal-dismiss
+						aria-label="Close"
+					>
+						<span class="[&>svg]:h-6 [&>svg]:w-6">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+							</svg>
+						</span>
+					</button>
+				</div>
+				<div class="relative flex-auto p-4" data-twe-modal-body-ref>
+					<form
+						action={ templ.URL(p.SubmitURL) }
+						method="POST"
+						class="sd-form"
+						{ renderAttributes(p.FormAttrs)... }
+					>
+						<input type="hidden" name="ids" class="sd-ids"/>
+						<div class="max-h-96 overflow-y-auto">
+							<table class="border-collapse table-auto w-full">
+								<thead class="border-t sticky top-0 bg-white dark:bg-surface-dark">
+									<tr>
+										<th class="border-b pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal w-10">
+											<input
+												type="checkbox"
+												class="sd-toggle-all h-4 w-4 rounded border-gray-300"
+												onclick={ selectDialogToggleAll(p.ModalID) }
+											/>
+										</th>
+										for col := 0; col < p.Data.GetColumnCount(); col++ {
+											if col > 0 {
+												<th class="border-b border-l pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal">{ p.Data.GetColumnName(col) }</th>
+											} else {
+												<th class="border-b pl-2 pt-1 pr-2 pb-1 text-gray-400 text-left font-normal">{ p.Data.GetColumnName(col) }</th>
+											}
+										}
+									</tr>
+								</thead>
+								<tbody>
+									for row := 0; row < p.Data.GetRowCount(); row++ {
+										{{ itemId := p.Data.GetItemID(row) }}
+										<tr class="border-b hover:bg-slate-50 align-top">
+											<td class="px-2 py-1">
+												<input
+													type="checkbox"
+													name="ids"
+													value={ itemId }
+													class="h-4 w-4 rounded border-gray-300"
+												/>
+											</td>
+											for col := 0; col < p.Data.GetColumnCount(); col++ {
+												<td class={ "px-2 py-1 " + p.Data.GetColumnStyle(col) }>@p.Data.GetData(row, col)</td>
+											}
+										</tr>
+									}
+								</tbody>
+							</table>
+						</div>
+					</form>
+				</div>
+				<div class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 p-4 dark:border-white/10">
+					<button
+						type="button"
+						class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-primary-accent-200 focus:bg-primary-accent-200 focus:outline-none focus:ring-0 active:bg-primary-accent-200 dark:bg-primary-300 dark:hover:bg-primary-400 dark:focus:bg-primary-400 dark:active:bg-primary-400"
+						data-twe-modal-dismiss
+					>
+						{ p.cancelLabel() }
+					</button>
+					<button
+						type="button"
+						class="sd-confirm ms-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+					>
+						{ p.confirmLabel() }
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+	(function(){
+	  var modal = document.getElementById({{ fmt.Sprintf("%q", p.ModalID) }});
+	  var form = modal.querySelector('.sd-form');
+	  var hidden = form.querySelector('.sd-ids');
+	  var btn = modal.querySelector('.sd-confirm');
+	  btn.addEventListener('click', function(){
+	    var selected = [];
+	    form.querySelectorAll('input[name="ids"]:checked').forEach(function(cb){
+	      selected.push(cb.value);
+	    });
+	    if (selected.length === 0) return;
+	    hidden.value = selected.join(',');
+	    form.submit();
+	  });
+	})();
+	</script>
+}

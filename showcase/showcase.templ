@@ -3,8 +3,8 @@ package showcase
 import (
 	"github.com/fbv/go-templ-ui/view"
 	"github.com/fbv/go-templ-ui/view/icon"
-	"github.com/fbv/go-templ-ui/view/ui"
 	"github.com/fbv/go-templ-ui/view/layout"
+	"github.com/fbv/go-templ-ui/view/ui"
 )
 
 templ Sidebar() {
@@ -54,12 +54,12 @@ templ Sidebar() {
 			},
 		},
 		User: &ui.UserInfo{
-			Name: "Boris Fedorov",
+			Name:  "Boris Fedorov",
 			Email: "boris.fedorov.ru@gmail.com",
 		},
-		LogoutURL:     "/showcase/login",
-		Collapsible:   true,
-		ID:            "main-sidebar",
+		LogoutURL:   "/showcase/login",
+		Collapsible: true,
+		ID:          "main-sidebar",
 	})
 }
 
@@ -72,26 +72,20 @@ templ Showcase() {
 		<div class="flex flex-row">
 			@Sidebar()
 			<div class="flex-1 w-auto h-screen overflow-y-auto p-4">
-			
-			@ui.H1("UI Components showcase")
-
-			@ui.H2("Breadcrumbs")
-			@ui.Breadcrumb(
-				&ui.BreadcrumbItem{Title: "Home", URL: "/"},
-				&ui.BreadcrumbItem{Title: "Library", URL: "/library"},
-				&ui.BreadcrumbItem{Title: "Data", Active: true},
-			)
-
-			@ui.H2("Collapsible")
-			@ui.Collapsible("TEST") {
-				<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula leo vitae nisi porttitor, non sodales massa luctus. Phasellus tristique eget magna at rhoncus. In hac habitasse platea dictumst. Integer aliquet pulvinar purus nec condimentum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam odio ipsum, blandit non lacus consequat, rutrum imperdiet felis. Phasellus sapien urna, lacinia posuere accumsan quis, semper ac nisi. Donec ornare at ex ac dictum. Nulla facilisi.</div>
-			}
-
-			@forms()
-
-			@ui.H2("Progress")
-
-<style>
+				@ui.H1("UI Components showcase")
+				@ui.H2("Breadcrumbs")
+				@ui.Breadcrumb(
+					&ui.BreadcrumbItem{Title: "Home", URL: "/"},
+					&ui.BreadcrumbItem{Title: "Library", URL: "/library"},
+					&ui.BreadcrumbItem{Title: "Data", Active: true},
+				)
+				@ui.H2("Collapsible")
+				@ui.Collapsible("TEST") {
+					<div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula leo vitae nisi porttitor, non sodales massa luctus. Phasellus tristique eget magna at rhoncus. In hac habitasse platea dictumst. Integer aliquet pulvinar purus nec condimentum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam odio ipsum, blandit non lacus consequat, rutrum imperdiet felis. Phasellus sapien urna, lacinia posuere accumsan quis, semper ac nisi. Donec ornare at ex ac dictum. Nulla facilisi.</div>
+				}
+				@forms()
+				@ui.H2("Progress")
+				<style>
    .radial-progress {
         display: inline-block;
         border-radius: 50%;
@@ -99,14 +93,13 @@ templ Showcase() {
         mask: radial-gradient(farthest-side, transparent calc(100% - var(--thickness)), white calc(100% - var(--thickness) + 1px));
     }
 </style>
-
-<div class="flex select-none relative text-slate-500 items-center justify-center">
-     <div class="radial-progress size-12"
-         style="--value: 75; --progress-color: #64748b; --thickness: 0.3rem;">
-     </div>
-     <div class="absolute font-bold text-sm">75%</div>
-</div>
-
+				<div class="flex select-none relative text-slate-500 items-center justify-center">
+					<div
+						class="radial-progress size-12"
+						style="--value: 75; --progress-color: #64748b; --thickness: 0.3rem;"
+					></div>
+					<div class="absolute font-bold text-sm">75%</div>
+				</div>
 				@ui.H2("Tabs")
 				@ui.Tabs(&ui.TabItem{
 					Title: "Дашборд каталога",
@@ -147,26 +140,25 @@ templ Showcase() {
 						})
 					}
 				</div>
-			@timelineSection()
-			@statCardsSection()
-			@progressSection()
-			@dropdownSection()
-			@headers()
-			@buttons()
-			@tables()
-			@utils()
-		@alerts()
-		@toasts()
-		@spinners()
-		@skeletons()
-		@datepickers()
-		@paginationSection()
-		@calendarSection()
-		@loginSection()
-
-			@ui.H2("Code")
-			@ui.Code(&ui.CodeProps{Language: "go", Content: "package main\n\nimport (\n\t\"fmt\"\n)\n\nfunc main() {\n\tfmt.Println(\"Hello, world!\")\n}\n"})
-
+				@timelineSection()
+				@statCardsSection()
+				@progressSection()
+				@dropdownSection()
+				@headers()
+				@buttons()
+				@tables()
+				@selectDialogSection()
+				@utils()
+				@alerts()
+				@toasts()
+				@spinners()
+				@skeletons()
+				@datepickers()
+				@paginationSection()
+				@calendarSection()
+				@loginSection()
+				@ui.H2("Code")
+				@ui.Code(&ui.CodeProps{Language: "go", Content: "package main\n\nimport (\n\t\"fmt\"\n)\n\nfunc main() {\n\tfmt.Println(\"Hello, world!\")\n}\n"})
 				<br/>
 			</div>
 		</div>
@@ -237,7 +229,6 @@ templ toasts() {
 		@ui.Toast(&ui.ToastProps{ID: "toast-error", Title: "Error", Style: "error", Duration: 5000}) {
 			An error occurred.
 		}
-		
 		@ui.H3("Custom Icons")
 		<p class="text-sm text-gray-500">Using standard icons from icon package:</p>
 		<div class="flex gap-2 flex-wrap">
@@ -324,7 +315,6 @@ templ timelineSection() {
 			{Title: "Testing", Date: "01.03.2024", Content: "QA тестирование", Color: "gray"},
 			{Title: "Deployment", Date: "15.03.2024", Content: "Запуск в продакшн", Color: "red"},
 		})
-		
 		@ui.H3("Horizontal Timeline")
 		@ui.HorizontalTimeline([]ui.TimelineItem{
 			{Title: "Step 1", Date: "Янв", Color: "blue", Active: true},
@@ -382,4 +372,18 @@ templ dropdownSection() {
 templ loginSection() {
 	@ui.H2("Login Dialog")
 	<p class="text-sm text-gray-500 mb-4">Click the Logout button in the sidebar to see the login modal.</p>
+}
+
+templ selectDialogSection() {
+	@ui.H2("Select Dialog")
+	<p class="text-sm text-gray-500 mb-4">Выберите элементы из таблицы и нажмите «Отправить» для отправки выбранных ID на сервер.</p>
+	<button
+		type="button"
+		class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+		data-twe-toggle="modal"
+		data-twe-target="#select-items-dlg"
+	>
+		Выбрать сотрудников
+	</button>
+	@ui.SelectDialog(selectDialogProps)
 }
