@@ -43,5 +43,6 @@ func (s *Server) Run() error {
 		ids := c.FormValue("ids")
 		return c.SendString("Выбраны элементы: " + ids)
 	})
+	r.Get("/tree", view.StaticPage(showcase.TreePage()))
 	return s.fiber.Listen(":8082")
 }
