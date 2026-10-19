@@ -5,15 +5,38 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/fbv/go-templ-ui/view/i18n"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func renderPage(t *testing.T) string {
 	t.Helper()
+	return renderPageWithContext(t, context.Background())
+}
+
+func renderPageWithContext(t *testing.T, ctx context.Context) string {
+	t.Helper()
 	var buf strings.Builder
-	require.NoError(t, Page(&PageProps{Title: "test"}).Render(context.Background(), &buf))
+	require.NoError(t, Page(&PageProps{Title: "test"}).Render(ctx, &buf))
 	return buf.String()
+}
+
+func TestPageDefaultsToEnglishDocumentLanguage(t *testing.T) {
+	html := renderPage(t)
+	assert.Contains(t, html, `<html lang="en">`, "default context must render an English document")
+}
+
+func TestPageTakesDocumentLanguageFromLocale(t *testing.T) {
+	html := renderPageWithContext(t, i18n.WithLocale(context.Background(), i18n.Russian))
+	assert.Contains(t, html, `<html lang="ru">`, "a Russian locale must render a Russian document")
+	assert.NotContains(t, html, `<html lang="en">`, "the document language must not stay hardcoded")
+}
+
+func TestPageFallsBackToEnglishForATaglessLocale(t *testing.T) {
+	html := renderPageWithContext(t, i18n.WithLocale(context.Background(), &i18n.Locale{Name: "No tag"}))
+	assert.Contains(t, html, `<html lang="en">`, "a carried locale without a tag must not produce an empty lang")
+	assert.NotContains(t, html, `<html lang="">`)
 }
 
 func TestPageAppliesStoredThemeBeforePaint(t *testing.T) {

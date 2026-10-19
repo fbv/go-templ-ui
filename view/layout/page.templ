@@ -1,6 +1,9 @@
 package layout
 
-import "github.com/fbv/go-templ-ui/view/ui"
+import (
+	"github.com/fbv/go-templ-ui/view/i18n"
+	"github.com/fbv/go-templ-ui/view/ui"
+)
 
 type PageProps struct {
 	Title string
@@ -8,7 +11,7 @@ type PageProps struct {
 
 templ Page(p *PageProps) {
 	<!DOCTYPE html>
-	<html lang="en">
+	<html lang={ i18n.From(ctx).Tag }>
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>

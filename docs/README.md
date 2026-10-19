@@ -50,6 +50,10 @@ showcase page.
 ### Dialogs
 - [ConfirmDialog](confirm_dialog.md) - Confirmation modal for dangerous actions
 
+### Theming & i18n
+- [i18n](i18n.md) - Locale, strings and formats carried in `context.Context`
+  (package, not a component: no demo page)
+
 ## Quick Reference
 
 | Component | Purpose | Key Props |
@@ -63,3 +67,4 @@ showcase page.
 | `Pagination` | Page navigation | `CurrentPage`, `TotalPages`, `BaseURL` |
 | `DatePicker` | Date/time input | `Name`, `Label`, `Type` |
 | `ConfirmDialog` | Confirmation modal | `ModalID`, `Title`, `Message`, `ConfirmURL` |
+| `i18n` | Locale, strings and formats | `WithLocale`, `T`, `Number`, `Currency`, `Date`, `MonthYear` |

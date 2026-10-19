@@ -1,9 +1,11 @@
 package ui
 
+import "github.com/fbv/go-templ-ui/view/i18n"
+
 templ YesNo(b bool) {
     if b {
-        <span class="text-green-600">Да</span>
+        <span class="text-green-600">{ i18n.T(ctx, i18n.KeyYes) }</span>
     } else {
-        <span class="text-red-600">Нет</span>
+        <span class="text-red-600">{ i18n.T(ctx, i18n.KeyNo) }</span>
     }
 }
