@@ -20,3 +20,192 @@ li.x-tab-active::before {
     border-color: #e5e7eb;
     bottom: -5px;
 }
+/* Mirror of view/ui/tokens.templ TokenStyles() — L1/L2/L3 token layers.
+   Keep in sync with TokenStyles(); drift between the two homes is accepted. */
+
+/* L1 — global primitives (raw colour ramp, DESIGN.md values) */
+:root, [data-theme="light"] {
+  --g-canvas: #F2F0EA;
+  --g-surface: #FBFAF6;
+  --g-surface-alt: #E7E4DB;
+  --g-surface-overlay: #FFFFFF;
+  --g-field: #FFFFFF;
+  --g-subtle: #F7F3EA;
+  --g-info-soft: #F6F3EB;
+  --g-border: #D6D2C6;
+  --g-border-strong: #BFB9A9;
+  --g-ink: #26241F;
+  --g-ink-muted: #5F5C54;
+  --g-ink-subtle: #8B8880;
+  --g-ink-disabled: #B4AFA3;
+  --g-action: #1F6FB8;
+  --g-action-hover: #1A5F9E;
+  --g-action-active: #154F84;
+  --g-action-fg: #FFFFFF;
+  --g-action-soft: #E2EAF5;
+  --g-highlight: #F8F5EC;
+  --g-selected: #F0EADC;
+  --g-success: #2E7D46;
+  --g-success-soft: #EAF5EC;
+  --g-success-border: #B2D1BA;
+  --g-warning: #9A6508;
+  --g-warning-soft: #F8F1DE;
+  --g-warning-border: #DCC79E;
+  --g-danger: #B5342A;
+  --g-danger-fg: #FFFFFF;
+  --g-danger-soft: #F9E9E6;
+  --g-danger-border: #E5B3AE;
+  --g-focus: #1F6FB8;
+}
+
+[data-theme="dark"] {
+  --g-canvas: #1C1B18;
+  --g-surface: #25241F;
+  --g-surface-alt: #2F2E28;
+  --g-surface-overlay: #2A2925;
+  --g-field: #2E2B25;
+  --g-subtle: #2F2E28;
+  --g-info-soft: #272520;
+  --g-border: #3E3D35;
+  --g-border-strong: #514F45;
+  --g-ink: #EAE8E1;
+  --g-ink-muted: #A5A29A;
+  --g-ink-subtle: #7C7A72;
+  --g-ink-disabled: #5A584F;
+  --g-action: #7CB7EC;
+  --g-action-hover: #94C6F0;
+  --g-action-active: #ABD4F4;
+  --g-action-fg: #0A1B29;
+  --g-action-soft: #1E2C3C;
+  --g-highlight: #34302A;
+  --g-selected: #3C3730;
+  --g-success: #7CCF9A;
+  --g-success-soft: #1E3324;
+  --g-success-border: #3A6247;
+  --g-warning: #E5B44C;
+  --g-warning-soft: #3A2F14;
+  --g-warning-border: #6D5725;
+  --g-danger: #EE8070;
+  --g-danger-fg: #2E120C;
+  --g-danger-soft: #3A211E;
+  --g-danger-border: #703E37;
+  --g-focus: #7CB7EC;
+}
+
+/* L2 — semantic aliases: colour roles + role-named type/radius/spacing scales
+   (the theming seam; components consume these, never --g-*) */
+:root {
+  --color-canvas: var(--g-canvas);
+  --color-surface: var(--g-surface);
+  --color-surface-alt: var(--g-surface-alt);
+  --color-surface-overlay: var(--g-surface-overlay);
+  --color-field: var(--g-field);
+  --color-subtle: var(--g-subtle);
+  --color-info-soft: var(--g-info-soft);
+  --color-border: var(--g-border);
+  --color-border-strong: var(--g-border-strong);
+  --color-ink: var(--g-ink);
+  --color-ink-muted: var(--g-ink-muted);
+  --color-ink-subtle: var(--g-ink-subtle);
+  --color-ink-disabled: var(--g-ink-disabled);
+  --color-action: var(--g-action);
+  --color-action-hover: var(--g-action-hover);
+  --color-action-active: var(--g-action-active);
+  --color-action-fg: var(--g-action-fg);
+  --color-action-soft: var(--g-action-soft);
+  --color-highlight: var(--g-highlight);
+  --color-selected: var(--g-selected);
+  --color-success: var(--g-success);
+  --color-success-soft: var(--g-success-soft);
+  --color-success-border: var(--g-success-border);
+  --color-warning: var(--g-warning);
+  --color-warning-soft: var(--g-warning-soft);
+  --color-warning-border: var(--g-warning-border);
+  --color-danger: var(--g-danger);
+  --color-danger-fg: var(--g-danger-fg);
+  --color-danger-soft: var(--g-danger-soft);
+  --color-danger-border: var(--g-danger-border);
+  --color-focus: var(--g-focus);
+
+  --rounded-sm: 5px;
+  --rounded-md: 7px;
+  --rounded-lg: 10px;
+  --rounded-xl: 14px;
+  --rounded-full: 9999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-control-sm: 24px;
+  --space-control: 32px;
+  --space-control-lg: 40px;
+  --space-row-compact: 32px;
+  --space-row-comfortable: 40px;
+
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-display-size: 24px;
+  --text-display-weight: 600;
+  --text-display-leading: 1.25;
+  --text-display-tracking: -0.01em;
+  --text-heading-lg-size: 20px;
+  --text-heading-lg-weight: 600;
+  --text-heading-lg-leading: 1.3;
+  --text-heading-size: 16px;
+  --text-heading-weight: 600;
+  --text-heading-leading: 1.4;
+  --text-subheading-size: 14px;
+  --text-subheading-weight: 600;
+  --text-subheading-leading: 1.4;
+  --text-body-size: 13px;
+  --text-body-weight: 400;
+  --text-body-leading: 1.5;
+  --text-body-sm-size: 12px;
+  --text-body-sm-weight: 400;
+  --text-body-sm-leading: 1.5;
+  --text-label-size: 12px;
+  --text-label-weight: 500;
+  --text-label-leading: 1.4;
+  --text-caption-size: 11px;
+  --text-caption-weight: 400;
+  --text-caption-leading: 1.4;
+  --text-overline-size: 11px;
+  --text-overline-weight: 500;
+  --text-overline-leading: 1.4;
+  --text-overline-tracking: 0.08em;
+  --text-mono-size: 12px;
+  --text-mono-weight: 400;
+  --text-mono-leading: 1.5;
+}
+
+/* L3 — component tokens */
+:root {
+  --badge-radius: var(--rounded-full);
+  --badge-font-size: var(--text-caption-size);
+  --badge-font-weight: var(--text-caption-weight);
+  --badge-line-height: var(--text-caption-leading);
+
+  --badge-neutral-bg: var(--color-subtle);
+  --badge-neutral-fg: var(--color-ink-muted);
+  --badge-neutral-border: var(--color-border);
+
+  --badge-success-bg: var(--color-success-soft);
+  --badge-success-fg: var(--color-success);
+  --badge-success-border: var(--color-success-border);
+
+  --badge-warning-bg: var(--color-warning-soft);
+  --badge-warning-fg: var(--color-ink-muted);
+  --badge-warning-border: var(--color-warning-border);
+
+  --badge-danger-bg: var(--color-danger-soft);
+  --badge-danger-fg: var(--color-danger);
+  --badge-danger-border: var(--color-danger-border);
+}

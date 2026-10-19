@@ -3,7 +3,9 @@ package server
 import (
 	"embed"
 	"net/http"
+	"strings"
 
+	"github.com/fbv/go-templ-ui/docs"
 	"github.com/fbv/go-templ-ui/showcase"
 	"github.com/fbv/go-templ-ui/view"
 	"github.com/gofiber/fiber/v2"
@@ -31,6 +33,13 @@ func (s *Server) Run() error {
 		Root:   http.FS(s.content),
 		Browse: true,
 	}))
+	// Demo pages link to docs/<name>.md relative to /showcase/<name>, which
+	// resolves to /showcase/docs/<name>.md. Mount the embedded docs tree so
+	// that href is a live URL instead of a 404.
+	r.Use("/docs", filesystem.New(filesystem.Config{
+		Root:   http.FS(docs.Content),
+		Browse: true,
+	}))
 	r.Get("/", func(c *fiber.Ctx) error {
 		return c.Redirect("/showcase/components")
 	})
@@ -44,5 +53,8 @@ func (s *Server) Run() error {
 		return c.SendString("Выбраны элементы: " + ids)
 	})
 	r.Get("/tree", view.StaticPage(showcase.TreePage()))
+	for _, d := range showcase.Demos() {
+		r.Get(strings.TrimPrefix(d.Route, "/showcase"), view.StaticPage(d.Render(d)))
+	}
 	return s.fiber.Listen(":8082")
 }

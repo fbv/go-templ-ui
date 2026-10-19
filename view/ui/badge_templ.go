@@ -72,27 +72,28 @@ func Badge(p *BadgeProps) templ.Component {
 	})
 }
 
+const badgeBase = "inline-block rounded-[var(--badge-radius)] border px-2.5 py-0.5 me-2 text-[length:var(--badge-font-size)] leading-[var(--badge-line-height)] font-[number:var(--badge-font-weight)]"
+
+// badgeStyle maps the legacy Style values onto semantic status/neutral
+// component tokens. Colors are always var(--badge-*); no palette classes.
+// red → danger, green → success, yellow → warning, ping → danger;
+// gray/indigo/purple/blue/empty/unknown → neutral (the default variant).
+// Badges are non-interactive display pills, so they never take the action
+// blue (DESIGN.md: blue is an affordance).
 func badgeStyle(p *BadgeProps) string {
-	style := "text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm"
+	variant := "neutral"
 	switch p.Style {
-	case "gray":
-		style = "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 " + style
-	case "red":
-		style = "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 " + style
 	case "green":
-		style = "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 " + style
+		variant = "success"
 	case "yellow":
-		style = "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 " + style
-	case "indigo":
-		style = "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 " + style
-	case "purple":
-		style = "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300 " + style
-	case "ping":
-		style = "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300 " + style
-	default:
-		style = "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 " + style
+		variant = "warning"
+	case "red", "ping":
+		variant = "danger"
 	}
-	return style
+	return badgeBase +
+		" bg-[var(--badge-" + variant + "-bg)]" +
+		" text-[var(--badge-" + variant + "-fg)]" +
+		" border-[var(--badge-" + variant + "-border)]"
 }
 
 var _ = templruntime.GeneratedTemplate

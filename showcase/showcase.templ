@@ -8,8 +8,8 @@ import (
 )
 
 templ Sidebar() {
-	@ui.Sidebar(&ui.SidebarProps{
-		Items: []*ui.SidebarItem{
+	{{
+		items := []*ui.SidebarItem{
 			&ui.SidebarItem{
 				Name:   "Components",
 				Icon:   icon.Dashboard,
@@ -58,7 +58,18 @@ templ Sidebar() {
 				URL:    "/admin/settings",
 				Active: view.PathPrefixIs(ctx, "/admin/settings"),
 			},
-		},
+		}
+		for _, d := range Demos() {
+			items = append(items, &ui.SidebarItem{
+				Name:   d.Title,
+				Icon:   d.Icon,
+				URL:    d.Route,
+				Active: view.PathIs(ctx, d.Route),
+			})
+		}
+	}}
+	@ui.Sidebar(&ui.SidebarProps{
+		Items: items,
 		User: &ui.UserInfo{
 			Name:  "Boris Fedorov",
 			Email: "boris.fedorov.ru@gmail.com",
