@@ -14,8 +14,10 @@ templ MasterDetails(master templ.Component, details templ.Component) {
     </div>
 }
 
+// Card is a passive container: DESIGN.md defines it by tone and border alone
+// (surface + border, rounded-lg) with no shadow, never a coloured fill.
 templ Card() {
-    <div class="p-8 mb-4 rounded-lg shadow bg-slate-50">
+    <div class="p-8 mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
         { children... }
     </div>
 }

@@ -49,20 +49,24 @@ type PanelProps struct {
 	Style  string
 }
 
+// panelClasses: neutral panels sit on the subtle warm fill; "blue" becomes an
+// informational panel on info-soft with neutral ink (DESIGN.md has no chromatic
+// "info" hue — blue would break the "colour means interactivity" rule). Any
+// other Style value falls back to neutral.
 func panelClasses(style string) string {
-	classes := "bg-gray-50 p-4 rounded-lg border"
+	classes := "bg-[var(--color-subtle)] p-4 rounded-lg border border-[var(--color-border)]"
 	switch style {
 	case "blue":
-		classes = "bg-blue-50 p-4 rounded-lg border border-blue-200"
+		classes = "bg-[var(--color-info-soft)] p-4 rounded-lg border border-[var(--color-border)]"
 	}
 	return classes
 }
 
 func panelHeaderClasses(style string) string {
-	classes := "text-sm text-gray-600 mb-4"
+	classes := "text-sm text-[var(--color-ink-muted)] mb-4"
 	switch style {
 	case "blue":
-		classes = "text-sm text-blue-700 mb-4"
+		classes = "text-sm text-[var(--color-ink)] mb-4"
 	}
 	return classes
 }
@@ -136,7 +140,7 @@ func Panel(p *PanelProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(p.Header)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/panel.templ`, Line: 31, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/panel.templ`, Line: 35, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {

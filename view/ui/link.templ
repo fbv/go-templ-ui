@@ -1,5 +1,7 @@
 package ui
 
+// Link is an affordance, so it is the one place the chromatic action token is
+// correct (DESIGN.md: blue belongs to things you can click).
 templ Link(url, title string) {
-    <a href={ templ.URL(url) } class="text-blue-600 hover:underline">{ title }</a>
+    <a href={ templ.URL(url) } class="text-[var(--color-action)] hover:underline">{ title }</a>
 }

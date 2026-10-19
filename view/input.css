@@ -208,4 +208,9 @@ li.x-tab-active::before {
   --badge-danger-bg: var(--color-danger-soft);
   --badge-danger-fg: var(--color-danger);
   --badge-danger-border: var(--color-danger-border);
+
+  /* Code surface is an inverse pairing: a dark slab in light theme, a light
+     slab in dark theme, so the block stays a distinct object either way. */
+  --code-bg: var(--color-ink);
+  --code-fg: var(--color-canvas);
 }

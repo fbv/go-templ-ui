@@ -73,7 +73,7 @@ templ Sidebar(p *SidebarProps) {
 		if p.Collapsible {
 			id={ p.ID }
 		}
-		class={ "flex flex-col bg-white h-screen border-r transition-all duration-300 ease-in-out sidebar-root sticky top-0 flex-shrink-0", sidebarWidthClass(p) }
+		class={ "flex flex-col bg-[var(--color-surface)] h-screen border-r border-[var(--color-border)] transition-all duration-300 ease-in-out sidebar-root sticky top-0 flex-shrink-0", sidebarWidthClass(p) }
 	>
 		<div class="flex-grow">
 			<ul class="flex flex-col p-2 space-y-1">
@@ -82,13 +82,13 @@ templ Sidebar(p *SidebarProps) {
 						if item.Active {
 							<a
 								href={ templ.URL(item.URL) }
-								class="relative flex flex-row items-center h-11 focus:outline-none bg-slate-100 text-gray-800 p-2 rounded-md sidebar-item"
+								class="relative flex flex-row items-center h-11 focus:outline-none bg-[var(--color-selected)] text-[var(--color-ink)] p-2 rounded-md sidebar-item"
 								title={ sidebarTooltip(item) }
 							>
 								<span class="inline-flex justify-center items-center ml-2 w-8 text-2xl sidebar-item-icon">
 									@SidebarItemIcon(item)
 								</span>
-								<span class="ml-2 text-sm tracking-wide truncate sidebar-item-text">{ item.Name }</span>
+								<span class="ml-2 text-sm tracking-wide truncate sidebar-item-text font-semibold">{ item.Name }</span>
 								if len(item.Modifiers) > 0 {
 									<span class="sidebar-item-modifier">
 										@item.Modifiers[0]
@@ -98,7 +98,7 @@ templ Sidebar(p *SidebarProps) {
 						} else {
 							<a
 								href={ templ.URL(item.URL) }
-								class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-slate-50 text-gray-800 p-2 rounded-md sidebar-item"
+								class="relative flex flex-row items-center h-11 focus:outline-none text-[var(--color-ink-muted)] hover:bg-[var(--color-highlight)] p-2 rounded-md sidebar-item"
 								title={ sidebarTooltip(item) }
 							>
 								<span class="inline-flex justify-center items-center ml-2 w-8 text-2xl sidebar-item-icon">
@@ -118,22 +118,22 @@ templ Sidebar(p *SidebarProps) {
 		</div>
 		<!-- Footer with user info and logout -->
 		if p.User != nil {
-			<div class="border-t border-gray-200 p-4 sidebar-footer">
+			<div class="border-t border-[var(--color-border)] p-4 sidebar-footer">
 				<div class="flex items-center space-x-3 mb-3">
 					<div class="flex-shrink-0">
 						if p.User.Avatar != "" {
 							<img class="h-8 w-8 rounded-full" src={ p.User.Avatar } alt="User avatar" />
 						} else {
-							<div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
-								<svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<div class="h-8 w-8 rounded-full bg-[var(--color-surface-alt)] flex items-center justify-center">
+								<svg class="h-5 w-5 text-[var(--color-ink-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
 								</svg>
 							</div>
 						}
 					</div>
 					<div class="flex-1 min-w-0 sidebar-user-info">
-						<p class="text-sm font-medium text-gray-900 truncate">{ p.User.Name }</p>
-						<p class="text-xs text-gray-500 truncate">{ p.User.Email }</p>
+						<p class="text-sm font-medium text-[var(--color-ink)] truncate">{ p.User.Name }</p>
+						<p class="text-xs text-[var(--color-ink-muted)] truncate">{ p.User.Email }</p>
 					</div>
 				</div>
 				if p.LogoutURL != "" || p.LogoutOnClick != "" {
@@ -141,7 +141,7 @@ templ Sidebar(p *SidebarProps) {
 						<button
 							type="button"
 							onclick={ logoutOnClickScript(p.LogoutOnClick) }
-							class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 sidebar-logout"
+							class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-[var(--color-danger-fg)] bg-[var(--color-danger)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--color-surface)] focus:ring-[var(--color-focus)] transition-colors duration-200 sidebar-logout"
 							title="Logout"
 						>
 							<svg class="w-4 h-4 sidebar-logout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +150,7 @@ templ Sidebar(p *SidebarProps) {
 							<span class="ml-2 sidebar-logout-text">Logout</span>
 						</button>
 					} else {
-						<a class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 sidebar-logout"
+						<a class="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-[var(--color-danger-fg)] bg-[var(--color-danger)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--color-surface)] focus:ring-[var(--color-focus)] transition-colors duration-200 sidebar-logout"
 							href={ templ.URL(p.LogoutURL) }
 							title="Logout"
 						>
@@ -165,11 +165,11 @@ templ Sidebar(p *SidebarProps) {
 		}
 		<!-- Toggle button at the very bottom -->
 		if p.Collapsible {
-			<div class="border-t border-gray-200 p-2">
+			<div class="border-t border-[var(--color-border)] p-2">
 				<button
 					type="button"
 					onclick={ toggleSidebarScript(p.ID) }
-					class="w-full flex items-center justify-center p-2 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+					class="w-full flex items-center justify-center p-2 rounded-md text-[var(--color-ink-muted)] hover:bg-[var(--color-highlight)] hover:text-[var(--color-ink)] transition-colors"
 					aria-label="Toggle sidebar"
 				>
 					<svg class="w-5 h-5 sidebar-icon-expand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,16 +212,20 @@ templ SidebarItemIcon(item *SidebarItem) {
 	}
 }
 
+// SidebarNew/SidebarRed/SidebarGreen are sidebar pills built on the L3 badge
+// vocabulary (foreground + soft fill + matching 1px border, as DESIGN.md
+// requires of coloured blocks so the low-contrast fill still reads as an object
+// against the sidebar surface).
 templ SidebarNew() {
-	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-indigo-500 bg-indigo-50 rounded-full sidebar-item-modifier">New</span>
+	<span class="px-2 py-0.5 ml-auto text-[length:var(--badge-font-size)] leading-[var(--badge-line-height)] font-[number:var(--badge-font-weight)] tracking-wide text-[var(--badge-neutral-fg)] bg-[var(--badge-neutral-bg)] border border-[var(--badge-neutral-border)] rounded-full sidebar-item-modifier">New</span>
 }
 
 templ SidebarRed(label string) {
-	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-red-500 bg-red-50 rounded-full sidebar-item-modifier">{ label }</span>
+	<span class="px-2 py-0.5 ml-auto text-[length:var(--badge-font-size)] leading-[var(--badge-line-height)] font-[number:var(--badge-font-weight)] tracking-wide text-[var(--badge-danger-fg)] bg-[var(--badge-danger-bg)] border border-[var(--badge-danger-border)] rounded-full sidebar-item-modifier">{ label }</span>
 }
 
 templ SidebarGreen(label string) {
-	<span class="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-green-500 bg-green-50 rounded-full sidebar-item-modifier">{ label }</span>
+	<span class="px-2 py-0.5 ml-auto text-[length:var(--badge-font-size)] leading-[var(--badge-line-height)] font-[number:var(--badge-font-weight)] tracking-wide text-[var(--badge-success-fg)] bg-[var(--badge-success-bg)] border border-[var(--badge-success-border)] rounded-full sidebar-item-modifier">{ label }</span>
 }
 
 templ SidebarStyles() {
@@ -303,8 +307,8 @@ templ SidebarStyles() {
 			transform: translateY(-50%);
 			margin-left: 0.5rem;
 			padding: 0.5rem 0.75rem;
-			background: #1f2937;
-			color: white;
+			background: var(--color-ink);
+			color: var(--color-canvas);
 			font-size: 0.75rem;
 			border-radius: 0.375rem;
 			white-space: nowrap;
@@ -322,7 +326,7 @@ templ SidebarStyles() {
 			transform: translateY(-50%);
 			border-width: 4px;
 			border-style: solid;
-			border-color: transparent transparent transparent #1f2937;
+			border-color: transparent transparent transparent var(--color-ink);
 			margin-left: 0;
 			z-index: 50;
 			pointer-events: none;

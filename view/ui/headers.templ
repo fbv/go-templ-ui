@@ -1,25 +1,30 @@
 package ui
 
+// H1–H6 map onto DESIGN.md's typography roles (display, heading-lg, heading,
+// subheading, body, body-sm). Size, weight and line-height come from the L2
+// role tokens, so a heading is theme-correct and rebrandable by construction.
+// Only the layout margins stay component-local.
+
 templ H1(text string) {
-    <h1 class="text-2xl font-medium text-gray-900 mt-8 mb-2">{ text }</h1>
+    <h1 class="text-[length:var(--text-display-size)] font-[number:var(--text-display-weight)] leading-[var(--text-display-leading)] tracking-[var(--text-display-tracking)] text-[var(--color-ink)] mt-8 mb-2">{ text }</h1>
 }
 
 templ H2(text string) {
-    <h2 class="text-xl font-medium text-gray-900 mt-4 mb-2">{ text }</h2>
+    <h2 class="text-[length:var(--text-heading-lg-size)] font-[number:var(--text-heading-lg-weight)] leading-[var(--text-heading-lg-leading)] text-[var(--color-ink)] mt-4 mb-2">{ text }</h2>
 }
 
 templ H3(text string) {
-    <h3 class="text-lg font-medium text-gray-900 mb-2">{ text }</h3>
+    <h3 class="text-[length:var(--text-heading-size)] font-[number:var(--text-heading-weight)] leading-[var(--text-heading-leading)] text-[var(--color-ink)] mb-2">{ text }</h3>
 }
 
 templ H4(text string) {
-    <h4 class="text-base font-medium text-gray-900 mb-2">{ text }</h4>
+    <h4 class="text-[length:var(--text-subheading-size)] font-[number:var(--text-subheading-weight)] leading-[var(--text-subheading-leading)] text-[var(--color-ink)] mb-2">{ text }</h4>
 }
 
 templ H5(text string) {
-    <h5 class="text-sm font-medium text-gray-900 mb-2">{ text }</h5>
+    <h5 class="text-[length:var(--text-body-size)] font-[number:var(--text-body-weight)] leading-[var(--text-body-leading)] text-[var(--color-ink)] mb-2">{ text }</h5>
 }
 
 templ H6(text string) {
-    <h6 class="text-xs font-medium text-gray-900 mb-2">{ text }</h6>
+    <h6 class="text-[length:var(--text-body-sm-size)] font-[number:var(--text-body-sm-weight)] leading-[var(--text-body-sm-leading)] text-[var(--color-ink)] mb-2">{ text }</h6>
 }

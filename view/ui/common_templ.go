@@ -77,6 +77,8 @@ func MasterDetails(master templ.Component, details templ.Component) templ.Compon
 	})
 }
 
+// Card is a passive container: DESIGN.md defines it by tone and border alone
+// (surface + border, rounded-lg) with no shadow, never a coloured fill.
 func Card() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -98,7 +100,7 @@ func Card() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"p-8 mb-4 rounded-lg shadow bg-slate-50\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"p-8 mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

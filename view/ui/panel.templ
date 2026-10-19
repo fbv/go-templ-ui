@@ -9,18 +9,22 @@ type PanelProps struct {
     Style string
 }
 
+// panelClasses: neutral panels sit on the subtle warm fill; "blue" becomes an
+// informational panel on info-soft with neutral ink (DESIGN.md has no chromatic
+// "info" hue — blue would break the "colour means interactivity" rule). Any
+// other Style value falls back to neutral.
 func panelClasses(style string) string {
-    classes := "bg-gray-50 p-4 rounded-lg border"
+    classes := "bg-[var(--color-subtle)] p-4 rounded-lg border border-[var(--color-border)]"
     switch (style) {
-        case "blue": classes = "bg-blue-50 p-4 rounded-lg border border-blue-200"
+        case "blue": classes = "bg-[var(--color-info-soft)] p-4 rounded-lg border border-[var(--color-border)]"
     }
     return classes
 }
 
 func panelHeaderClasses(style string) string {
-    classes := "text-sm text-gray-600 mb-4"
+    classes := "text-sm text-[var(--color-ink-muted)] mb-4"
     switch (style) {
-        case "blue": classes = "text-sm text-blue-700 mb-4"
+        case "blue": classes = "text-sm text-[var(--color-ink)] mb-4"
     }
     return classes
 }

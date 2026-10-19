@@ -11,7 +11,8 @@ package ui
 // plus the role-named type/radius/spacing scales (DESIGN.md names those by role —
 // body, control, overline — so they are semantic tokens, not raw primitives).
 //
-// L3 (component tokens, --badge-*) references L2 and holds per-component anatomy.
+// L3 (component tokens, --badge-* and --code-*) references L2 and holds
+// per-component anatomy.
 //
 // Theme switching flips L1 values alone; markup and classes never change per theme.
 templ TokenStyles() {
@@ -201,6 +202,11 @@ templ TokenStyles() {
   --badge-danger-bg: var(--color-danger-soft);
   --badge-danger-fg: var(--color-danger);
   --badge-danger-border: var(--color-danger-border);
+
+  /* Code surface is an inverse pairing: a dark slab in light theme, a light
+     slab in dark theme, so the block stays a distinct object either way. */
+  --code-bg: var(--color-ink);
+  --code-fg: var(--color-canvas);
 }
 </style>
 }

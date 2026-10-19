@@ -12,8 +12,12 @@ type CodeProps struct {
 
 // Code renders a preformatted code block with optional syntax highlighting class.
 // It escapes HTML by default via templ, preserving content safety.
+//
+// The surface is the L3 inverse pairing (--code-bg on --code-fg): dark in the
+// light theme, light in the dark theme, so the block always reads as a distinct
+// slab without any palette class or per-theme markup.
 templ Code(p *CodeProps) {
-    <div class="rounded-md bg-slate-900 text-slate-100">
+    <div class="rounded-md bg-[var(--code-bg)] text-[var(--code-fg)] font-[family-name:var(--font-mono)]">
         if p.Wrap {
             <pre class="whitespace-pre-wrap break-words p-4">
                 if p.Language != "" {
@@ -45,4 +49,3 @@ templ Code(p *CodeProps) {
         }
     </div>
 }
-

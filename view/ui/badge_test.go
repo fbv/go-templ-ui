@@ -12,7 +12,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var hardcodedPaletteRe = regexp.MustCompile(`(?:^|\s)(?:bg|text|border|from|to|via|ring|outline|fill|stroke)-(?:red|green|blue|yellow|indigo|purple|pink|gray|grey|slate|zinc|neutral|stone|amber|orange|lime|emerald|teal|cyan|sky|violet|fuchsia|rose|white|black)-`)
+// hardcodedPaletteRe flags a Tailwind palette class. The colour name may end the
+// class token (bg-white, text-black) or continue into a shade/slash segment
+// (text-gray-900, bg-white/50), so the suffix is optional and the token boundary
+// is checked.
+var hardcodedPaletteRe = regexp.MustCompile(`(?:^|[\s"])(?:bg|text|border|from|to|via|ring|outline|fill|stroke)-(?:red|green|blue|yellow|indigo|purple|pink|gray|grey|slate|zinc|neutral|stone|amber|orange|lime|emerald|teal|cyan|sky|violet|fuchsia|rose|white|black)(?:[-/][^\s"]*)?(?:$|[\s"])`)
 
 func TestBadgeBaseUsesComponentTokens(t *testing.T) {
 	// The pill radius must come from the L3 component token, never a hardcoded

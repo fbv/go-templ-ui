@@ -10,24 +10,25 @@ type BreadcrumbItem struct {
 
 // Breadcrumb renders a navigational breadcrumb trail.
 // It uses a <nav> with aria-label for accessibility and supports RTL spacing.
+// Separators are ink-muted, the active crumb is ink (a location marker, not an
+// affordance) and only the links take the action token.
 templ Breadcrumb(items ...*BreadcrumbItem) {
     <nav class="flex mb-4" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 rtl:space-x-reverse">
             for i, item := range items {
                 if i > 0 {
                     // Visual separator between items
-                    <li class="text-slate-400">/
+                    <li class="text-[var(--color-ink-muted)]">/
                     </li>
                 }
                 <li class="inline-flex items-center">
                     if item.Active {
-                        <span class="text-slate-700">{ item.Title }</span>
+                        <span class="text-[var(--color-ink)]">{ item.Title }</span>
                     } else {
-                        <a href={ templ.URL(item.URL) } class="text-blue-600 hover:underline">{ item.Title }</a>
+                        <a href={ templ.URL(item.URL) } class="text-[var(--color-action)] hover:underline">{ item.Title }</a>
                     }
                 </li>
             }
         </ol>
     </nav>
 }
-
