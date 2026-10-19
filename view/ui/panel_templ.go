@@ -49,7 +49,7 @@ type PanelProps struct {
 	Style  string
 }
 
-// panelClasses: neutral panels sit on the subtle warm fill; "blue" becomes an
+// panelClasses: neutral panels sit on the subtle neutral fill; "blue" becomes an
 // informational panel on info-soft with neutral ink (DESIGN.md has no chromatic
 // "info" hue — blue would break the "colour means interactivity" rule). Any
 // other Style value falls back to neutral.

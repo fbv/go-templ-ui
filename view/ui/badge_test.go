@@ -129,7 +129,7 @@ func TestTokenLayersPresent(t *testing.T) {
 	} {
 		assert.NotEmpty(t, vars[name], "missing token %s", name)
 	}
-	assert.Equal(t, "#F2F0EA", resolveVar(t, vars, "--color-canvas"))
+	assert.Equal(t, "#FFFFFF", resolveVar(t, vars, "--color-canvas"))
 	dark := themeVars(t, css, true)
 	assert.Equal(t, "#1C1B18", resolveVar(t, dark, "--color-canvas"))
 	assert.Equal(t, "9999px", resolveVar(t, vars, "--badge-radius"))
