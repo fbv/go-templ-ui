@@ -3,6 +3,8 @@ package ui
 import (
 	"fmt"
 	"time"
+
+	"github.com/fbv/go-templ-ui/view/i18n"
 )
 
 type CalendarMonthProps struct {
@@ -39,7 +41,8 @@ templ CalendarMonthScript() {
 				});
 				var html = '';
 				if (filtered.length === 0) {
-					html = '<p class="text-sm text-gray-400 dark:text-gray-500">Нет событий</p>';
+					var emptyLabel = eventsSection.getAttribute('data-empty-label') || '';
+					html = '<p class="text-sm text-gray-400 dark:text-gray-500">' + emptyLabel + '</p>';
 				} else {
 					for (var i = 0; i < filtered.length; i++) {
 						var e = filtered[i];
@@ -90,7 +93,7 @@ templ CalendarMonth(p *CalendarMonthProps) {
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
 				</button>
 				<h3 class="text-sm font-semibold text-gray-900 dark:text-white">
-					{ formatMonthYear(time.Date(p.Year, p.Month, 1, 0, 0, 0, 0, time.UTC)) }
+					{ formatMonthYear(ctx, time.Date(p.Year, p.Month, 1, 0, 0, 0, 0, time.UTC)) }
 				</h3>
 				<button
 					type="button"
@@ -109,14 +112,14 @@ templ CalendarMonth(p *CalendarMonthProps) {
 				hx-target={ "#" + p.ID }
 				hx-swap="outerHTML"
 			>
-				Сегодня
+				{ i18n.T(ctx, i18n.KeyToday) }
 			</button>
 		</div>
 		<div class="overflow-x-auto">
 			<table class="calendar-month-grid">
 				<thead>
 					<tr>
-						for _, header := range dayOfWeekHeaders() {
+						for _, header := range dayOfWeekHeaders(ctx) {
 							<th class="text-gray-500 dark:text-gray-400">{ header }</th>
 						}
 					</tr>
@@ -152,7 +155,7 @@ templ CalendarMonth(p *CalendarMonthProps) {
 											}
 											if len(dayEvents) > maxBadges {
 												<div class="text-[0.625rem] text-gray-400 dark:text-gray-500 px-1">
-													+{ fmt.Sprintf("%d", len(dayEvents)-maxBadges) } ещё
+													+{ fmt.Sprintf("%d", len(dayEvents)-maxBadges) } { i18n.T(ctx, i18n.KeyMore) }
 												</div>
 											}
 										</div>
@@ -164,8 +167,8 @@ templ CalendarMonth(p *CalendarMonthProps) {
 				</tbody>
 			</table>
 		</div>
-		<div class="calendar-day-events border-t border-gray-200 dark:border-gray-700 p-3">
-			<p class="text-sm text-gray-400 dark:text-gray-500">Выберите день</p>
+		<div class="calendar-day-events border-t border-gray-200 dark:border-gray-700 p-3" data-empty-label={ i18n.T(ctx, i18n.KeyNoEvents) }>
+			<p class="text-sm text-gray-400 dark:text-gray-500">{ i18n.T(ctx, i18n.KeyChooseDay) }</p>
 		</div>
 	</div>
 	<script>

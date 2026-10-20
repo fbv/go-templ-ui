@@ -7,6 +7,8 @@ package ui
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "github.com/fbv/go-templ-ui/view/i18n"
+
 // ThemeToggle is a reusable light/dark switch. It flips data-theme and the
 // dark class on <html> together and persists the choice to localStorage.
 func ThemeToggle() templ.Component {
@@ -30,7 +32,46 @@ func ThemeToggle() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<button type=\"button\" onclick=\"toggleTheme()\" title=\"Toggle light/dark theme\" aria-label=\"Toggle light/dark theme\" class=\"inline-flex items-center gap-1.5 rounded-[var(--rounded-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1.5 text-[length:var(--text-label-size)] font-[number:var(--text-label-weight)] text-[var(--color-ink-muted)] hover:bg-[var(--color-highlight)] hover:text-[var(--color-ink)]\"><svg class=\"h-4 w-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" aria-hidden=\"true\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z\"></path></svg> <span>Theme</span></button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<button type=\"button\" onclick=\"toggleTheme()\" title=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(i18n.T(ctx, i18n.KeyToggleTheme))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/theme_toggle.templ`, Line: 11, Col: 42}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" aria-label=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(i18n.T(ctx, i18n.KeyToggleTheme))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/theme_toggle.templ`, Line: 12, Col: 47}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" class=\"inline-flex items-center gap-1.5 rounded-[var(--rounded-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1.5 text-[length:var(--text-label-size)] font-[number:var(--text-label-weight)] text-[var(--color-ink-muted)] hover:bg-[var(--color-highlight)] hover:text-[var(--color-ink)]\"><svg class=\"h-4 w-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" aria-hidden=\"true\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z\"></path></svg> <span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(i18n.T(ctx, i18n.KeyTheme))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/theme_toggle.templ`, Line: 18, Col: 36}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span></button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -54,12 +95,12 @@ func ThemeToggleScript() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<script>\n\t\tif (!window._themeToggleInitialized) {\n\t\t\twindow._themeToggleInitialized = true;\n\t\t\twindow.toggleTheme = function () {\n\t\t\t\tvar root = document.documentElement;\n\t\t\t\tvar next = root.getAttribute(\"data-theme\") === \"dark\" ? \"light\" : \"dark\";\n\t\t\t\troot.setAttribute(\"data-theme\", next);\n\t\t\t\tif (next === \"dark\") {\n\t\t\t\t\troot.classList.add(\"dark\");\n\t\t\t\t} else {\n\t\t\t\t\troot.classList.remove(\"dark\");\n\t\t\t\t}\n\t\t\t\ttry { localStorage.setItem(\"theme\", next); } catch (e) {}\n\t\t\t};\n\t\t}\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<script>\n\t\tif (!window._themeToggleInitialized) {\n\t\t\twindow._themeToggleInitialized = true;\n\t\t\twindow.toggleTheme = function () {\n\t\t\t\tvar root = document.documentElement;\n\t\t\t\tvar next = root.getAttribute(\"data-theme\") === \"dark\" ? \"light\" : \"dark\";\n\t\t\t\troot.setAttribute(\"data-theme\", next);\n\t\t\t\tif (next === \"dark\") {\n\t\t\t\t\troot.classList.add(\"dark\");\n\t\t\t\t} else {\n\t\t\t\t\troot.classList.remove(\"dark\");\n\t\t\t\t}\n\t\t\t\ttry { localStorage.setItem(\"theme\", next); } catch (e) {}\n\t\t\t};\n\t\t}\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -54,7 +54,8 @@ showcase page.
 - [Theme](theme.md) - Custom semantic colour themes registered from the same
   token contract (package, not a component: no demo page)
 - [i18n](i18n.md) - Locale, strings and formats carried in `context.Context`
-  (package, not a component: no demo page)
+  (package, not a component; Russian demo page at
+  [`/showcase/i18n`](i18n.md#the-showcases-russian-demo))
 
 ## Quick Reference
 
@@ -69,5 +70,5 @@ showcase page.
 | `Pagination` | Page navigation | `CurrentPage`, `TotalPages`, `BaseURL` |
 | `DatePicker` | Date/time input | `Name`, `Label`, `Type` |
 | `ConfirmDialog` | Confirmation modal | `ModalID`, `Title`, `Message`, `ConfirmURL` |
-| `i18n` | Locale, strings and formats | `WithLocale`, `T`, `Number`, `Currency`, `Date`, `MonthYear` |
+| `i18n` | Locale, strings and formats; Russian demo at `/showcase/i18n` | `WithLocale`, `T`, `Number`, `Currency`, `Date`, `MonthYear` |
 | `Theme` | Custom semantic colour themes | `Register`, `Get`, `Names`, `Check`, `Styles` |

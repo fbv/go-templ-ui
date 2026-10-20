@@ -3,6 +3,8 @@ package ui
 import (
 	"fmt"
 	"time"
+
+	"github.com/fbv/go-templ-ui/view/i18n"
 )
 
 type CalendarTimelineProps struct {
@@ -44,7 +46,6 @@ templ CalendarTimelineScript() {
 }
 
 templ CalendarTimelineDayGroup(date time.Time, events []CalendarEvent) {
-	{{ weekdayNames := []string{"Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"} }}
 	{{ today := time.Now() }}
 	{{ isToday := isSameDay(date, today) }}
 	<div class="mb-6">
@@ -53,7 +54,7 @@ templ CalendarTimelineDayGroup(date time.Time, events []CalendarEvent) {
 				<span class="w-2 h-2 rounded-full bg-blue-500"></span>
 			}
 			<h4 class={ "text-sm font-semibold", templ.KV("text-blue-600 dark:text-blue-400", isToday), templ.KV("text-gray-900 dark:text-white", !isToday) }>
-				{ weekdayNames[date.Weekday()] }, { formatDate(date) }
+				{ i18n.WeekdayName(ctx, date.Weekday()) }, { i18n.Date(ctx, date) }
 			</h4>
 			<span class="text-xs text-gray-400 dark:text-gray-500 ml-auto">
 				{ fmt.Sprintf("%d событий", len(events)) }
@@ -71,7 +72,7 @@ templ CalendarTimelineDayGroup(date time.Time, events []CalendarEvent) {
 									{ formatTime(ev.Start) } — { formatTime(ev.End) }
 								</span>
 								if ev.AllDay {
-									<span class="text-[0.625rem] px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-600 opacity-70">Весь день</span>
+									<span class="text-[0.625rem] px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-600 opacity-70">{ i18n.T(ctx, i18n.KeyAllDay) }</span>
 								}
 							</div>
 						</div>
@@ -89,7 +90,7 @@ templ CalendarTimelinePage(events []CalendarEvent, hasMore bool, nextCursor stri
 	}
 	if hasMore {
 		<div class="calendar-timeline-loading hidden items-center justify-center py-4 text-sm text-gray-400">
-			Загрузка...
+			{ i18n.T(ctx, i18n.KeyLoading) }
 		</div>
 		<div
 			class="calendar-timeline-sentinel"
@@ -106,12 +107,12 @@ templ CalendarTimeline(p *CalendarTimelineProps) {
 	{{ grouped := groupEventsByDay(p.Events) }}
 	<div id={ p.ID } class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
 		<div class="mb-4">
-			<h3 class="text-sm font-semibold text-gray-900 dark:text-white">Календарь событий</h3>
+			<h3 class="text-sm font-semibold text-gray-900 dark:text-white">{ i18n.T(ctx, i18n.KeyEventsCalendar) }</h3>
 		</div>
 		<div class="calendar-timeline-scroll">
 			if len(grouped) == 0 {
 				<div class="text-center py-8">
-					<p class="text-sm text-gray-400 dark:text-gray-500">Нет событий</p>
+					<p class="text-sm text-gray-400 dark:text-gray-500">{ i18n.T(ctx, i18n.KeyNoEvents) }</p>
 				</div>
 			} else {
 				for date, dayEvents := range grouped {
@@ -120,7 +121,7 @@ templ CalendarTimeline(p *CalendarTimelineProps) {
 			}
 			if p.HasMore {
 				<div class="calendar-timeline-loading hidden items-center justify-center py-4 text-sm text-gray-400">
-					Загрузка...
+					{ i18n.T(ctx, i18n.KeyLoading) }
 				</div>
 				<div
 					class="calendar-timeline-sentinel"

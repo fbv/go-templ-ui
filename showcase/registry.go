@@ -35,5 +35,13 @@ func Demos() []Demo {
 			DocsPath: "docs/badge.md",
 			Render:   BadgeDemoPage,
 		},
+		{
+			Name:     "i18n",
+			Title:    "i18n",
+			Icon:     "M12 3a9 9 0 1 0 0 18 9 9 0 1 0 0-18zM3 12h18M12 3c2.5 2.7 4 5.7 4 9s-1.5 6.3-4 9c-2.5-2.7-4-5.7-4-9s1.5-6.3 4-9z",
+			Route:    "/showcase/i18n",
+			DocsPath: "docs/i18n.md",
+			Render:   I18nDemoPage,
+		},
 	}
 }

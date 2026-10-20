@@ -28,6 +28,19 @@ var (
 			KeyLogout:        "Log out",
 			KeySelectedCount: "%d selected",
 			KeyPageOf:        "Page %d of %d",
+
+			KeyChooseDay:        "Choose a day",
+			KeyMore:             "more",
+			KeyEventsCalendar:   "Events calendar",
+			KeyToggleSidebar:    "Toggle sidebar",
+			KeyUserAvatar:       "User avatar",
+			KeyToggleTheme:      "Toggle light/dark theme",
+			KeyVsPreviousPeriod: "vs previous period",
+
+			KeyError:   "Error",
+			KeyWarning: "Warning",
+			KeySuccess: "Success",
+			KeyInfo:    "Info",
 		},
 		Months: [12]string{
 			"January", "February", "March", "April", "May", "June",
@@ -72,6 +85,19 @@ var (
 			KeyLogout:        "Выйти",
 			KeySelectedCount: "Выбрано: %d",
 			KeyPageOf:        "Страница %d из %d",
+
+			KeyChooseDay:        "Выберите день",
+			KeyMore:             "ещё",
+			KeyEventsCalendar:   "Календарь событий",
+			KeyToggleSidebar:    "Переключить боковую панель",
+			KeyUserAvatar:       "Аватар пользователя",
+			KeyToggleTheme:      "Переключить светлую/тёмную тему",
+			KeyVsPreviousPeriod: "vs прошлый период",
+
+			KeyError:   "Ошибка",
+			KeyWarning: "Предупреждение",
+			KeySuccess: "Успех",
+			KeyInfo:    "Информация",
 		},
 		Months: [12]string{
 			"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",

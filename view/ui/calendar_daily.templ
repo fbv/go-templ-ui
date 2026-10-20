@@ -3,6 +3,8 @@ package ui
 import (
 	"fmt"
 	"time"
+
+	"github.com/fbv/go-templ-ui/view/i18n"
 )
 
 type CalendarDayProps struct {
@@ -64,7 +66,6 @@ templ CalendarDay(p *CalendarDayProps) {
 	{{ isToday := isSameDay(p.Date, today) }}
 	{{ dayEvts := timedEvents(p.Events) }}
 	{{ allDayEvts := allDayEvents(p.Events) }}
-	{{ weekdayNames := []string{"Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"} }}
 	<div id={ p.ID } class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" data-hour-height={ fmt.Sprintf("%d", hourHeight) }>
 		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
 			<div class="flex items-center gap-2">
@@ -79,7 +80,7 @@ templ CalendarDay(p *CalendarDayProps) {
 				</button>
 				<div>
 					<h3 class="text-sm font-semibold text-gray-900 dark:text-white">
-						{ weekdayNames[p.Date.Weekday()] }, { formatDate(p.Date) }
+						{ i18n.WeekdayName(ctx, p.Date.Weekday()) }, { formatDate(ctx, p.Date) }
 					</h3>
 				</div>
 				<button
@@ -99,12 +100,12 @@ templ CalendarDay(p *CalendarDayProps) {
 				hx-target={ "#" + p.ID }
 				hx-swap="outerHTML"
 			>
-				Сегодня
+				{ i18n.T(ctx, i18n.KeyToday) }
 			</button>
 		</div>
 		if len(allDayEvts) > 0 {
 			<div class="border-b border-gray-200 dark:border-gray-700 px-4 py-2">
-				<div class="text-[0.625rem] text-gray-400 dark:text-gray-500 mb-1">Весь день</div>
+				<div class="text-[0.625rem] text-gray-400 dark:text-gray-500 mb-1">{ i18n.T(ctx, i18n.KeyAllDay) }</div>
 				<div class="space-y-1">
 					for _, ev := range allDayEvts {
 						<div class={ "calendar-event-badge " + calendarEventColor(ev.Color) }>

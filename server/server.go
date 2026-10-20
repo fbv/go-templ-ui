@@ -24,6 +24,12 @@ func New(content embed.FS) *Server {
 }
 
 func (s *Server) Run() error {
+	return s.routes().Listen(":8082")
+}
+
+// routes builds the app and registers every route, so tests can exercise the
+// real routing table without listening on a socket.
+func (s *Server) routes() *fiber.App {
 	s.fiber = fiber.New(fiber.Config{})
 	s.fiber.Get("/", func(c *fiber.Ctx) error {
 		return c.Redirect("/showcase/components")
@@ -53,8 +59,11 @@ func (s *Server) Run() error {
 		return c.SendString("Выбраны элементы: " + ids)
 	})
 	r.Get("/tree", view.StaticPage(showcase.TreePage()))
+	// The i18n demo calendar's month navigation swaps the calendar element
+	// alone; the demo page's LoadURL comes from the same constant.
+	r.Get(strings.TrimPrefix(showcase.I18nCalendarMonthURL, "/showcase"), showcase.I18nCalendarMonthHandler())
 	for _, d := range showcase.Demos() {
 		r.Get(strings.TrimPrefix(d.Route, "/showcase"), view.StaticPage(d.Render(d)))
 	}
-	return s.fiber.Listen(":8082")
+	return s.fiber
 }

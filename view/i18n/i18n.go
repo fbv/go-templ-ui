@@ -47,6 +47,19 @@ const (
 	KeyLogout        = "logout"
 	KeySelectedCount = "selected-count"
 	KeyPageOf        = "page-of"
+
+	KeyChooseDay        = "choose-day"
+	KeyMore             = "more"
+	KeyEventsCalendar   = "events-calendar"
+	KeyToggleSidebar    = "toggle-sidebar"
+	KeyUserAvatar       = "user-avatar"
+	KeyToggleTheme      = "toggle-theme"
+	KeyVsPreviousPeriod = "vs-previous-period"
+
+	KeyError   = "error"
+	KeyWarning = "warning"
+	KeySuccess = "success"
+	KeyInfo    = "info"
 )
 
 // CurrencyFormat describes how one currency code is written in a locale.

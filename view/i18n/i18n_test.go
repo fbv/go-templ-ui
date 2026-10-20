@@ -152,6 +152,9 @@ func TestEveryBuiltInCatalogKeyIsPresent(t *testing.T) {
 		KeyYes, KeyNo, KeyClose, KeyLoading, KeyToday, KeyAllDay, KeyNoEvents,
 		KeyNoData, KeyCancel, KeyConfirm, KeySubmit, KeySearch, KeyTheme,
 		KeyCollapse, KeyNew, KeyLogout, KeySelectedCount, KeyPageOf,
+		KeyChooseDay, KeyMore, KeyEventsCalendar, KeyToggleSidebar, KeyUserAvatar,
+		KeyToggleTheme, KeyVsPreviousPeriod,
+		KeyError, KeyWarning, KeySuccess, KeyInfo,
 	}
 	for _, l := range []*Locale{English, Russian} {
 		for _, key := range keys {

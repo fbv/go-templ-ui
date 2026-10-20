@@ -1,0 +1,135 @@
+package showcase
+
+import (
+	"time"
+
+	"github.com/fbv/go-templ-ui/view/i18n"
+	"github.com/fbv/go-templ-ui/view/ui"
+)
+
+// i18nDemoPage is the CAP-4 demonstration: one showcase page rendered under
+// the built-in Russian locale. The locale is selected in I18nDemoPage (the
+// templ.ComponentFunc + view.Render consumer form), not here, so this file
+// only composes the components and samples.
+templ i18nDemoPage(d Demo) {
+	@DemoPage(&DemoPageProps{
+		Name:        d.Name,
+		Title:       d.Title,
+		DocsPath:    d.DocsPath,
+		Description: "Locale, strings and formats carried in context.Context, demonstrated under the built-in Russian locale. This page wraps its render in i18n.WithLocale(ctx, i18n.Russian) — the consumer wiring docs/i18n.md documents — so the document language is \"ru\" while the rest of the showcase stays English. Below: migrated component strings and the ru number/currency/date formats. Calendar month navigation swaps only the calendar element via " + I18nCalendarMonthURL + ".",
+		Props: []DemoProp{
+			{Name: "WithLocale", Type: "func", Required: "Yes", Description: "Returns a context carrying the locale every component below renders in."},
+			{Name: "T", Type: "func", Required: "Yes", Description: "The catalog entry for a key in the selected locale; falls back to the key itself when neither catalog knows it."},
+			{Name: "Number / Currency / Percent", Type: "func", Required: "Yes", Description: "Number formatting in the locale's separators and currency presentation."},
+			{Name: "Date / DateTime / Time / MonthYear", Type: "func", Required: "Yes", Description: "Date formatting in the locale's layouts and month/weekday names."},
+		},
+		Variants: []DemoVariant{
+			{
+				Title:   "Formats under ru",
+				Preview: i18nDemoFormats(),
+				Code:    "i18n.Number(ctx, 1234.5, 2)                                 // 1 234,50\ni18n.Currency(ctx, 1234.5, \"RUB\")                        // 1 234,50 ₽\ni18n.Date(ctx, time.Date(2026, time.March, 9, 0, 0, 0, 0, time.UTC)) // 09.03.2026\ni18n.MonthYear(ctx, time.Date(2026, time.March, 9, 0, 0, 0, 0, time.UTC)) // Март 2026",
+			},
+			{
+				Title:   "Alert (catalog strings + sr-only titles)",
+				Preview: i18nDemoAlerts(),
+				Code:    "@ui.Alert(&ui.AlertProps{Style: \"error\", Title: \"Сбой синхронизации\", Dismissible: true})",
+			},
+			{
+				Title:   "Toast (catalog strings)",
+				Preview: i18nDemoToast(),
+				Code:    "@ui.Toast(&ui.ToastProps{ID: \"i18n-toast\", Title: \"Сохранено\", Style: \"success\"})",
+			},
+			{
+				Title:   "Stat (catalog comparison label)",
+				Preview: i18nDemoStat(),
+				Code:    "@ui.StatCard(&ui.StatProps{Title: \"Выручка\", Value: \"1 234,50 ₽\", Change: \"+12%\", ChangeType: \"up\"})",
+			},
+			{
+				Title:   "Calendar month (month title, weekday headers, day panel)",
+				Preview: i18nDemoCalendarMonth(),
+				Code:    "@ui.CalendarMonth(&ui.CalendarMonthProps{\n    ID: \"i18n-calendar-month\", Year: 2026, Month: time.March,\n    LoadURL: \"" + I18nCalendarMonthURL + "\",\n})\n@ui.CalendarMonthScript()\n@ui.CalendarStyles()",
+			},
+			{
+				Title:   "Calendar timeline (day-group heading, labels)",
+				Preview: i18nDemoCalendarTimeline(),
+				Code:    "@ui.CalendarTimeline(&ui.CalendarTimelineProps{\n    ID: \"i18n-calendar-timeline\",\n    Events: demoEvents,\n})\n@ui.CalendarTimelineScript()",
+			},
+		},
+	})
+}
+
+templ i18nDemoFormats() {
+	<dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+		<dt class="text-[length:var(--text-body-sm-size)] text-[var(--color-ink-muted)]">Number</dt>
+		<dd class="text-[length:var(--text-body-size)] text-[var(--color-ink)]">{ i18n.Number(ctx, 1234.5, 2) }</dd>
+		<dt class="text-[length:var(--text-body-sm-size)] text-[var(--color-ink-muted)]">Currency (RUB)</dt>
+		<dd class="text-[length:var(--text-body-size)] text-[var(--color-ink)]">{ i18n.Currency(ctx, 1234.5, "RUB") }</dd>
+		<dt class="text-[length:var(--text-body-sm-size)] text-[var(--color-ink-muted)]">Date</dt>
+		<dd class="text-[length:var(--text-body-size)] text-[var(--color-ink)]">{ i18n.Date(ctx, i18nDemoDate) }</dd>
+		<dt class="text-[length:var(--text-body-sm-size)] text-[var(--color-ink-muted)]">Month / year</dt>
+		<dd class="text-[length:var(--text-body-size)] text-[var(--color-ink)]">{ i18n.MonthYear(ctx, i18nDemoDate) }</dd>
+	</dl>
+}
+
+templ i18nDemoAlerts() {
+	@ui.Alert(&ui.AlertProps{Style: "info", Title: "Синхронизация запущена"}) {
+		Фоновая задача выполняется.
+	}
+	@ui.Alert(&ui.AlertProps{Style: "success", Title: "Сохранено", Dismissible: true}) {
+		Изменения записаны.
+	}
+	@ui.Alert(&ui.AlertProps{Style: "warning", Title: "Проверьте данные", Dismissible: true}) {
+		Заполните обязательные поля.
+	}
+	@ui.Alert(&ui.AlertProps{Style: "error", Title: "Сбой синхронизации", Dismissible: true}) {
+		Повторите попытку позже.
+	}
+}
+
+templ i18nDemoToast() {
+	@ui.Toast(&ui.ToastProps{ID: "i18n-toast", Title: "Сохранено", Style: "success"}) {
+		Запись обновлена.
+	}
+}
+
+templ i18nDemoStat() {
+	@ui.StatCard(&ui.StatProps{
+		Title:      "Выручка",
+		Value:      i18n.Currency(ctx, 1234.5, "RUB"),
+		Change:     "+12%",
+		ChangeType: "up",
+	})
+}
+
+templ i18nDemoCalendarMonth() {
+	@ui.CalendarMonth(&ui.CalendarMonthProps{
+		ID:      "i18n-calendar-month",
+		Year:    i18nDemoDate.Year(),
+		Month:   i18nDemoDate.Month(),
+		LoadURL: I18nCalendarMonthURL,
+		Events:  i18nDemoEvents(i18nDemoDate.Year(), i18nDemoDate.Month()),
+	})
+	@ui.CalendarMonthScript()
+	@ui.CalendarStyles()
+}
+
+templ i18nDemoCalendarTimeline() {
+	@ui.CalendarTimeline(&ui.CalendarTimelineProps{
+		ID:     "i18n-calendar-timeline",
+		Events: i18nDemoEvents(i18nDemoDate.Year(), i18nDemoDate.Month()),
+	})
+	@ui.CalendarTimelineScript()
+}
+
+// i18nCalendarMonthFragment is the element the demo calendar's month
+// navigation swaps in: just the CalendarMonth for the requested month, never a
+// document shell.
+templ i18nCalendarMonthFragment(year int, month time.Month) {
+	@ui.CalendarMonth(&ui.CalendarMonthProps{
+		ID:      "i18n-calendar-month",
+		Year:    year,
+		Month:   month,
+		LoadURL: I18nCalendarMonthURL,
+		Events:  i18nDemoEvents(year, month),
+	})
+}

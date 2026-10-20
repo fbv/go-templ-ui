@@ -3,27 +3,13 @@
 # user-facing strings through i18n.T(ctx, key) instead. Remove entries only
 # when the string itself goes away. Text nodes and the literal values of
 # aria-label, title, placeholder and alt are listed, duplicates included.
-alert.templ: Close
-alert.templ: Close
 breadcrumb.templ: /
 breadcrumb.templ: Breadcrumb
 calendar.templ: +
-calendar.templ: Выберите день
-calendar.templ: Сегодня
-calendar.templ: ещё
 calendar_daily.templ: ,
-calendar_daily.templ: Весь день
-calendar_daily.templ: Сегодня
 calendar_daily.templ: —
 calendar_timeline.templ: ,
-calendar_timeline.templ: Весь день
-calendar_timeline.templ: Загрузка...
-calendar_timeline.templ: Загрузка...
-calendar_timeline.templ: Календарь событий
-calendar_timeline.templ: Нет событий
 calendar_timeline.templ: —
-calendar_weekly.templ: Весь день
-calendar_weekly.templ: Сегодня
 calendar_weekly.templ: —
 chat.templ: Введите сообщение...
 confirm_dialog.templ: Close
@@ -33,18 +19,4 @@ pagination.templ: &lt;&lt;
 pagination.templ: &raquo;
 pagination.templ: ...
 select_dialog.templ: Close
-sidebar.templ: Collapse
-sidebar.templ: Logout
-sidebar.templ: Logout
-sidebar.templ: Logout
-sidebar.templ: Logout
-sidebar.templ: New
-sidebar.templ: Toggle sidebar
-sidebar.templ: User avatar
-stat.templ: vs прошлый период
-theme_toggle.templ: Theme
-theme_toggle.templ: Toggle light/dark theme
-theme_toggle.templ: Toggle light/dark theme
-toast.templ: Close
-toast.templ: Close
 tree.templ: Toggle

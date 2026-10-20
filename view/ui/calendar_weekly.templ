@@ -3,6 +3,8 @@ package ui
 import (
 	"fmt"
 	"time"
+
+	"github.com/fbv/go-templ-ui/view/i18n"
 )
 
 type CalendarWeekProps struct {
@@ -65,7 +67,7 @@ templ CalendarWeek(p *CalendarWeekProps) {
 					<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
 				</button>
 				<h3 class="text-sm font-semibold text-gray-900 dark:text-white">
-					{ fmt.Sprintf("%s — %s", formatDate(weekDays), formatDate(weekDays.AddDate(0, 0, 6))) }
+					{ fmt.Sprintf("%s — %s", formatDate(ctx, weekDays), formatDate(ctx, weekDays.AddDate(0, 0, 6))) }
 				</h3>
 				<button
 					type="button"
@@ -84,14 +86,14 @@ templ CalendarWeek(p *CalendarWeekProps) {
 				hx-target={ "#" + p.ID }
 				hx-swap="outerHTML"
 			>
-				Сегодня
+				{ i18n.T(ctx, i18n.KeyToday) }
 			</button>
 		</div>
 		{{ allDayEvts := allDayEvents(p.Events) }}
 		if len(allDayEvts) > 0 {
 			<div class="border-b border-gray-200 dark:border-gray-700 px-2 py-1">
 				<div class="grid grid-cols-[4rem_repeat(7,1fr)] gap-px">
-					<div class="text-[0.625rem] text-gray-400 dark:text-gray-500 flex items-center justify-end pr-2">Весь день</div>
+					<div class="text-[0.625rem] text-gray-400 dark:text-gray-500 flex items-center justify-end pr-2">{ i18n.T(ctx, i18n.KeyAllDay) }</div>
 					for i := 0; i < 7; i++ {
 						{{ day := weekDays.AddDate(0, 0, i) }}
 						{{ dayEvts := eventsForDay(allDayEvts, day) }}

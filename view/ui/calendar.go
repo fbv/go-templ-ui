@@ -1,17 +1,20 @@
 package ui
 
 import (
+	"context"
 	"fmt"
 	"time"
+
+	"github.com/fbv/go-templ-ui/view/i18n"
 )
 
 type CalendarEvent struct {
-	ID      string
-	Title   string
-	Start   time.Time
-	End     time.Time
-	Color   string
-	AllDay  bool
+	ID     string
+	Title  string
+	Start  time.Time
+	End    time.Time
+	Color  string
+	AllDay bool
 }
 
 func calendarEventColor(color string) string {
@@ -70,20 +73,24 @@ func formatTime(t time.Time) string {
 	return fmt.Sprintf("%02d:%02d", t.Hour(), t.Minute())
 }
 
-func formatDate(t time.Time) string {
-	return fmt.Sprintf("%02d.%02d.%d", t.Day(), t.Month(), t.Year())
+func formatDate(ctx context.Context, t time.Time) string {
+	return i18n.Date(ctx, t)
 }
 
-func formatMonthYear(t time.Time) string {
-	months := []string{
-		"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-		"Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь",
+func formatMonthYear(ctx context.Context, t time.Time) string {
+	return i18n.MonthYear(ctx, t)
+}
+
+func dayOfWeekHeaders(ctx context.Context) []string {
+	return []string{
+		i18n.WeekdayName(ctx, time.Monday),
+		i18n.WeekdayName(ctx, time.Tuesday),
+		i18n.WeekdayName(ctx, time.Wednesday),
+		i18n.WeekdayName(ctx, time.Thursday),
+		i18n.WeekdayName(ctx, time.Friday),
+		i18n.WeekdayName(ctx, time.Saturday),
+		i18n.WeekdayName(ctx, time.Sunday),
 	}
-	return fmt.Sprintf("%s %d", months[t.Month()-1], t.Year())
-}
-
-func dayOfWeekHeaders() []string {
-	return []string{"Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"}
 }
 
 func daysInMonth(year int, month time.Month) []time.Time {
