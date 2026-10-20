@@ -1,0 +1,129 @@
+package showcase
+
+import "github.com/fbv/go-templ-ui/view/ui"
+
+// StateDemoPage is the CAP-5 demonstration: one Panel per state of the shared
+// five-state API, each with consumer-supplied text, under the DemoPage
+// scaffold's "Variants & states" section. Title and docs path come from the
+// registry row (showcase/registry.go) — never from literals here.
+templ StateDemoPage(d Demo) {
+	@DemoPage(&DemoPageProps{
+		Name:        d.Name,
+		Title:       d.Title,
+		DocsPath:    d.DocsPath,
+		Description: "The uniform five data states (CAP-5) through one StateProps value. A data component carries State and renders the StateView surface in place of its content — never a blank area. Panel is the first carrier; every string below is supplied by the consumer.",
+		Props: []DemoProp{
+			{Name: "State", Type: "ui.DataState", Required: "No", Description: `"loading", "empty", "error", "permission-denied" or "partial". Nil, empty or an unrecognised value falls back to the empty treatment (or, for a nil StateProps, passes children through).`},
+			{Name: "Message", Type: "string", Required: "No", Description: "The consumer-supplied message: what the empty state offers, why the error happened, who to ask, or which fields are unavailable. The library ships no hardcoded string."},
+			{Name: "ActionLabel", Type: "string", Required: "No", Description: `Empty state's primary action label. With ActionURL, renders exactly one action control; alone, it renders nothing.`},
+			{Name: "ActionURL", Type: "string", Required: "No", Description: "Empty state's primary action target. ActionLabel and ActionURL must both be set for the control to render."},
+			{Name: "RetryLabel", Type: "string", Required: "No", Description: "Error state's retry label. Ignored by permission-denied, which never renders a retry."},
+			{Name: "RetryURL", Type: "string", Required: "No", Description: "Error state's retry target. RetryLabel and RetryURL must both be set for the control to render."},
+			{Name: "SkeletonRows", Type: "int", Required: "No", Description: "Loading: number of skeleton rows matching the expected layout. Zero falls back to a single-line skeleton."},
+			{Name: "SkeletonCols", Type: "int", Required: "No", Description: "Loading: cells per skeleton row. Zero or one renders one column."},
+		},
+		Variants: []DemoVariant{
+			{
+				Title:   "Loading — Skeleton rows matching the expected layout; never a spinner over a blank",
+				Preview: stateDemoLoading(),
+				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StateLoading, SkeletonRows: 5, SkeletonCols: 4}}) {\n\t<p>…rows arrive here…</p>\n}",
+			},
+			{
+				Title:   "Empty — subheading message plus one primary action",
+				Preview: stateDemoEmpty(),
+				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StateEmpty, Message: \"No accounts yet.\", ActionLabel: \"Create account\", ActionURL: \"/accounts/new\"}})",
+			},
+			{
+				Title:   "Error — neutral surface, danger accent, a retry action",
+				Preview: stateDemoError(),
+				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StateError, Message: \"Accounts could not be loaded. Retry, or contact support if it persists.\", RetryLabel: \"Retry\", RetryURL: \"/accounts\"}})",
+			},
+			{
+				Title:   "Permission denied — muted surface, no retry; the message says why and who to ask",
+				Preview: stateDemoPermissionDenied(),
+				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StatePermissionDenied, Message: \"You do not have access to this record. Ask an administrator for access.\"}})",
+			},
+			{
+				Title:   "Partial data — what loaded, plus an inline notice naming what is unavailable",
+				Preview: stateDemoPartial(),
+				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StatePartial, Message: \"Owner and ARR are unavailable.\"}}) {\n\t<table>…rows that loaded…</table>\n}",
+			},
+		},
+	})
+}
+
+templ stateDemoLoading() {
+	@ui.Panel(&ui.PanelProps{
+		Header: "Accounts",
+		State: &ui.StateProps{
+			State:        ui.StateLoading,
+			SkeletonRows: 5,
+			SkeletonCols: 4,
+		},
+	}) {
+		<p class="text-[length:var(--text-body-size)] text-[var(--color-ink-muted)]">Acme Logistics — Renewal — Priya Shah</p>
+	}
+}
+
+templ stateDemoEmpty() {
+	@ui.Panel(&ui.PanelProps{
+		Header: "Accounts",
+		State: &ui.StateProps{
+			State:       ui.StateEmpty,
+			Message:     "No accounts yet.",
+			ActionLabel: "Create account",
+			ActionURL:   "/accounts/new",
+		},
+	})
+}
+
+templ stateDemoError() {
+	@ui.Panel(&ui.PanelProps{
+		Header: "Accounts",
+		State: &ui.StateProps{
+			State:      ui.StateError,
+			Message:    "Accounts could not be loaded. Retry, or contact support if it persists.",
+			RetryLabel: "Retry",
+			RetryURL:   "/accounts",
+		},
+	})
+}
+
+templ stateDemoPermissionDenied() {
+	@ui.Panel(&ui.PanelProps{
+		Header: "Accounts",
+		State: &ui.StateProps{
+			State:   ui.StatePermissionDenied,
+			Message: "You do not have access to this record. Ask an administrator for access.",
+		},
+	})
+}
+
+templ stateDemoPartial() {
+	@ui.Panel(&ui.PanelProps{
+		Header: "Accounts",
+		State: &ui.StateProps{
+			State:   ui.StatePartial,
+			Message: "Owner and ARR are unavailable.",
+		},
+	}) {
+		<table class="border-collapse table-auto w-full text-[length:var(--text-body-size)]">
+			<thead>
+				<tr>
+					<th class="border-b border-[var(--color-border)] px-2 py-1 text-left text-[var(--color-ink-muted)]">Account</th>
+					<th class="border-b border-[var(--color-border)] px-2 py-1 text-left text-[var(--color-ink-muted)]">Stage</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="border-b border-[var(--color-border)] px-2 py-1 text-[var(--color-ink)]">Acme Logistics</td>
+					<td class="border-b border-[var(--color-border)] px-2 py-1 text-[var(--color-ink)]">Renewal</td>
+				</tr>
+				<tr>
+					<td class="border-b border-[var(--color-border)] px-2 py-1 text-[var(--color-ink)]">Northwind Traders</td>
+					<td class="border-b border-[var(--color-border)] px-2 py-1 text-[var(--color-ink)]">New business</td>
+				</tr>
+			</tbody>
+		</table>
+	}
+}

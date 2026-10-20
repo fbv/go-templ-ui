@@ -56,6 +56,10 @@ showcase page.
 - [i18n](i18n.md) - Locale, strings and formats carried in `context.Context`
   (package, not a component; Russian demo page at
   [`/showcase/i18n`](i18n.md#the-showcases-russian-demo))
+- [State](state.md) - The uniform five data states (loading, empty, error,
+  permission-denied, partial) through one `StateProps` value and `StateView`;
+  `Panel` is the first carrier (demo at
+  [`/showcase/state`](state.md#the-showcasestate-demo))
 
 ## Quick Reference
 
@@ -72,3 +76,4 @@ showcase page.
 | `ConfirmDialog` | Confirmation modal | `ModalID`, `Title`, `Message`, `ConfirmURL` |
 | `i18n` | Locale, strings and formats; Russian demo at `/showcase/i18n` | `WithLocale`, `T`, `Number`, `Currency`, `Date`, `MonthYear` |
 | `Theme` | Custom semantic colour themes | `Register`, `Get`, `Names`, `Check`, `Styles` |
+| `StateView` | The uniform five data states (CAP-5); demo at `/showcase/state` | `State`, `Message`, `ActionLabel`, `RetryLabel`, `SkeletonRows` |

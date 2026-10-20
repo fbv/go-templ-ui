@@ -43,5 +43,13 @@ func Demos() []Demo {
 			DocsPath: "docs/i18n.md",
 			Render:   I18nDemoPage,
 		},
+		{
+			Name:     "state",
+			Title:    "State",
+			Icon:     "M4 5h16v3H4V5zm0 5h16v3H4v-3zm0 5h16v3H4v-3z",
+			Route:    "/showcase/state",
+			DocsPath: "docs/state.md",
+			Render:   StateDemoPage,
+		},
 	}
 }

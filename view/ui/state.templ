@@ -1,0 +1,126 @@
+package ui
+
+// DataState names one of the uniform five data states (EXPERIENCE.md § State
+// Patterns). It is a string so a value can travel from a query, a JSON body or
+// a handler without a translation step; an unrecognised value falls back to
+// the empty treatment, so a state never renders a blank surface.
+type DataState string
+
+const (
+	StateLoading          DataState = "loading"
+	StateEmpty            DataState = "empty"
+	StateError            DataState = "error"
+	StatePermissionDenied DataState = "permission-denied"
+	StatePartial          DataState = "partial"
+)
+
+// StateProps is the shared value every data-bearing component carries to
+// render one of the five states. Every user-facing string is a prop — the
+// component ships no hardcoded literal (CAP-4). Partial data is the one
+// treatment that emits children; the other four replace them.
+type StateProps struct {
+	State        DataState
+	Message      string
+	ActionLabel  string
+	ActionURL    string
+	RetryLabel   string
+	RetryURL     string
+	SkeletonRows int
+	SkeletonCols int
+}
+
+// stateClass: the surface each treatment calls for. Loading has no wrapper —
+// the skeleton is the surface — so StateView never calls this for it. The
+// error treatment is a neutral surface with a danger accent (danger border,
+// danger message); permission-denied stays neutral and muted. An unrecognised
+// state takes the empty treatment (default), never a blank surface.
+func stateClass(state DataState) string {
+	switch state {
+	case StateError:
+		return "rounded-[var(--rounded-lg)] border border-[var(--color-danger-border)] bg-[var(--color-subtle)] p-4"
+	case StatePermissionDenied:
+		return "rounded-[var(--rounded-lg)] border border-[var(--color-border)] bg-[var(--color-subtle)] p-4"
+	case StatePartial:
+		return "rounded-[var(--rounded-lg)] border border-[var(--color-border)] bg-[var(--color-subtle)] px-3 py-2 mt-4"
+	default: // StateEmpty, "" and any unrecognised value
+		return "rounded-[var(--rounded-lg)] border border-[var(--color-border)] bg-[var(--color-subtle)] p-4"
+	}
+}
+
+// stateMessageClass: the message role per treatment. Empty speaks in the
+// subheading typography role (EXPERIENCE.md); permission-denied speaks in
+// muted ink; the partial notice is a small inline row.
+func stateMessageClass(state DataState) string {
+	switch state {
+	case StateEmpty:
+		return "text-[length:var(--text-subheading-size)] font-[number:var(--text-subheading-weight)] leading-[var(--text-subheading-leading)] text-[var(--color-ink)]"
+	case StateError:
+		return "text-[length:var(--text-body-size)] font-[number:var(--text-body-weight)] leading-[var(--text-body-leading)] text-[var(--color-danger)]"
+	case StatePermissionDenied:
+		return "text-[length:var(--text-body-size)] font-[number:var(--text-body-weight)] leading-[var(--text-body-leading)] text-[var(--color-ink-muted)]"
+	default: // the partial notice row
+		return "text-[length:var(--text-body-sm-size)] font-[number:var(--text-body-sm-weight)] leading-[var(--text-body-sm-leading)] text-[var(--color-ink-muted)]"
+	}
+}
+
+// stateSkeletonCols: a row count without a column count still yields a
+// one-column skeleton rather than an empty flex row.
+func stateSkeletonCols(p *StateProps) int {
+	if p.SkeletonCols > 0 {
+		return p.SkeletonCols
+	}
+	return 1
+}
+
+// stateAction: the one primary (or retry) action control. Both label and URL
+// are required; without them no control renders — the library never invents a
+// user-facing string. The focus ring is the house 2px {colors.focus} ring.
+templ stateAction(label, url string) {
+	if label != "" && url != "" {
+		<a
+			href={ templ.URL(url) }
+			class="mt-3 inline-block rounded-[var(--rounded-md)] bg-[var(--color-action)] px-4 py-2 text-[length:var(--text-label-size)] font-[number:var(--text-label-weight)] leading-[var(--text-label-leading)] text-[var(--color-action-fg)] hover:bg-[var(--color-action-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--color-subtle)] focus:ring-[var(--color-focus)]"
+		>{ label }</a>
+	}
+}
+
+// StateView renders the surface a component shows in place of its content
+// when it has no data to show: loading (skeleton rows, never a spinner over a
+// blank), empty (subheading message + one primary action), error (neutral
+// surface, danger accent, retry action), permission-denied (neutral muted
+// surface, no retry), or partial data (children plus an inline notice).
+//
+// A nil *StateProps, an empty one, and an unrecognised State all fall back in
+// the weakest form of the "never blank" guarantee — nil passes children
+// through untouched, anything else renders the empty treatment.
+templ StateView(p *StateProps) {
+	if p == nil {
+		{ children... }
+	} else {
+		switch p.State {
+			case StateLoading:
+				if p.SkeletonRows > 0 {
+					@SkeletonTable(p.SkeletonRows, stateSkeletonCols(p))
+				} else {
+					@Skeleton(&SkeletonProps{Lines: 1})
+				}
+			case StateError:
+				<div class={ stateClass(StateError) }>
+					<p class={ stateMessageClass(StateError) }>{ p.Message }</p>
+					@stateAction(p.RetryLabel, p.RetryURL)
+				</div>
+			case StatePermissionDenied:
+				<div class={ stateClass(StatePermissionDenied) }>
+					<p class={ stateMessageClass(StatePermissionDenied) }>{ p.Message }</p>
+				</div>
+			case StatePartial:
+				{ children... }
+				<div class={ stateClass(StatePartial), stateMessageClass(StatePartial) }>{ p.Message }</div>
+			default: // StateEmpty, "" and any unrecognised value: the empty treatment
+				<div class={ stateClass(StateEmpty) }>
+					<p class={ stateMessageClass(StateEmpty) }>{ p.Message }</p>
+					@stateAction(p.ActionLabel, p.ActionURL)
+				</div>
+		}
+	}
+}

@@ -7,6 +7,10 @@ templ HorizontalPanel() {
 type PanelProps struct {
 	Header string
     Style string
+	// State is the CAP-5 data-state carrier: when set, the panel renders the
+	// StateView surface in place of its children (the header stays). Nil keeps
+	// the pre-State behaviour — children render exactly as before.
+	State *StateProps
 }
 
 // panelClasses: neutral panels sit on the subtle neutral fill; "blue" becomes an
@@ -34,6 +38,8 @@ templ Panel(p *PanelProps) {
 		if p.Header != ""{
 			<p class={ panelHeaderClasses(p.Style) } >{ p.Header }</p>
 		}
-		{ children... }
+		@StateView(p.State) {
+			{ children... }
+		}
 	</div>
 }
