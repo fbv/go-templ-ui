@@ -51,6 +51,8 @@ showcase page.
 - [ConfirmDialog](confirm_dialog.md) - Confirmation modal for dangerous actions
 
 ### Theming & i18n
+- [Theme](theme.md) - Custom semantic colour themes registered from the same
+  token contract (package, not a component: no demo page)
 - [i18n](i18n.md) - Locale, strings and formats carried in `context.Context`
   (package, not a component: no demo page)
 
@@ -68,3 +70,4 @@ showcase page.
 | `DatePicker` | Date/time input | `Name`, `Label`, `Type` |
 | `ConfirmDialog` | Confirmation modal | `ModalID`, `Title`, `Message`, `ConfirmURL` |
 | `i18n` | Locale, strings and formats | `WithLocale`, `T`, `Number`, `Currency`, `Date`, `MonthYear` |
+| `Theme` | Custom semantic colour themes | `Register`, `Get`, `Names`, `Check`, `Styles` |

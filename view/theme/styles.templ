@@ -1,0 +1,33 @@
+package theme
+
+import "strings"
+
+// Styles emits one [data-theme="name"] block per registered theme, declaring
+// only the roles that theme supplies. layout.Page places it beside
+// ui.TokenStyles(), so the blocks sit after the :root aliases they override;
+// every omitted role keeps the :root fallback.
+templ Styles() {
+	@templ.Raw(stylesTag())
+}
+
+func stylesTag() string {
+	names := Names()
+	if len(names) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	b.WriteString("<style>")
+	for _, name := range names {
+		t, ok := Get(name)
+		if !ok {
+			continue
+		}
+		b.WriteString("\n[data-theme=\"" + name + "\"] {\n")
+		for _, d := range t.declarations() {
+			b.WriteString("  " + d.name + ": " + d.value + ";\n")
+		}
+		b.WriteString("}")
+	}
+	b.WriteString("\n</style>")
+	return b.String()
+}

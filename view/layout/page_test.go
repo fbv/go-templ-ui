@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/fbv/go-templ-ui/view/i18n"
+	"github.com/fbv/go-templ-ui/view/theme"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -54,13 +55,44 @@ func TestPageAppliesStoredThemeBeforePaint(t *testing.T) {
 	assert.Contains(t, html, "--color-surface", "must inject semantic token aliases")
 }
 
-func TestPageThemeInitFallsBackToLight(t *testing.T) {
+func TestPageThemeInitAcceptsRegisteredNamesAndFallsBackToLight(t *testing.T) {
 	html := renderPage(t)
 
-	assert.Contains(t, html, `theme !== "dark" && theme !== "light"`,
-		"must treat anything but dark/light as unset")
+	assert.Contains(t, html, `var known = ["light", "dark"`,
+		"the init must accept the built-in names")
+	assert.Contains(t, html, `known.indexOf(theme) < 0`,
+		"must treat any name outside the known list as unset")
 	assert.Contains(t, html, `theme = "light"`, "must fall back to light")
 	assert.Contains(t, html, "catch (e)", "must survive localStorage being unavailable")
+}
+
+func TestPageRendersRegisteredCustomTheme(t *testing.T) {
+	require.NoError(t, theme.Register(&theme.Theme{
+		Name:   "brand",
+		Canvas: "#FAF7F2",
+		Ink:    "#1A2B4A",
+	}))
+
+	html := renderPage(t)
+
+	// data-theme carries the registered name with its values.
+	assert.Contains(t, html, `data-theme="brand"`, "the page must carry the selected name")
+	assert.Contains(t, html, "--color-canvas: #FAF7F2;", "the page must carry the supplied values")
+	assert.Contains(t, html, "--color-ink: #1A2B4A;")
+
+	// The pre-paint init accepts the registered name.
+	assert.Contains(t, html, `"light", "dark", "brand"`, "the init must accept registered names")
+
+	// dark is absent for a custom theme; only "dark" gains the class.
+	assert.Contains(t, html, `if (theme === "dark") root.classList.add("dark")`,
+		"the dark class must be added only for dark")
+	assert.NotContains(t, html, `class="dark"`, "a custom theme must not ship the dark class")
+
+	// light and dark are unchanged.
+	assert.Contains(t, html, `:root, [data-theme="light"]`, "built-in light must be present")
+	assert.Contains(t, html, `[data-theme="dark"]`, "built-in dark must be present")
+	assert.Contains(t, html, "--g-canvas: #FFFFFF;", "built-in light values must be unchanged")
+	assert.Contains(t, html, "--g-canvas: #1C1B18;", "built-in dark values must be unchanged")
 }
 
 func TestPageRegistersThemeToggleScript(t *testing.T) {

@@ -1,12 +1,38 @@
 package layout
 
 import (
+	"strings"
+
 	"github.com/fbv/go-templ-ui/view/i18n"
+	"github.com/fbv/go-templ-ui/view/theme"
 	"github.com/fbv/go-templ-ui/view/ui"
 )
 
 type PageProps struct {
 	Title string
+}
+
+// themeInitScript applies the stored theme before paint. Every registered
+// theme name beside the built-in light/dark is accepted; anything else falls
+// back to light. Only "dark" gains Tailwind's dark class, so a selected custom
+// theme paints its own palette without it.
+func themeInitScript() string {
+	names := append([]string{"light", "dark"}, theme.Names()...)
+	quoted := make([]string, len(names))
+	for i, n := range names {
+		quoted[i] = `"` + n + `"`
+	}
+	return `<script>
+			(function () {
+				var root = document.documentElement;
+				var theme = null;
+				try { theme = localStorage.getItem("theme"); } catch (e) {}
+				var known = [` + strings.Join(quoted, ", ") + `];
+				if (known.indexOf(theme) < 0) theme = "light";
+				root.setAttribute("data-theme", theme);
+				if (theme === "dark") root.classList.add("dark");
+			})();
+		</script>`
 }
 
 templ Page(p *PageProps) {
@@ -15,17 +41,9 @@ templ Page(p *PageProps) {
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
-			<script>
-				(function () {
-					var root = document.documentElement;
-					var theme = null;
-					try { theme = localStorage.getItem("theme"); } catch (e) {}
-					if (theme !== "dark" && theme !== "light") theme = "light";
-					root.setAttribute("data-theme", theme);
-					if (theme === "dark") root.classList.add("dark");
-				})();
-			</script>
+			@templ.Raw(themeInitScript())
 			@ui.TokenStyles()
+			@theme.Styles()
 			@ui.CollapsibleStyle()
 			@ui.SidebarStyles()
 			@ui.ScrollablePanelStyle()

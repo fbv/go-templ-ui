@@ -8,12 +8,38 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"strings"
+
 	"github.com/fbv/go-templ-ui/view/i18n"
+	"github.com/fbv/go-templ-ui/view/theme"
 	"github.com/fbv/go-templ-ui/view/ui"
 )
 
 type PageProps struct {
 	Title string
+}
+
+// themeInitScript applies the stored theme before paint. Every registered
+// theme name beside the built-in light/dark is accepted; anything else falls
+// back to light. Only "dark" gains Tailwind's dark class, so a selected custom
+// theme paints its own palette without it.
+func themeInitScript() string {
+	names := append([]string{"light", "dark"}, theme.Names()...)
+	quoted := make([]string, len(names))
+	for i, n := range names {
+		quoted[i] = `"` + n + `"`
+	}
+	return `<script>
+			(function () {
+				var root = document.documentElement;
+				var theme = null;
+				try { theme = localStorage.getItem("theme"); } catch (e) {}
+				var known = [` + strings.Join(quoted, ", ") + `];
+				if (known.indexOf(theme) < 0) theme = "light";
+				root.setAttribute("data-theme", theme);
+				if (theme === "dark") root.classList.add("dark");
+			})();
+		</script>`
 }
 
 func Page(p *PageProps) templ.Component {
@@ -44,17 +70,25 @@ func Page(p *PageProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(i18n.From(ctx).Tag)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/layout/page.templ`, Line: 14, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/layout/page.templ`, Line: 40, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><script>\n\t\t\t\t(function () {\n\t\t\t\t\tvar root = document.documentElement;\n\t\t\t\t\tvar theme = null;\n\t\t\t\t\ttry { theme = localStorage.getItem(\"theme\"); } catch (e) {}\n\t\t\t\t\tif (theme !== \"dark\" && theme !== \"light\") theme = \"light\";\n\t\t\t\t\troot.setAttribute(\"data-theme\", theme);\n\t\t\t\t\tif (theme === \"dark\") root.classList.add(\"dark\");\n\t\t\t\t})();\n\t\t\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templ.Raw(themeInitScript()).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = ui.TokenStyles().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = theme.Styles().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -93,7 +127,7 @@ func Page(p *PageProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(p.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/layout/page.templ`, Line: 36, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/layout/page.templ`, Line: 54, Col: 19}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
