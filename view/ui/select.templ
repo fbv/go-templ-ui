@@ -23,6 +23,11 @@ type SelectProps struct {
 	SelectedValue string        // Currently selected value to pre-select an option
 	Style         string        // Optional element style
 	SubmitOnSelect bool         // Auto submit form on selection
+	// State is the CAP-5 data-state carrier: when set, the component renders
+	// the StateView surface in place of the <select> and its label; for
+	// StatePartial the label and select render plus the inline notice. Nil
+	// keeps the pre-State behaviour — the select renders exactly as before.
+	State *StateProps
 }
 
 // ItemsProvider interface allows for dynamic generation of select options
@@ -56,38 +61,50 @@ func (p ListItemProvider[T]) GetItem(i int) HasNameAndValue {
 // Select renders a styled HTML select dropdown with optional label and placeholder
 // The component supports both static items (via Items) and dynamic items (via ItemsProvider)
 // It automatically handles the selected state based on SelectedValue
+// A set State routes through StateView: the state surface replaces the
+// <select> and its label, except StatePartial which renders the label,
+// the select and then the inline notice.
 templ Select(p *SelectProps) {
 	<div 
 		if p.Style != "" {
 			class={p.Style}
 		}
 	>
-		// Render optional label if provided
-		if len(p.Label) > 0 {
+		// The label renders only with the select — the same nil/partial guard
+		// governs both, so a label never points at a control that is not
+		// there. The select's closing brace hugs it so a nil state stays
+		// byte-identical to the pre-State markup (templ would otherwise emit
+		// a trailing space before the brace).
+		// Render optional label if provided, beside the control it names
+		if (p.State == nil || p.State.State == StatePartial) && len(p.Label) > 0 {
 			<label for={ p.Name } class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{ p.Label }</label>
 		}
-		<select id={ p.Name } name={ p.Name } class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-			if p.SubmitOnSelect {
-				onchange="this.form.submit()"
-			}
-		>
-			// Render placeholder option if provided (hidden when a value is selected)
-			if len(p.Placeholder) > 0 {
-				<option hidden selected?={ len(p.SelectedValue) == 0 } value="">{ p.Placeholder }</option>
-			}
-			// Render dynamic options from ItemsProvider if available
-			if p.ItemsProvider != nil {
-				{{ var count = p.ItemsProvider.GetItemsCount() }}
-				for i := 0; i < count; i++ {
-					{{var item = p.ItemsProvider.GetItem(i) }}
-					{{var value = item.GetValue() }}
-					<option value={ value } selected?={ value == p.SelectedValue }>{ item.GetName() }</option>
+		if p.State == nil || p.State.State == StatePartial {
+			<select id={ p.Name } name={ p.Name } class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+				if p.SubmitOnSelect {
+					onchange="this.form.submit()"
 				}
-			}
-			// Render static options from Items slice
-			for _, item := range p.Items {
-				<option value={ item.Value } selected?={ item.Value == p.SelectedValue }>{ item.Name }</option>
-			}
-		</select>
+			>
+				// Render placeholder option if provided (hidden when a value is selected)
+				if len(p.Placeholder) > 0 {
+					<option hidden selected?={ len(p.SelectedValue) == 0 } value="">{ p.Placeholder }</option>
+				}
+				// Render dynamic options from ItemsProvider if available
+				if p.ItemsProvider != nil {
+					{{ var count = p.ItemsProvider.GetItemsCount() }}
+					for i := 0; i < count; i++ {
+						{{var item = p.ItemsProvider.GetItem(i) }}
+						{{var value = item.GetValue() }}
+						<option value={ value } selected?={ value == p.SelectedValue }>{ item.GetName() }</option>
+					}
+				}
+				// Render static options from Items slice
+				for _, item := range p.Items {
+					<option value={ item.Value } selected?={ item.Value == p.SelectedValue }>{ item.Name }</option>
+				}
+			</select>}
+		if p.State != nil {
+			@StateView(p.State)
+		}
 	</div>
 }

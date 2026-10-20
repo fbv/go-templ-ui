@@ -9,10 +9,12 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/fbv/go-templ-ui/view/ui"
 
-// StateDemoPage is the CAP-5 demonstration: one Panel per state of the shared
-// five-state API, each with consumer-supplied text, under the DemoPage
-// scaffold's "Variants & states" section. Title and docs path come from the
-// registry row (showcase/registry.go) — never from literals here.
+// StateDemoPage is the CAP-5 demonstration: one row per data-bearing
+// component (panel, table, list, select), each showing all five states of
+// the shared StateProps value, under the DemoPage scaffold's "Variants &
+// states" section. Title and docs path come from the registry row
+// (showcase/registry.go) — never from literals here. Every string in the
+// previews is supplied by the consumer.
 func StateDemoPage(d Demo) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -38,7 +40,7 @@ func StateDemoPage(d Demo) templ.Component {
 			Name:        d.Name,
 			Title:       d.Title,
 			DocsPath:    d.DocsPath,
-			Description: "The uniform five data states (CAP-5) through one StateProps value. A data component carries State and renders the StateView surface in place of its content — never a blank area. Panel is the first carrier; every string below is supplied by the consumer.",
+			Description: "The uniform five data states (CAP-5) through one StateProps value. Panel and Select carry a State field; DynamicTable and SimpleList are reached through the DynamicTableWithState and SimpleListWithState wrappers. Each carrier renders the StateView surface in place of its content — never a blank area. Every string below is supplied by the consumer.",
 			Props: []DemoProp{
 				{Name: "State", Type: "ui.DataState", Required: "No", Description: `"loading", "empty", "error", "permission-denied" or "partial". Nil, empty or an unrecognised value falls back to the empty treatment (or, for a nil StateProps, passes children through).`},
 				{Name: "Message", Type: "string", Required: "No", Description: "The consumer-supplied message: what the empty state offers, why the error happened, who to ask, or which fields are unavailable. The library ships no hardcoded string."},
@@ -51,29 +53,104 @@ func StateDemoPage(d Demo) templ.Component {
 			},
 			Variants: []DemoVariant{
 				{
-					Title:   "Loading — Skeleton rows matching the expected layout; never a spinner over a blank",
+					Title:   "Panel — Loading — Skeleton rows matching the expected layout; never a spinner over a blank",
 					Preview: stateDemoLoading(),
 					Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StateLoading, SkeletonRows: 5, SkeletonCols: 4}}) {\n\t<p>…rows arrive here…</p>\n}",
 				},
 				{
-					Title:   "Empty — subheading message plus one primary action",
+					Title:   "Panel — Empty — subheading message plus one primary action",
 					Preview: stateDemoEmpty(),
 					Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StateEmpty, Message: \"No accounts yet.\", ActionLabel: \"Create account\", ActionURL: \"/accounts/new\"}})",
 				},
 				{
-					Title:   "Error — neutral surface, danger accent, a retry action",
+					Title:   "Panel — Error — neutral surface, danger accent, a retry action",
 					Preview: stateDemoError(),
 					Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StateError, Message: \"Accounts could not be loaded. Retry, or contact support if it persists.\", RetryLabel: \"Retry\", RetryURL: \"/accounts\"}})",
 				},
 				{
-					Title:   "Permission denied — muted surface, no retry; the message says why and who to ask",
+					Title:   "Panel — Permission denied — muted surface, no retry; the message says why and who to ask",
 					Preview: stateDemoPermissionDenied(),
 					Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StatePermissionDenied, Message: \"You do not have access to this record. Ask an administrator for access.\"}})",
 				},
 				{
-					Title:   "Partial data — what loaded, plus an inline notice naming what is unavailable",
+					Title:   "Panel — Partial data — what loaded, plus an inline notice naming what is unavailable",
 					Preview: stateDemoPartial(),
 					Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StatePartial, Message: \"Owner and ARR are unavailable.\"}}) {\n\t<table>…rows that loaded…</table>\n}",
+				},
+				{
+					Title:   "Table — Loading — DynamicTableWithState paints the skeleton in place of the table",
+					Preview: stateTableDemoLoading(),
+					Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StateLoading, SkeletonRows: 4, SkeletonCols: 2})",
+				},
+				{
+					Title:   "Table — Empty — no bare table with no rows; the message and action replace it",
+					Preview: stateTableDemoEmpty(),
+					Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StateEmpty, Message: \"No accounts yet.\", ActionLabel: \"Create account\", ActionURL: \"/accounts/new\"})",
+				},
+				{
+					Title:   "Table — Error — neutral surface, danger accent, a retry action",
+					Preview: stateTableDemoError(),
+					Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StateError, Message: \"Accounts could not be loaded. Retry, or contact support if it persists.\", RetryLabel: \"Retry\", RetryURL: \"/accounts\"})",
+				},
+				{
+					Title:   "Table — Permission denied — muted surface, no retry; the message says why and who to ask",
+					Preview: stateTableDemoPermissionDenied(),
+					Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StatePermissionDenied, Message: \"You do not have access to this list. Ask an administrator for access.\"})",
+				},
+				{
+					Title:   "Table — Partial data — the rows that loaded, plus an inline notice",
+					Preview: stateTableDemoPartial(),
+					Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StatePartial, Message: \"Owner and ARR are unavailable.\"})",
+				},
+				{
+					Title:   "List — Loading — SimpleListWithState paints the skeleton in place of the list",
+					Preview: stateListDemoLoading(),
+					Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StateLoading, SkeletonRows: 3, SkeletonCols: 1})",
+				},
+				{
+					Title:   "List — Empty — the message and action replace the list",
+					Preview: stateListDemoEmpty(),
+					Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StateEmpty, Message: \"No accounts yet.\", ActionLabel: \"Create account\", ActionURL: \"/accounts/new\"})",
+				},
+				{
+					Title:   "List — Error — neutral surface, danger accent, a retry action",
+					Preview: stateListDemoError(),
+					Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StateError, Message: \"Accounts could not be loaded. Retry, or contact support if it persists.\", RetryLabel: \"Retry\", RetryURL: \"/accounts\"})",
+				},
+				{
+					Title:   "List — Permission denied — muted surface, no retry; the message says why and who to ask",
+					Preview: stateListDemoPermissionDenied(),
+					Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StatePermissionDenied, Message: \"You do not have access to this list. Ask an administrator for access.\"})",
+				},
+				{
+					Title:   "List — Partial data — the items that loaded, plus an inline notice",
+					Preview: stateListDemoPartial(),
+					Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StatePartial, Message: \"Owner is unavailable.\"})",
+				},
+				{
+					Title:   "Select — Loading — the skeleton replaces the control and its label",
+					Preview: stateSelectDemoLoading(),
+					Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StateLoading, SkeletonRows: 2, SkeletonCols: 2}})",
+				},
+				{
+					Title:   "Select — Empty — the message and action replace the control",
+					Preview: stateSelectDemoEmpty(),
+					Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StateEmpty, Message: \"No countries available.\", ActionLabel: \"Reload countries\", ActionURL: \"/countries\"}})",
+				},
+				{
+					Title:   "Select — Error — neutral surface, danger accent, a retry action",
+					Preview: stateSelectDemoError(),
+					Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StateError, Message: \"Countries could not be loaded. Retry, or contact support if it persists.\", RetryLabel: \"Retry\", RetryURL: \"/countries\"}})",
+				},
+				{
+					Title:   "Select — Permission denied — muted surface, no retry; the message says why and who to ask",
+					Preview: stateSelectDemoPermissionDenied(),
+					Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StatePermissionDenied, Message: \"You do not have access to this list. Ask an administrator for access.\"}})",
+				},
+				{
+					Title:   "Select — Partial data — the control stays, plus an inline notice",
+					Preview: stateSelectDemoPartial(),
+					Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StatePartial, Message: \"France is unavailable.\"}})",
 				},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
@@ -293,6 +370,526 @@ func stateDemoPartial() templ.Component {
 				Message: "Owner and ARR are unavailable.",
 			},
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateTableDemoLoading() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var9 == nil {
+			templ_7745c5c3_Var9 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+			State:        ui.StateLoading,
+			SkeletonRows: 4,
+			SkeletonCols: 2,
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateTableDemoEmpty() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var10 == nil {
+			templ_7745c5c3_Var10 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+			State:       ui.StateEmpty,
+			Message:     "No accounts yet.",
+			ActionLabel: "Create account",
+			ActionURL:   "/accounts/new",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateTableDemoError() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var11 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var11 == nil {
+			templ_7745c5c3_Var11 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+			State:      ui.StateError,
+			Message:    "Accounts could not be loaded. Retry, or contact support if it persists.",
+			RetryLabel: "Retry",
+			RetryURL:   "/accounts",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateTableDemoPermissionDenied() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var12 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var12 == nil {
+			templ_7745c5c3_Var12 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+			State:   ui.StatePermissionDenied,
+			Message: "You do not have access to this list. Ask an administrator for access.",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateTableDemoPartial() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var13 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var13 == nil {
+			templ_7745c5c3_Var13 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+			State:   ui.StatePartial,
+			Message: "Owner and ARR are unavailable.",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateListDemoLoading() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var14 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var14 == nil {
+			templ_7745c5c3_Var14 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+			State:        ui.StateLoading,
+			SkeletonRows: 3,
+			SkeletonCols: 1,
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateListDemoEmpty() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var15 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var15 == nil {
+			templ_7745c5c3_Var15 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+			State:       ui.StateEmpty,
+			Message:     "No accounts yet.",
+			ActionLabel: "Create account",
+			ActionURL:   "/accounts/new",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateListDemoError() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var16 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var16 == nil {
+			templ_7745c5c3_Var16 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+			State:      ui.StateError,
+			Message:    "Accounts could not be loaded. Retry, or contact support if it persists.",
+			RetryLabel: "Retry",
+			RetryURL:   "/accounts",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateListDemoPermissionDenied() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var17 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var17 == nil {
+			templ_7745c5c3_Var17 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+			State:   ui.StatePermissionDenied,
+			Message: "You do not have access to this list. Ask an administrator for access.",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateListDemoPartial() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var18 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var18 == nil {
+			templ_7745c5c3_Var18 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+			State:   ui.StatePartial,
+			Message: "Owner is unavailable.",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateSelectDemoLoading() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var19 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var19 == nil {
+			templ_7745c5c3_Var19 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.Select(&ui.SelectProps{
+			Name:  "country",
+			Label: "Country",
+			Items: GetSampleCountries(),
+			State: &ui.StateProps{
+				State:        ui.StateLoading,
+				SkeletonRows: 2,
+				SkeletonCols: 2,
+			},
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateSelectDemoEmpty() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var20 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var20 == nil {
+			templ_7745c5c3_Var20 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.Select(&ui.SelectProps{
+			Name:  "country",
+			Label: "Country",
+			Items: GetSampleCountries(),
+			State: &ui.StateProps{
+				State:       ui.StateEmpty,
+				Message:     "No countries available.",
+				ActionLabel: "Reload countries",
+				ActionURL:   "/countries",
+			},
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateSelectDemoError() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var21 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var21 == nil {
+			templ_7745c5c3_Var21 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.Select(&ui.SelectProps{
+			Name:  "country",
+			Label: "Country",
+			Items: GetSampleCountries(),
+			State: &ui.StateProps{
+				State:      ui.StateError,
+				Message:    "Countries could not be loaded. Retry, or contact support if it persists.",
+				RetryLabel: "Retry",
+				RetryURL:   "/countries",
+			},
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateSelectDemoPermissionDenied() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var22 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var22 == nil {
+			templ_7745c5c3_Var22 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.Select(&ui.SelectProps{
+			Name:  "country",
+			Label: "Country",
+			Items: GetSampleCountries(),
+			State: &ui.StateProps{
+				State:   ui.StatePermissionDenied,
+				Message: "You do not have access to this list. Ask an administrator for access.",
+			},
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func stateSelectDemoPartial() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var23 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var23 == nil {
+			templ_7745c5c3_Var23 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = ui.Select(&ui.SelectProps{
+			Name:  "country",
+			Label: "Country",
+			Items: GetSampleCountries(),
+			State: &ui.StateProps{
+				State:   ui.StatePartial,
+				Message: "France is unavailable.",
+			},
+		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

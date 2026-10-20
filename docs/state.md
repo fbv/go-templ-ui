@@ -8,9 +8,12 @@ content; a component whose data is loading, missing, failed, forbidden, or
 only partially available sets `State` and renders the matching surface —
 never a blank area.
 
-`Panel` is the first carrier: an additive `State *StateProps` field that
-replaces its children (header kept) when set. Ticket 1.7 applies the same
-value to table, list and select without redesigning the API.
+Every data-bearing component is a carrier: `Panel` and `Select` take an
+additive `State *StateProps` field; `DynamicTable` and `SimpleList`, which
+are pure interface-takers with no props struct, are reached through the
+`DynamicTableWithState` and `SimpleListWithState` wrappers. Both shapes
+reduce to the same call — pass a `*StateProps`, and `nil` means "render as
+today".
 
 Every user-facing string is a prop. The component ships no hardcoded literal,
 so it is locale-neutral: a consumer supplies `Message`, `ActionLabel` and
@@ -55,6 +58,61 @@ Fallbacks, in full:
   a visible surface, never a blank area and never a panic.
 - A state other than `partial` replaces any children with its surface; only
   `partial` emits them.
+
+## Applied across the data components
+
+Two carrier shapes, one value. A component that owns a props struct takes a
+`State *StateProps` field; a pure interface-taker with no props struct takes a
+`<Name>WithState` wrapper, because giving it a props struct would break every
+existing call site. Neither shape reimplements a treatment — both route through
+`StateView`.
+
+| Component | Carrier | How the state renders |
+|-----------|---------|----------------------|
+| `Panel` | field `PanelProps.State` | Keeps the header; replaces the children. |
+| `Select` | field `SelectProps.State` | Replaces the `<select>` and its label. `StatePartial` renders the label, the select, plus the notice. |
+| `DynamicTable` | wrapper `DynamicTableWithState(data, state)` | Replaces the table, except `StatePartial` which keeps the rows and adds the notice. |
+| `SimpleList` | wrapper `SimpleListWithState(ds, state)` | Replaces the list, except `StatePartial` which keeps the items and adds the notice. |
+
+A nil `*StateProps` renders exactly what the component rendered before the
+carrier existed — byte-identical, pinned by the carrier tests.
+
+### Field shape (Panel, Select)
+
+```go
+@ui.Select(&ui.SelectProps{
+	Name:  "country",
+	Label: "Country",
+	Items: countries,
+	State: &ui.StateProps{State: ui.StateLoading, SkeletonRows: 2, SkeletonCols: 2},
+})
+```
+
+`Panel` is the same shape — see *Carrying a state on a Panel* below.
+
+### Wrapper shape (DynamicTableWithState, SimpleListWithState)
+
+```go
+@ui.DynamicTableWithState(accountsTable, &ui.StateProps{
+	State:      ui.StateError,
+	Message:    "Accounts could not be loaded. Retry, or contact support if it persists.",
+	RetryLabel: "Retry",
+	RetryURL:   "/accounts",
+})
+```
+
+The list wrapper is identical in shape:
+
+```go
+@ui.SimpleListWithState(openAccounts, &ui.StateProps{
+	State:   ui.StatePartial,
+	Message: "Owner is unavailable.",
+})
+```
+
+The wrappers compose through `StateView`: partial data keeps the rows or items
+and adds the notice; the other four treatments replace them with the state
+surface. Passing `nil` renders the unwrapped component unchanged.
 
 ## Usage
 
@@ -162,10 +220,11 @@ can host it:
 ### The `/showcase/state` demo
 
 `/showcase/state` (`showcase/state.templ`) is this document demonstrated end
-to end under the `DemoPage` scaffold's variants section: one `Panel` per
-state — loading skeleton rows, empty with a primary action, error with a
-retry, permission-denied with no retry, and partial data with an inline
-notice — each with consumer-supplied text.
+to end under the `DemoPage` scaffold's variants section: one row per
+component — panel, table, list and select — each showing all five states
+(loading skeleton rows, empty with a primary action, error with a retry,
+permission-denied with no retry, and partial data with an inline notice),
+with consumer-supplied text throughout.
 
 ## Styles
 

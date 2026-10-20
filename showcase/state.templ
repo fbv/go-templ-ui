@@ -2,16 +2,18 @@ package showcase
 
 import "github.com/fbv/go-templ-ui/view/ui"
 
-// StateDemoPage is the CAP-5 demonstration: one Panel per state of the shared
-// five-state API, each with consumer-supplied text, under the DemoPage
-// scaffold's "Variants & states" section. Title and docs path come from the
-// registry row (showcase/registry.go) — never from literals here.
+// StateDemoPage is the CAP-5 demonstration: one row per data-bearing
+// component (panel, table, list, select), each showing all five states of
+// the shared StateProps value, under the DemoPage scaffold's "Variants &
+// states" section. Title and docs path come from the registry row
+// (showcase/registry.go) — never from literals here. Every string in the
+// previews is supplied by the consumer.
 templ StateDemoPage(d Demo) {
 	@DemoPage(&DemoPageProps{
 		Name:        d.Name,
 		Title:       d.Title,
 		DocsPath:    d.DocsPath,
-		Description: "The uniform five data states (CAP-5) through one StateProps value. A data component carries State and renders the StateView surface in place of its content — never a blank area. Panel is the first carrier; every string below is supplied by the consumer.",
+		Description: "The uniform five data states (CAP-5) through one StateProps value. Panel and Select carry a State field; DynamicTable and SimpleList are reached through the DynamicTableWithState and SimpleListWithState wrappers. Each carrier renders the StateView surface in place of its content — never a blank area. Every string below is supplied by the consumer.",
 		Props: []DemoProp{
 			{Name: "State", Type: "ui.DataState", Required: "No", Description: `"loading", "empty", "error", "permission-denied" or "partial". Nil, empty or an unrecognised value falls back to the empty treatment (or, for a nil StateProps, passes children through).`},
 			{Name: "Message", Type: "string", Required: "No", Description: "The consumer-supplied message: what the empty state offers, why the error happened, who to ask, or which fields are unavailable. The library ships no hardcoded string."},
@@ -24,29 +26,104 @@ templ StateDemoPage(d Demo) {
 		},
 		Variants: []DemoVariant{
 			{
-				Title:   "Loading — Skeleton rows matching the expected layout; never a spinner over a blank",
+				Title:   "Panel — Loading — Skeleton rows matching the expected layout; never a spinner over a blank",
 				Preview: stateDemoLoading(),
 				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StateLoading, SkeletonRows: 5, SkeletonCols: 4}}) {\n\t<p>…rows arrive here…</p>\n}",
 			},
 			{
-				Title:   "Empty — subheading message plus one primary action",
+				Title:   "Panel — Empty — subheading message plus one primary action",
 				Preview: stateDemoEmpty(),
 				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StateEmpty, Message: \"No accounts yet.\", ActionLabel: \"Create account\", ActionURL: \"/accounts/new\"}})",
 			},
 			{
-				Title:   "Error — neutral surface, danger accent, a retry action",
+				Title:   "Panel — Error — neutral surface, danger accent, a retry action",
 				Preview: stateDemoError(),
 				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StateError, Message: \"Accounts could not be loaded. Retry, or contact support if it persists.\", RetryLabel: \"Retry\", RetryURL: \"/accounts\"}})",
 			},
 			{
-				Title:   "Permission denied — muted surface, no retry; the message says why and who to ask",
+				Title:   "Panel — Permission denied — muted surface, no retry; the message says why and who to ask",
 				Preview: stateDemoPermissionDenied(),
 				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StatePermissionDenied, Message: \"You do not have access to this record. Ask an administrator for access.\"}})",
 			},
 			{
-				Title:   "Partial data — what loaded, plus an inline notice naming what is unavailable",
+				Title:   "Panel — Partial data — what loaded, plus an inline notice naming what is unavailable",
 				Preview: stateDemoPartial(),
 				Code:    "@ui.Panel(&ui.PanelProps{Header: \"Accounts\", State: &ui.StateProps{State: ui.StatePartial, Message: \"Owner and ARR are unavailable.\"}}) {\n\t<table>…rows that loaded…</table>\n}",
+			},
+			{
+				Title:   "Table — Loading — DynamicTableWithState paints the skeleton in place of the table",
+				Preview: stateTableDemoLoading(),
+				Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StateLoading, SkeletonRows: 4, SkeletonCols: 2})",
+			},
+			{
+				Title:   "Table — Empty — no bare table with no rows; the message and action replace it",
+				Preview: stateTableDemoEmpty(),
+				Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StateEmpty, Message: \"No accounts yet.\", ActionLabel: \"Create account\", ActionURL: \"/accounts/new\"})",
+			},
+			{
+				Title:   "Table — Error — neutral surface, danger accent, a retry action",
+				Preview: stateTableDemoError(),
+				Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StateError, Message: \"Accounts could not be loaded. Retry, or contact support if it persists.\", RetryLabel: \"Retry\", RetryURL: \"/accounts\"})",
+			},
+			{
+				Title:   "Table — Permission denied — muted surface, no retry; the message says why and who to ask",
+				Preview: stateTableDemoPermissionDenied(),
+				Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StatePermissionDenied, Message: \"You do not have access to this list. Ask an administrator for access.\"})",
+			},
+			{
+				Title:   "Table — Partial data — the rows that loaded, plus an inline notice",
+				Preview: stateTableDemoPartial(),
+				Code:    "@ui.DynamicTableWithState(accountsTable, &ui.StateProps{State: ui.StatePartial, Message: \"Owner and ARR are unavailable.\"})",
+			},
+			{
+				Title:   "List — Loading — SimpleListWithState paints the skeleton in place of the list",
+				Preview: stateListDemoLoading(),
+				Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StateLoading, SkeletonRows: 3, SkeletonCols: 1})",
+			},
+			{
+				Title:   "List — Empty — the message and action replace the list",
+				Preview: stateListDemoEmpty(),
+				Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StateEmpty, Message: \"No accounts yet.\", ActionLabel: \"Create account\", ActionURL: \"/accounts/new\"})",
+			},
+			{
+				Title:   "List — Error — neutral surface, danger accent, a retry action",
+				Preview: stateListDemoError(),
+				Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StateError, Message: \"Accounts could not be loaded. Retry, or contact support if it persists.\", RetryLabel: \"Retry\", RetryURL: \"/accounts\"})",
+			},
+			{
+				Title:   "List — Permission denied — muted surface, no retry; the message says why and who to ask",
+				Preview: stateListDemoPermissionDenied(),
+				Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StatePermissionDenied, Message: \"You do not have access to this list. Ask an administrator for access.\"})",
+			},
+			{
+				Title:   "List — Partial data — the items that loaded, plus an inline notice",
+				Preview: stateListDemoPartial(),
+				Code:    "@ui.SimpleListWithState(openAccounts, &ui.StateProps{State: ui.StatePartial, Message: \"Owner is unavailable.\"})",
+			},
+			{
+				Title:   "Select — Loading — the skeleton replaces the control and its label",
+				Preview: stateSelectDemoLoading(),
+				Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StateLoading, SkeletonRows: 2, SkeletonCols: 2}})",
+			},
+			{
+				Title:   "Select — Empty — the message and action replace the control",
+				Preview: stateSelectDemoEmpty(),
+				Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StateEmpty, Message: \"No countries available.\", ActionLabel: \"Reload countries\", ActionURL: \"/countries\"}})",
+			},
+			{
+				Title:   "Select — Error — neutral surface, danger accent, a retry action",
+				Preview: stateSelectDemoError(),
+				Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StateError, Message: \"Countries could not be loaded. Retry, or contact support if it persists.\", RetryLabel: \"Retry\", RetryURL: \"/countries\"}})",
+			},
+			{
+				Title:   "Select — Permission denied — muted surface, no retry; the message says why and who to ask",
+				Preview: stateSelectDemoPermissionDenied(),
+				Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StatePermissionDenied, Message: \"You do not have access to this list. Ask an administrator for access.\"}})",
+			},
+			{
+				Title:   "Select — Partial data — the control stays, plus an inline notice",
+				Preview: stateSelectDemoPartial(),
+				Code:    "@ui.Select(&ui.SelectProps{Name: \"country\", Label: \"Country\", Items: countries, State: &ui.StateProps{State: ui.StatePartial, Message: \"France is unavailable.\"}})",
 			},
 		},
 	})
@@ -126,4 +203,149 @@ templ stateDemoPartial() {
 			</tbody>
 		</table>
 	}
+}
+
+templ stateTableDemoLoading() {
+	@ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+		State:        ui.StateLoading,
+		SkeletonRows: 4,
+		SkeletonCols: 2,
+	})
+}
+
+templ stateTableDemoEmpty() {
+	@ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+		State:       ui.StateEmpty,
+		Message:     "No accounts yet.",
+		ActionLabel: "Create account",
+		ActionURL:   "/accounts/new",
+	})
+}
+
+templ stateTableDemoError() {
+	@ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+		State:      ui.StateError,
+		Message:    "Accounts could not be loaded. Retry, or contact support if it persists.",
+		RetryLabel: "Retry",
+		RetryURL:   "/accounts",
+	})
+}
+
+templ stateTableDemoPermissionDenied() {
+	@ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+		State:   ui.StatePermissionDenied,
+		Message: "You do not have access to this list. Ask an administrator for access.",
+	})
+}
+
+templ stateTableDemoPartial() {
+	@ui.DynamicTableWithState(stateDemoAccountsTable(), &ui.StateProps{
+		State:   ui.StatePartial,
+		Message: "Owner and ARR are unavailable.",
+	})
+}
+
+templ stateListDemoLoading() {
+	@ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+		State:        ui.StateLoading,
+		SkeletonRows: 3,
+		SkeletonCols: 1,
+	})
+}
+
+templ stateListDemoEmpty() {
+	@ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+		State:       ui.StateEmpty,
+		Message:     "No accounts yet.",
+		ActionLabel: "Create account",
+		ActionURL:   "/accounts/new",
+	})
+}
+
+templ stateListDemoError() {
+	@ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+		State:      ui.StateError,
+		Message:    "Accounts could not be loaded. Retry, or contact support if it persists.",
+		RetryLabel: "Retry",
+		RetryURL:   "/accounts",
+	})
+}
+
+templ stateListDemoPermissionDenied() {
+	@ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+		State:   ui.StatePermissionDenied,
+		Message: "You do not have access to this list. Ask an administrator for access.",
+	})
+}
+
+templ stateListDemoPartial() {
+	@ui.SimpleListWithState(stateDemoOpenAccounts(), &ui.StateProps{
+		State:   ui.StatePartial,
+		Message: "Owner is unavailable.",
+	})
+}
+
+templ stateSelectDemoLoading() {
+	@ui.Select(&ui.SelectProps{
+		Name:  "country",
+		Label: "Country",
+		Items: GetSampleCountries(),
+		State: &ui.StateProps{
+			State:        ui.StateLoading,
+			SkeletonRows: 2,
+			SkeletonCols: 2,
+		},
+	})
+}
+
+templ stateSelectDemoEmpty() {
+	@ui.Select(&ui.SelectProps{
+		Name:  "country",
+		Label: "Country",
+		Items: GetSampleCountries(),
+		State: &ui.StateProps{
+			State:       ui.StateEmpty,
+			Message:     "No countries available.",
+			ActionLabel: "Reload countries",
+			ActionURL:   "/countries",
+		},
+	})
+}
+
+templ stateSelectDemoError() {
+	@ui.Select(&ui.SelectProps{
+		Name:  "country",
+		Label: "Country",
+		Items: GetSampleCountries(),
+		State: &ui.StateProps{
+			State:      ui.StateError,
+			Message:    "Countries could not be loaded. Retry, or contact support if it persists.",
+			RetryLabel: "Retry",
+			RetryURL:   "/countries",
+		},
+	})
+}
+
+templ stateSelectDemoPermissionDenied() {
+	@ui.Select(&ui.SelectProps{
+		Name:  "country",
+		Label: "Country",
+		Items: GetSampleCountries(),
+		State: &ui.StateProps{
+			State:   ui.StatePermissionDenied,
+			Message: "You do not have access to this list. Ask an administrator for access.",
+		},
+	})
+}
+
+templ stateSelectDemoPartial() {
+	@ui.Select(&ui.SelectProps{
+		Name:  "country",
+		Label: "Country",
+		Items: GetSampleCountries(),
+		State: &ui.StateProps{
+			State:   ui.StatePartial,
+			Message: "France is unavailable.",
+		},
+	})
 }

@@ -31,6 +31,21 @@ templ SimpleList(ds ListDataSource) {
 	</div>
 }
 
+// SimpleListWithState is the CAP-5 state carrier for the list, which is a
+// pure interface-taker and cannot take a props field. Nil state renders the
+// list unchanged; a set state routes through StateView, which keeps the
+// list's items only for StatePartial and paints its own surface for the
+// other four treatments.
+templ SimpleListWithState(ds ListDataSource, state *StateProps) {
+	if state == nil {
+		@SimpleList(ds)
+	} else {
+		@StateView(state) {
+			@SimpleList(ds)
+		}
+	}
+}
+
 templ SimpleListItem(p *ListItemProps) {
 	<div class="relative block w-full px-2 py-1 border-b border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-500 dark:focus:text-white">
 		<span

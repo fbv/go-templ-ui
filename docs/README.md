@@ -58,7 +58,8 @@ showcase page.
   [`/showcase/i18n`](i18n.md#the-showcases-russian-demo))
 - [State](state.md) - The uniform five data states (loading, empty, error,
   permission-denied, partial) through one `StateProps` value and `StateView`;
-  `Panel` is the first carrier (demo at
+  carried field-shaped by `Panel` and `Select`, wrapper-shaped by
+  `DynamicTable` and `SimpleList` (demo at
   [`/showcase/state`](state.md#the-showcasestate-demo))
 
 ## Quick Reference

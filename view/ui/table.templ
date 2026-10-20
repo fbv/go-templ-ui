@@ -47,6 +47,21 @@ templ DynamicTable(data TableDataSource) {
 	</table>
 }
 
+// DynamicTableWithState is the CAP-5 state carrier for the table, which is a
+// pure interface-taker and cannot take a props field. Nil state renders the
+// table unchanged; a set state routes through StateView, which keeps the
+// table's rows only for StatePartial and paints its own surface for the other
+// four treatments.
+templ DynamicTableWithState(data TableDataSource, state *StateProps) {
+	if state == nil {
+		@DynamicTable(data)
+	} else {
+		@StateView(state) {
+			@DynamicTable(data)
+		}
+	}
+}
+
 templ Text(text string) {
     <span>{ text }</span>
 }
