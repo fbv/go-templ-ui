@@ -27,17 +27,13 @@ func ThemeToggle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var1 == nil {
-			templ_7745c5c3_Var1 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<button type=\"button\" onclick=\"toggleTheme()\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(i18n.T(ctx, i18n.KeyToggleTheme))
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templruntime.NewAttributeExpression(i18n.T(ctx, i18n.KeyToggleTheme)).Resolve(ctx)
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/theme_toggle.templ`, Line: 11, Col: 42}
 		}
@@ -50,7 +46,7 @@ func ThemeToggle() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(i18n.T(ctx, i18n.KeyToggleTheme))
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templruntime.NewAttributeExpression(i18n.T(ctx, i18n.KeyToggleTheme)).Resolve(ctx)
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/theme_toggle.templ`, Line: 12, Col: 47}
 		}
@@ -95,10 +91,6 @@ func ThemeToggleScript() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var5 == nil {
-			templ_7745c5c3_Var5 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<script>\n\t\tif (!window._themeToggleInitialized) {\n\t\t\twindow._themeToggleInitialized = true;\n\t\t\twindow.toggleTheme = function () {\n\t\t\t\tvar root = document.documentElement;\n\t\t\t\tvar next = root.getAttribute(\"data-theme\") === \"dark\" ? \"light\" : \"dark\";\n\t\t\t\troot.setAttribute(\"data-theme\", next);\n\t\t\t\tif (next === \"dark\") {\n\t\t\t\t\troot.classList.add(\"dark\");\n\t\t\t\t} else {\n\t\t\t\t\troot.classList.remove(\"dark\");\n\t\t\t\t}\n\t\t\t\ttry { localStorage.setItem(\"theme\", next); } catch (e) {}\n\t\t\t};\n\t\t}\n\t</script>")
 		if templ_7745c5c3_Err != nil {

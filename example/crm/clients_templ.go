@@ -25,10 +25,6 @@ func ClientsPage() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var1 == nil {
-			templ_7745c5c3_Var1 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Var2 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -140,10 +136,6 @@ func addClientModal() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var5 == nil {
-			templ_7745c5c3_Var5 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div id=\"add-client-modal\" class=\"fixed inset-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none bg-black/50\" tabindex=\"-1\"><div class=\"pointer-events-none relative w-auto min-h-screen flex items-center justify-center p-4\"><div class=\"pointer-events-auto relative w-full max-w-lg bg-white rounded-lg shadow-2xl\"><div class=\"p-6\"><div class=\"flex justify-between items-center mb-4\"><h3 class=\"text-lg font-semibold text-gray-900\">Новый клиент</h3><button type=\"button\" class=\"text-gray-400 hover:text-gray-600\" onclick=\"document.getElementById('add-client-modal').classList.add('hidden')\"><svg class=\"w-6 h-6\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M6 18L18 6M6 6l12 12\"></path></svg></button></div><form action=\"/crm/clients\" method=\"POST\" class=\"space-y-4\">")
 		if templ_7745c5c3_Err != nil {

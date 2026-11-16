@@ -23,10 +23,6 @@ func LoginModal() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var1 == nil {
-			templ_7745c5c3_Var1 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"login-modal\" class=\"fixed inset-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none\" tabindex=\"-1\" aria-hidden=\"true\"><div class=\"pointer-events-none relative w-auto min-h-screen flex items-center justify-center p-4\"><div class=\"pointer-events-auto relative w-full max-w-md bg-white rounded-lg shadow-2xl dark:bg-gray-800 opacity-0 translate-y-[-50px] transition-all duration-300\" data-modal-dialog><div class=\"p-6\"><div class=\"flex justify-between items-center mb-4\"><div></div><button type=\"button\" class=\"text-gray-400 hover:text-gray-600 dark:hover:text-gray-300\" onclick=\"document.getElementById('login-modal').classList.add('hidden')\"><svg class=\"w-6 h-6\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M6 18L18 6M6 6l12 12\"></path></svg></button></div>")
 		if templ_7745c5c3_Err != nil {
@@ -60,10 +56,6 @@ func LoginModalScript() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<script>\n\t\tif (!window._loginModalInitialized) {\n\t\t\twindow._loginModalInitialized = true;\n\t\t\twindow.showLoginModal = function() {\n\t\t\t\tvar modal = document.getElementById('login-modal');\n\t\t\t\tif (modal) {\n\t\t\t\t\tmodal.classList.remove('hidden');\n\t\t\t\t\tvar dialog = modal.querySelector('[data-modal-dialog]');\n\t\t\t\t\tif (dialog) {\n\t\t\t\t\t\tdialog.classList.remove('translate-y-[-50px]', 'opacity-0');\n\t\t\t\t\t\tdialog.classList.add('translate-y-0', 'opacity-100');\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t};\n\t\t\twindow.hideLoginModal = function() {\n\t\t\t\tvar modal = document.getElementById('login-modal');\n\t\t\t\tif (modal) {\n\t\t\t\t\tvar dialog = modal.querySelector('[data-modal-dialog]');\n\t\t\t\t\tif (dialog) {\n\t\t\t\t\t\tdialog.classList.add('translate-y-[-50px]', 'opacity-0');\n\t\t\t\t\t\tdialog.classList.remove('translate-y-0', 'opacity-100');\n\t\t\t\t\t}\n\t\t\t\t\tsetTimeout(function() {\n\t\t\t\t\t\tmodal.classList.add('hidden');\n\t\t\t\t\t}, 300);\n\t\t\t\t}\n\t\t\t};\n\t\t\tdocument.addEventListener('click', function(e) {\n\t\t\t\tvar modal = document.getElementById('login-modal');\n\t\t\t\tif (modal && e.target === modal) {\n\t\t\t\t\twindow.hideLoginModal();\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t</script>")
 		if templ_7745c5c3_Err != nil {

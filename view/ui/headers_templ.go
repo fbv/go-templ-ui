@@ -27,10 +27,6 @@ func H1(text string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var1 == nil {
-			templ_7745c5c3_Var1 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h1 class=\"text-[length:var(--text-display-size)] font-[number:var(--text-display-weight)] leading-[var(--text-display-leading)] tracking-[var(--text-display-tracking)] text-[var(--color-ink)] mt-8 mb-2\">")
 		if templ_7745c5c3_Err != nil {
@@ -69,10 +65,6 @@ func H2(text string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<h2 class=\"text-[length:var(--text-heading-lg-size)] font-[number:var(--text-heading-lg-weight)] leading-[var(--text-heading-lg-leading)] text-[var(--color-ink)] mt-4 mb-2\">")
 		if templ_7745c5c3_Err != nil {
@@ -111,10 +103,6 @@ func H3(text string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var5 == nil {
-			templ_7745c5c3_Var5 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<h3 class=\"text-[length:var(--text-heading-size)] font-[number:var(--text-heading-weight)] leading-[var(--text-heading-leading)] text-[var(--color-ink)] mb-2\">")
 		if templ_7745c5c3_Err != nil {
@@ -153,10 +141,6 @@ func H4(text string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var7 == nil {
-			templ_7745c5c3_Var7 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<h4 class=\"text-[length:var(--text-subheading-size)] font-[number:var(--text-subheading-weight)] leading-[var(--text-subheading-leading)] text-[var(--color-ink)] mb-2\">")
 		if templ_7745c5c3_Err != nil {
@@ -195,10 +179,6 @@ func H5(text string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var9 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var9 == nil {
-			templ_7745c5c3_Var9 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<h5 class=\"text-[length:var(--text-body-size)] font-[number:var(--text-body-weight)] leading-[var(--text-body-leading)] text-[var(--color-ink)] mb-2\">")
 		if templ_7745c5c3_Err != nil {
@@ -237,10 +217,6 @@ func H6(text string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var11 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var11 == nil {
-			templ_7745c5c3_Var11 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<h6 class=\"text-[length:var(--text-body-sm-size)] font-[number:var(--text-body-sm-weight)] leading-[var(--text-body-sm-leading)] text-[var(--color-ink)] mb-2\">")
 		if templ_7745c5c3_Err != nil {

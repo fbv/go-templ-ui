@@ -23,10 +23,6 @@ func CollapsibleStyle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var1 == nil {
-			templ_7745c5c3_Var1 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n.collapsible {\n  cursor: pointer;\n}\n\n.collapsible-active::before {\n    content: \"▾ \";\n}\n\n.collapsible-notactive::before {\n    content: \"▸ \";\n}\n\n.collapsible-content {\n  display: none;\n  overflow: hidden;\n}\n</style>")
 		if templ_7745c5c3_Err != nil {
@@ -53,9 +49,6 @@ func Collapsible(label string) templ.Component {
 		}
 		ctx = templ.InitializeContext(ctx)
 		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<button type=\"button\" class=\"collapsible collapsible-notactive\">")
 		if templ_7745c5c3_Err != nil {
@@ -102,10 +95,6 @@ func CollapsibleScript() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var4 == nil {
-			templ_7745c5c3_Var4 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<script>\nvar coll = document.getElementsByClassName(\"collapsible\");\nvar i;\n\nfor (i = 0; i < coll.length; i++) {\n  coll[i].addEventListener(\"click\", function() {\n    this.classList.toggle(\"collapsible-active\");\n    this.classList.toggle(\"collapsible-notactive\");\n    var content = this.nextElementSibling;\n    if (content.style.display === \"block\") {\n      content.style.display = \"none\";\n    } else {\n      content.style.display = \"block\";\n    }\n  });\n}\n</script>")
 		if templ_7745c5c3_Err != nil {

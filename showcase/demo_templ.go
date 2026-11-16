@@ -64,10 +64,6 @@ func DemoPage(p *DemoPageProps) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var1 == nil {
-			templ_7745c5c3_Var1 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Var2 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -94,7 +90,7 @@ func DemoPage(p *DemoPageProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue("demo-" + p.Name)
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templruntime.NewAttributeExpression("demo-" + p.Name).Resolve(ctx)
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demo.templ`, Line: 48, Col: 29}
 			}
@@ -146,7 +142,7 @@ func DemoPage(p *DemoPageProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " <table class=\"border-collapse table-auto w-full mb-4\"><thead><tr><th class=\"border-b border-[var(--color-border)] px-2 py-1 text-left text-[length:var(--text-overline-size)] font-[number:var(--text-overline-weight)] leading-[var(--text-overline-leading)] uppercase tracking-[var(--text-overline-tracking)] text-[var(--color-ink-subtle)]\">Property</th><th class=\"border-b border-[var(--color-border)] px-2 py-1 text-left text-[length:var(--text-overline-size)] font-[number:var(--text-overline-weight)] leading-[var(--text-overline-leading)] uppercase tracking-[var(--text-overline-tracking)] text-[var(--color-ink-subtle)]\">Type</th><th class=\"border-b border-[var(--color-border)] px-2 py-1 text-left text-[length:var(--text-overline-size)] font-[number:var(--text-overline-weight)] leading-[var(--text-overline-leading)] uppercase tracking-[var(--text-overline-tracking)] text-[var(--color-ink-subtle)]\">Required</th><th class=\"border-b border-[var(--color-border)] px-2 py-1 text-left text-[length:var(--text-overline-size)] font-[number:var(--text-overline-weight)] leading-[var(--text-overline-leading)] uppercase tracking-[var(--text-overline-tracking)] text-[var(--color-ink-subtle)]\">Description</th></tr></thead> <tbody>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<table class=\"border-collapse table-auto w-full mb-4\"><thead><tr><th class=\"border-b border-[var(--color-border)] px-2 py-1 text-left text-[length:var(--text-overline-size)] font-[number:var(--text-overline-weight)] leading-[var(--text-overline-leading)] uppercase tracking-[var(--text-overline-tracking)] text-[var(--color-ink-subtle)]\">Property</th><th class=\"border-b border-[var(--color-border)] px-2 py-1 text-left text-[length:var(--text-overline-size)] font-[number:var(--text-overline-weight)] leading-[var(--text-overline-leading)] uppercase tracking-[var(--text-overline-tracking)] text-[var(--color-ink-subtle)]\">Type</th><th class=\"border-b border-[var(--color-border)] px-2 py-1 text-left text-[length:var(--text-overline-size)] font-[number:var(--text-overline-weight)] leading-[var(--text-overline-leading)] uppercase tracking-[var(--text-overline-tracking)] text-[var(--color-ink-subtle)]\">Required</th><th class=\"border-b border-[var(--color-border)] px-2 py-1 text-left text-[length:var(--text-overline-size)] font-[number:var(--text-overline-weight)] leading-[var(--text-overline-leading)] uppercase tracking-[var(--text-overline-tracking)] text-[var(--color-ink-subtle)]\">Description</th></tr></thead> <tbody>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -223,7 +219,7 @@ func DemoPage(p *DemoPageProps) templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, " <div class=\"rounded-[var(--rounded-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4 mb-2\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"rounded-[var(--rounded-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4 mb-2\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -253,12 +249,12 @@ func DemoPage(p *DemoPageProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var9 templ.SafeURL
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(p.DocsPath))
+			var templ_7745c5c3_Var9 string
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templruntime.NewAttributeExpression(templ.URL(p.DocsPath)).ResolveURL(ctx)
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demo.templ`, Line: 93, Col: 101}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

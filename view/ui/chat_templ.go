@@ -47,10 +47,6 @@ func ChatStyle() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var1 == nil {
-			templ_7745c5c3_Var1 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<style>\n\t\t.chat-messages {\n\t\t\tscrollbar-width: thin;\n\t\t\tscrollbar-color: rgba(156, 163, 175, 0.5) transparent;\n\t\t}\n\t\t.chat-messages::-webkit-scrollbar {\n\t\t\twidth: 6px;\n\t\t}\n\t\t.chat-messages::-webkit-scrollbar-track {\n\t\t\tbackground: transparent;\n\t\t}\n\t\t.chat-messages::-webkit-scrollbar-thumb {\n\t\t\tbackground-color: rgba(156, 163, 175, 0.5);\n\t\t\tborder-radius: 3px;\n\t\t}\n\t\t.chat-messages::-webkit-scrollbar-thumb:hover {\n\t\t\tbackground-color: rgba(156, 163, 175, 0.7);\n\t\t}\n\t\t.chat-bubble-own {\n\t\t\tborder-bottom-right-radius: 4px;\n\t\t}\n\t\t.chat-bubble-other {\n\t\t\tborder-bottom-left-radius: 4px;\n\t\t}\n\t\t.chat-file-preview {\n\t\t\tmax-height: 200px;\n\t\t\tobject-fit: contain;\n\t\t}\n\t\t@keyframes chatFadeIn {\n\t\t\tfrom { opacity: 0; transform: translateY(8px); }\n\t\t\tto { opacity: 1; transform: translateY(0); }\n\t\t}\n\t\t.chat-message-animate {\n\t\t\tanimation: chatFadeIn 0.2s ease-out;\n\t\t}\n\t</style>")
 		if templ_7745c5c3_Err != nil {
@@ -76,10 +72,6 @@ func ChatScript() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<script>\n\t\tif (!window._chatInitialized) {\n\t\t\twindow._chatInitialized = true;\n\t\t\twindow.chatScrollToBottom = function(containerId) {\n\t\t\t\tvar el = document.getElementById(containerId);\n\t\t\t\tif (el) {\n\t\t\t\t\tel.scrollTop = el.scrollHeight;\n\t\t\t\t}\n\t\t\t};\n\t\t\twindow.chatScrollToBottomSmooth = function(containerId) {\n\t\t\t\tvar el = document.getElementById(containerId);\n\t\t\t\tif (el) {\n\t\t\t\t\tel.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });\n\t\t\t\t}\n\t\t\t};\n\t\t\tdocument.body.addEventListener('htmx:afterSwap', function(e) {\n\t\t\t\tif (e.detail.target && e.detail.target.id) {\n\t\t\t\t\tvar id = e.detail.target.id;\n\t\t\t\t\tif (id.indexOf('chat-messages') === 0) {\n\t\t\t\t\t\twindow.chatScrollToBottom(id);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t</script>")
 		if templ_7745c5c3_Err != nil {
@@ -115,10 +107,6 @@ func ChatHeader(p *ChatProps) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"flex items-center gap-3 px-4 py-3 border-b border-gray-200 bg-white\">")
 		if templ_7745c5c3_Err != nil {
@@ -196,10 +184,6 @@ func ChatMessageBubble(msg *ChatMessage) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var6 == nil {
-			templ_7745c5c3_Var6 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		if msg.Type == "system" {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"flex justify-center my-2 chat-message-animate\"><span class=\"text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full\">")
@@ -230,7 +214,7 @@ func ChatMessageBubble(msg *ChatMessage) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var8 string
-				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(msg.FileURL)
+				templ_7745c5c3_Var8, templ_7745c5c3_Err = templruntime.NewAttributeExpression(msg.FileURL).ResolveURL(ctx)
 				if templ_7745c5c3_Err != nil {
 					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 129, Col: 29}
 				}
@@ -243,7 +227,7 @@ func ChatMessageBubble(msg *ChatMessage) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var9 string
-				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(msg.FileName)
+				templ_7745c5c3_Var9, templ_7745c5c3_Err = templruntime.NewAttributeExpression(msg.FileName).Resolve(ctx)
 				if templ_7745c5c3_Err != nil {
 					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 129, Col: 50}
 				}
@@ -261,12 +245,12 @@ func ChatMessageBubble(msg *ChatMessage) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var10 templ.SafeURL
-				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(msg.FileURL))
+				var templ_7745c5c3_Var10 string
+				templ_7745c5c3_Var10, templ_7745c5c3_Err = templruntime.NewAttributeExpression(templ.URL(msg.FileURL)).ResolveURL(ctx)
 				if templ_7745c5c3_Err != nil {
 					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 133, Col: 38}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -371,7 +355,7 @@ func ChatMessageBubble(msg *ChatMessage) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var16 string
-				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(msg.FileURL)
+				templ_7745c5c3_Var16, templ_7745c5c3_Err = templruntime.NewAttributeExpression(msg.FileURL).ResolveURL(ctx)
 				if templ_7745c5c3_Err != nil {
 					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 166, Col: 29}
 				}
@@ -384,7 +368,7 @@ func ChatMessageBubble(msg *ChatMessage) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var17 string
-				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue(msg.FileName)
+				templ_7745c5c3_Var17, templ_7745c5c3_Err = templruntime.NewAttributeExpression(msg.FileName).Resolve(ctx)
 				if templ_7745c5c3_Err != nil {
 					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 166, Col: 50}
 				}
@@ -402,12 +386,12 @@ func ChatMessageBubble(msg *ChatMessage) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var18 templ.SafeURL
-				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(msg.FileURL))
+				var templ_7745c5c3_Var18 string
+				templ_7745c5c3_Var18, templ_7745c5c3_Err = templruntime.NewAttributeExpression(templ.URL(msg.FileURL)).ResolveURL(ctx)
 				if templ_7745c5c3_Err != nil {
 					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 170, Col: 38}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -509,17 +493,13 @@ func ChatMessageList(p *ChatProps, messages []ChatMessage) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var23 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var23 == nil {
-			templ_7745c5c3_Var23 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var24 string
-		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.ResolveAttributeValue("chat-messages-" + p.ID)
+		templ_7745c5c3_Var24, templ_7745c5c3_Err = templruntime.NewAttributeExpression("chat-messages-" + p.ID).Resolve(ctx)
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 193, Col: 34}
 		}
@@ -565,17 +545,13 @@ func ChatInput(p *ChatProps) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var25 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var25 == nil {
-			templ_7745c5c3_Var25 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "<div class=\"border-t border-gray-200 bg-white p-3\"><form hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var26 string
-		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("/chat/%s/messages", p.ID))
+		templ_7745c5c3_Var26, templ_7745c5c3_Err = templruntime.NewAttributeExpression(fmt.Sprintf("/chat/%s/messages", p.ID)).Resolve(ctx)
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 204, Col: 51}
 		}
@@ -588,7 +564,7 @@ func ChatInput(p *ChatProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var27 string
-		templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.ResolveAttributeValue("#chat-messages-" + p.ID)
+		templ_7745c5c3_Var27, templ_7745c5c3_Err = templruntime.NewAttributeExpression("#chat-messages-" + p.ID).Resolve(ctx)
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 205, Col: 39}
 		}
@@ -601,7 +577,7 @@ func ChatInput(p *ChatProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var28 string
-		templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.ResolveAttributeValue(p.CurrentUserID)
+		templ_7745c5c3_Var28, templ_7745c5c3_Err = templruntime.NewAttributeExpression(p.CurrentUserID).Resolve(ctx)
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 211, Col: 64}
 		}
@@ -614,7 +590,7 @@ func ChatInput(p *ChatProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var29 string
-		templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.ResolveAttributeValue("chat-file-preview-" + p.ID)
+		templ_7745c5c3_Var29, templ_7745c5c3_Err = templruntime.NewAttributeExpression("chat-file-preview-" + p.ID).Resolve(ctx)
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/ui/chat.templ`, Line: 233, Col: 39}
 		}
@@ -646,10 +622,6 @@ func Chat(p *ChatProps, messages []ChatMessage) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var30 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var30 == nil {
-			templ_7745c5c3_Var30 = templ.NopComponent
-		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<div class=\"flex flex-col h-full bg-white\">")
 		if templ_7745c5c3_Err != nil {
