@@ -5,3 +5,7 @@ package ui
 templ Link(url, title string) {
     <a href={ templ.URL(url) } class="text-[var(--color-action)] hover:underline">{ title }</a>
 }
+
+templ MonoLink(url, title string) {
+    <a href={ templ.URL(url) } class="text-[var(--color-action)] hover:underline font-mono" >{ title }</a>
+}
