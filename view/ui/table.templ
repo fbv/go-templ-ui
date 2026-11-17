@@ -62,10 +62,6 @@ templ DynamicTableWithState(data TableDataSource, state *StateProps) {
 	}
 }
 
-templ Text(text string) {
-    <span>{ text }</span>
-}
-
 templ Table() {
 	<table class="border-collapse table-auto w-full">
 		{ children... }
