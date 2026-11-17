@@ -17,6 +17,10 @@ import (
 
 type PageProps struct {
 	Title string
+	// Head is rendered at the end of <head>, after the built-in styles and scripts.
+	Head []templ.Component
+	// BodyEnd is rendered at the very end of <body>, after the built-in scripts.
+	BodyEnd []templ.Component
 }
 
 // themeInitScript applies the stored theme before paint. Every registered
@@ -67,7 +71,7 @@ func Page(p *PageProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templruntime.NewAttributeExpression(i18n.From(ctx).Tag).Resolve(ctx)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/layout/page.templ`, Line: 40, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/layout/page.templ`, Line: 44, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -124,13 +128,25 @@ func Page(p *PageProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(p.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/layout/page.templ`, Line: 54, Col: 19}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/layout/page.templ`, Line: 58, Col: 19}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</title><style>\nhtml { font-size: 13px; }\nli.x-tab {\n    display: flex;\n    justify-content: center;\n    margin: 0 8px 0 0; \n}\nli.x-tab-active::before {\n    content: '';\n    position: absolute;\n    background-color: #fff;\n    transform: rotate(45deg);\n    width: 9px;\n    height: 9px;\n    border-width: 1px 0 0 1px;\n    border-style: solid;\n    border-color: #e5e7eb;\n    bottom: -5px;\n}\n</style><!--link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap\"/--><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css\"><script src=\"https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp\"></script><script>\n\t\t\t\ttailwind.config = {\n\t\t\t\t\tdarkMode: \"class\",\n\t\t\t\t\ttheme: {\n\t\t\t\t\t\tfontFamily: {\n        \t\t\t\t\tsans: [\"Roboto\", \"sans-serif\"],\n        \t\t\t\t\tbody: [\"Roboto\", \"sans-serif\"],\n        \t\t\t\t\tmono: [\"ui-monospace\", \"monospace\"],\n      \t\t\t\t\t},\n\t\t\t\t\t\textend: {\n\t\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t\tcanvas: 'var(--color-canvas)',\n\t\t\t\t\t\t\t\tsurface: 'var(--color-surface)',\n\t\t\t\t\t\t\t\t'surface-alt': 'var(--color-surface-alt)',\n\t\t\t\t\t\t\t\t'surface-overlay': 'var(--color-surface-overlay)',\n\t\t\t\t\t\t\t\tfield: 'var(--color-field)',\n\t\t\t\t\t\t\t\tsubtle: 'var(--color-subtle)',\n\t\t\t\t\t\t\t\t'info-soft': 'var(--color-info-soft)',\n\t\t\t\t\t\t\t\tborder: 'var(--color-border)',\n\t\t\t\t\t\t\t\t'border-strong': 'var(--color-border-strong)',\n\t\t\t\t\t\t\t\tink: 'var(--color-ink)',\n\t\t\t\t\t\t\t\t'ink-muted': 'var(--color-ink-muted)',\n\t\t\t\t\t\t\t\t'ink-subtle': 'var(--color-ink-subtle)',\n\t\t\t\t\t\t\t\t'ink-disabled': 'var(--color-ink-disabled)',\n\t\t\t\t\t\t\t\taction: 'var(--color-action)',\n\t\t\t\t\t\t\t\t'action-hover': 'var(--color-action-hover)',\n\t\t\t\t\t\t\t\t'action-active': 'var(--color-action-active)',\n\t\t\t\t\t\t\t\t'action-fg': 'var(--color-action-fg)',\n\t\t\t\t\t\t\t\t'action-soft': 'var(--color-action-soft)',\n\t\t\t\t\t\t\t\thighlight: 'var(--color-highlight)',\n\t\t\t\t\t\t\t\tselected: 'var(--color-selected)',\n\t\t\t\t\t\t\t\tsuccess: 'var(--color-success)',\n\t\t\t\t\t\t\t\t'success-soft': 'var(--color-success-soft)',\n\t\t\t\t\t\t\t\t'success-border': 'var(--color-success-border)',\n\t\t\t\t\t\t\t\twarning: 'var(--color-warning)',\n\t\t\t\t\t\t\t\t'warning-soft': 'var(--color-warning-soft)',\n\t\t\t\t\t\t\t\t'warning-border': 'var(--color-warning-border)',\n\t\t\t\t\t\t\t\tdanger: 'var(--color-danger)',\n\t\t\t\t\t\t\t\t'danger-fg': 'var(--color-danger-fg)',\n\t\t\t\t\t\t\t\t'danger-soft': 'var(--color-danger-soft)',\n\t\t\t\t\t\t\t\t'danger-border': 'var(--color-danger-border)',\n\t\t\t\t\t\t\t\tfocus: 'var(--color-focus)',\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tcorePlugins: {\n\t\t\t\t\t\tpreflight: false,\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t</script></head><body class=\"bg-canvas\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</title><style>\nhtml { font-size: 13px; }\nli.x-tab {\n    display: flex;\n    justify-content: center;\n    margin: 0 8px 0 0; \n}\nli.x-tab-active::before {\n    content: '';\n    position: absolute;\n    background-color: #fff;\n    transform: rotate(45deg);\n    width: 9px;\n    height: 9px;\n    border-width: 1px 0 0 1px;\n    border-style: solid;\n    border-color: #e5e7eb;\n    bottom: -5px;\n}\n</style><!--link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap\"/--><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css\"><script src=\"https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp\"></script><script>\n\t\t\t\ttailwind.config = {\n\t\t\t\t\tdarkMode: \"class\",\n\t\t\t\t\ttheme: {\n\t\t\t\t\t\tfontFamily: {\n        \t\t\t\t\tsans: [\"Roboto\", \"sans-serif\"],\n        \t\t\t\t\tbody: [\"Roboto\", \"sans-serif\"],\n        \t\t\t\t\tmono: [\"ui-monospace\", \"monospace\"],\n      \t\t\t\t\t},\n\t\t\t\t\t\textend: {\n\t\t\t\t\t\t\tcolors: {\n\t\t\t\t\t\t\t\tcanvas: 'var(--color-canvas)',\n\t\t\t\t\t\t\t\tsurface: 'var(--color-surface)',\n\t\t\t\t\t\t\t\t'surface-alt': 'var(--color-surface-alt)',\n\t\t\t\t\t\t\t\t'surface-overlay': 'var(--color-surface-overlay)',\n\t\t\t\t\t\t\t\tfield: 'var(--color-field)',\n\t\t\t\t\t\t\t\tsubtle: 'var(--color-subtle)',\n\t\t\t\t\t\t\t\t'info-soft': 'var(--color-info-soft)',\n\t\t\t\t\t\t\t\tborder: 'var(--color-border)',\n\t\t\t\t\t\t\t\t'border-strong': 'var(--color-border-strong)',\n\t\t\t\t\t\t\t\tink: 'var(--color-ink)',\n\t\t\t\t\t\t\t\t'ink-muted': 'var(--color-ink-muted)',\n\t\t\t\t\t\t\t\t'ink-subtle': 'var(--color-ink-subtle)',\n\t\t\t\t\t\t\t\t'ink-disabled': 'var(--color-ink-disabled)',\n\t\t\t\t\t\t\t\taction: 'var(--color-action)',\n\t\t\t\t\t\t\t\t'action-hover': 'var(--color-action-hover)',\n\t\t\t\t\t\t\t\t'action-active': 'var(--color-action-active)',\n\t\t\t\t\t\t\t\t'action-fg': 'var(--color-action-fg)',\n\t\t\t\t\t\t\t\t'action-soft': 'var(--color-action-soft)',\n\t\t\t\t\t\t\t\thighlight: 'var(--color-highlight)',\n\t\t\t\t\t\t\t\tselected: 'var(--color-selected)',\n\t\t\t\t\t\t\t\tsuccess: 'var(--color-success)',\n\t\t\t\t\t\t\t\t'success-soft': 'var(--color-success-soft)',\n\t\t\t\t\t\t\t\t'success-border': 'var(--color-success-border)',\n\t\t\t\t\t\t\t\twarning: 'var(--color-warning)',\n\t\t\t\t\t\t\t\t'warning-soft': 'var(--color-warning-soft)',\n\t\t\t\t\t\t\t\t'warning-border': 'var(--color-warning-border)',\n\t\t\t\t\t\t\t\tdanger: 'var(--color-danger)',\n\t\t\t\t\t\t\t\t'danger-fg': 'var(--color-danger-fg)',\n\t\t\t\t\t\t\t\t'danger-soft': 'var(--color-danger-soft)',\n\t\t\t\t\t\t\t\t'danger-border': 'var(--color-danger-border)',\n\t\t\t\t\t\t\t\tfocus: 'var(--color-focus)',\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tcorePlugins: {\n\t\t\t\t\t\tpreflight: false,\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t</script>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if p.Head != nil {
+			for _, c := range p.Head {
+				templ_7745c5c3_Err = c.Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</head><body class=\"bg-canvas\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -138,7 +154,7 @@ func Page(p *PageProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<script src=\"https://unpkg.com/htmx.org@2.0.3\" integrity=\"sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq\" crossorigin=\"anonymous\"></script><script src=\"https://unpkg.com/htmx.org/dist/ext/json-enc.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/tw-elements/js/tw-elements.umd.min.js\"></script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<script src=\"https://unpkg.com/htmx.org@2.0.3\" integrity=\"sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq\" crossorigin=\"anonymous\"></script><script src=\"https://unpkg.com/htmx.org/dist/ext/json-enc.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/tw-elements/js/tw-elements.umd.min.js\"></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -182,7 +198,15 @@ func Page(p *PageProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</body></html>")
+		if p.BodyEnd != nil {
+			for _, c := range p.BodyEnd {
+				templ_7745c5c3_Err = c.Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

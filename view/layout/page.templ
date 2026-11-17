@@ -10,6 +10,10 @@ import (
 
 type PageProps struct {
 	Title string
+	// Head is rendered at the end of <head>, after the built-in styles and scripts.
+	Head []templ.Component
+	// BodyEnd is rendered at the very end of <body>, after the built-in scripts.
+	BodyEnd []templ.Component
 }
 
 // themeInitScript applies the stored theme before paint. Every registered
@@ -125,6 +129,11 @@ li.x-tab-active::before {
 					}
 				}
 			</script>
+			if p.Head != nil {
+				for _, c := range p.Head {
+					@c
+				}
+			}
 		</head>
 		<body class="bg-canvas">
 			{ children... }
@@ -141,6 +150,11 @@ li.x-tab-active::before {
 		@ui.ChatScript()
 		@ui.TreeScript()
 		@ui.ThemeToggleScript()
+		if p.BodyEnd != nil {
+			for _, c := range p.BodyEnd {
+				@c
+			}
+		}
 	</body>
 	</html>
 }
